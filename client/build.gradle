@@ -86,12 +86,15 @@ project(":html") {
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: "groovy"
 
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        testCompile "org.codehaus.groovy:groovy-all:2.4.1"
+        testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
     }
 }
 
