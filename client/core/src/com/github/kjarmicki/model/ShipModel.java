@@ -14,6 +14,7 @@ public class ShipModel {
     private static final float ROTATION = 2.0f;
     private final Polygon takenArea;
     private final Vector2 velocity = new Vector2();
+    private float rotating;
 
     public ShipModel(float x, float y) {
         takenArea = new Polygon(rectangularVertices(x, y, WIDTH, HEIGHT));
@@ -45,12 +46,12 @@ public class ShipModel {
         velocity.y -= delta * ACCELERATION * direction.y;
     }
 
-    public void rotateLeft() {
-        takenArea.rotate(ROTATION);
+    public void rotateLeft(float delta) {
+        rotating += delta * ROTATION;
     }
 
-    public void rotateRight() {
-        takenArea.rotate(-ROTATION);
+    public void rotateRight(float delta) {
+        rotating -= delta * ROTATION;
     }
 
     public void applyMovement(float delta) {
@@ -59,9 +60,12 @@ public class ShipModel {
         velocity.x -= delta * DRAG * velocity.x;
         velocity.y -= delta * DRAG * velocity.y;
 
+        rotating -= delta * DRAG * rotating;
+
         float x = getX() + delta * velocity.x;
         float y = getY() + delta * velocity.y;
         takenArea.setPosition(x, y);
+        takenArea.rotate(rotating);
     }
 
     private Vector2 getDirectionVector() {

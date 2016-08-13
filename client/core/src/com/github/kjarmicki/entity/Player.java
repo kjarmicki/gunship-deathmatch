@@ -21,8 +21,8 @@ public class Player {
     public void update(float delta) {
         if(controls.up()) shipModel.moveForwards(delta);
         if(controls.down()) shipModel.moveBackwards(delta);
-        if(controls.left()) shipModel.rotateLeft();
-        if(controls.right()) shipModel.rotateRight();
+        if(controls.left()) shipModel.rotateLeft(delta);
+        if(controls.right()) shipModel.rotateRight(delta);
 
         shipModel.applyMovement(delta);
     }
