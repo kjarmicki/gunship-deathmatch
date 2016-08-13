@@ -18,11 +18,13 @@ public class Player {
         this.controls = controls;
     }
 
-    public void update() {
-        if(controls.up()) shipModel.moveForwards();
-        if(controls.down()) shipModel.moveBackwards();
+    public void update(float delta) {
+        if(controls.up()) shipModel.moveForwards(delta);
+        if(controls.down()) shipModel.moveBackwards(delta);
         if(controls.left()) shipModel.rotateLeft();
         if(controls.right()) shipModel.rotateRight();
+
+        shipModel.applyMovement(delta);
     }
 
     public void draw(Batch batch) {

@@ -8,8 +8,12 @@ import com.badlogic.gdx.math.Vector2;
 public class ShipModel {
     public static final int WIDTH = 236;
     public static final int HEIGHT = 233;
-    public static final Vector2 MOVE_SPEED = new Vector2(5, 10);
+    private static final float DRAG = 1f;
+    private static final float ACCELERATION = 500.0f;
+    private static final float MAX_SPEED = 1000.0f;
+    private static final float ROTATION = 2.0f;
     private final Polygon takenArea;
+    private final Vector2 velocity = new Vector2();
 
     public ShipModel(float x, float y) {
         takenArea = new Polygon(rectangularVertices(x, y, WIDTH, HEIGHT));
@@ -29,26 +33,35 @@ public class ShipModel {
         return takenArea.getRotation();
     }
 
-    public void moveForwards() {
+    public void moveForwards(float delta) {
         Vector2 direction = getDirectionVector();
-        float x = getX() + direction.x * MOVE_SPEED.x;
-        float y = getY() + direction.y * MOVE_SPEED.y;
-        takenArea.setPosition(x, y);
+        velocity.x += delta * ACCELERATION * direction.x;
+        velocity.y += delta * ACCELERATION * direction.y;
     }
 
-    public void moveBackwards() {
+    public void moveBackwards(float delta) {
         Vector2 direction = getDirectionVector();
-        float x = getX() - direction.x * MOVE_SPEED.x;
-        float y = getY() - direction.y * MOVE_SPEED.y;
-        takenArea.setPosition(x, y);
+        velocity.x -= delta * ACCELERATION * direction.x;
+        velocity.y -= delta * ACCELERATION * direction.y;
     }
 
     public void rotateLeft() {
-        takenArea.rotate(MOVE_SPEED.x);
+        takenArea.rotate(ROTATION);
     }
 
     public void rotateRight() {
-        takenArea.rotate(-MOVE_SPEED.x);
+        takenArea.rotate(-ROTATION);
+    }
+
+    public void applyMovement(float delta) {
+        velocity.clamp(0, MAX_SPEED);
+
+        velocity.x -= delta * DRAG * velocity.x;
+        velocity.y -= delta * DRAG * velocity.y;
+
+        float x = getX() + delta * velocity.x;
+        float y = getY() + delta * velocity.y;
+        takenArea.setPosition(x, y);
     }
 
     private Vector2 getDirectionVector() {
