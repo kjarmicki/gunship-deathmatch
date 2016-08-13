@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.util.Debug;
 
 public class ShipModel {
     public static final int WIDTH = 236;
@@ -66,6 +67,8 @@ public class ShipModel {
         float y = getY() + delta * velocity.y;
         takenArea.setPosition(x, y);
         takenArea.rotate(rotating);
+
+        Debug.drawOutline(takenArea);
     }
 
     private Vector2 getDirectionVector() {
@@ -75,13 +78,5 @@ public class ShipModel {
 
     private float[] rectangularVertices(float x, float y, float width, float height) {
         return new float[] {x, y, width, x, width, height, y, height};
-    }
-
-    public void debug() {
-        ShapeRenderer sr = new ShapeRenderer();
-        sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.setColor(Color.BLUE);
-        sr.polygon(takenArea.getTransformedVertices());
-        sr.end();
     }
 }

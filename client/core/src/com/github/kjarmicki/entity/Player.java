@@ -30,8 +30,4 @@ public class Player {
     public void draw(Batch batch) {
         shipView.draw(batch, shipModel.getX(), shipModel.getY(), ShipModel.WIDTH, ShipModel.HEIGHT, shipModel.getRotation());
     }
-
-    public void debug() {
-        shipModel.debug();
-    }
 }
