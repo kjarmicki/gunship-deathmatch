@@ -1,7 +1,8 @@
 package com.github.kjarmicki.model;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class ShipModel {
@@ -12,6 +13,7 @@ public class ShipModel {
 
     public ShipModel(float x, float y) {
         takenArea = new Polygon(rectangularVertices(x, y, WIDTH, HEIGHT));
+        takenArea.setOrigin(WIDTH/2, HEIGHT/2);
     }
 
     public float getX() {
@@ -22,31 +24,39 @@ public class ShipModel {
         return takenArea.getY();
     }
 
-    public void moveUp() {
+    public float getRotation() {
+        return takenArea.getRotation();
+    }
+
+    public void moveForwards() {
         float x = getX();
         float y = getY() + MOVE_SPEED.y;
         takenArea.setPosition(x, y);
     }
 
-    public void moveDown() {
+    public void moveBackwards() {
         float x = getX();
         float y = getY() - MOVE_SPEED.y;
         takenArea.setPosition(x, y);
     }
 
-    public void moveLeft() {
-        float x = getX() - MOVE_SPEED.x;
-        float y = getY();
-        takenArea.setPosition(x, y);
+    public void rotateLeft() {
+        takenArea.rotate(MOVE_SPEED.x);
     }
 
-    public void moveRight() {
-        float x = getX() + MOVE_SPEED.x;
-        float y = getY();
-        takenArea.setPosition(x, y);
+    public void rotateRight() {
+        takenArea.rotate(-MOVE_SPEED.x);
     }
 
     private float[] rectangularVertices(float x, float y, float width, float height) {
         return new float[] {x, y, width, x, width, height, y, height};
+    }
+
+    public void debug() {
+        ShapeRenderer sr = new ShapeRenderer();
+        sr.begin(ShapeRenderer.ShapeType.Line);
+        sr.setColor(Color.BLUE);
+        sr.polygon(takenArea.getTransformedVertices());
+        sr.end();
     }
 }

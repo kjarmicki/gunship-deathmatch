@@ -19,13 +19,17 @@ public class Player {
     }
 
     public void update() {
-        if(controls.up()) shipModel.moveUp();
-        if(controls.down()) shipModel.moveDown();
-        if(controls.left()) shipModel.moveLeft();
-        if(controls.right()) shipModel.moveRight();
+        if(controls.up()) shipModel.moveForwards();
+        if(controls.down()) shipModel.moveBackwards();
+        if(controls.left()) shipModel.rotateLeft();
+        if(controls.right()) shipModel.rotateRight();
     }
 
     public void draw(Batch batch) {
         shipView.draw(batch, shipModel.getX(), shipModel.getY());
+    }
+
+    public void debug() {
+        shipModel.debug();
     }
 }

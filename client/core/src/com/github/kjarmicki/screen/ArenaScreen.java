@@ -38,6 +38,7 @@ public class ArenaScreen extends ScreenAdapter {
         batch.setProjectionMatrix(camera.combined);
 
         player.update();
+        player.debug();
 
         batch.begin();
         player.draw(batch);
