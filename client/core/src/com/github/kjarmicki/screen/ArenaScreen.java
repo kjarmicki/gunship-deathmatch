@@ -6,25 +6,27 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
+import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.entity.Player;
+import com.github.kjarmicki.model.ShipModel;
+import com.github.kjarmicki.view.ShipView;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Camera camera;
     private final Batch batch;
-    private final Rectangle player;
-    private final Texture playerSkin;
+    private final Controls controls;
+    private final Player player;
 
-    public ArenaScreen(Camera camera, Batch batch) {
+    public ArenaScreen(Camera camera, Batch batch, Controls controls) {
         this.camera = camera;
         this.batch = batch;
+        this.controls = controls;
 
-        this.player = new Rectangle();
-        player.x = 0;
-        player.y = 0;
-        player.width = 236;
-        player.height = 233;
-
-        this.playerSkin = new Texture(Gdx.files.internal("ship.jpg"));
+        this.player = new Player(
+                new ShipModel(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y),
+                new ShipView(new Texture(Gdx.files.internal(ShipView.DEFAULT_SKIN))),
+                controls
+        );
     }
 
     @Override
@@ -35,8 +37,10 @@ public class ArenaScreen extends ScreenAdapter {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
+        player.update();
+
         batch.begin();
-        batch.draw(playerSkin, player.x, player.y);
+        player.draw(batch);
         batch.end();
     }
 }
