@@ -11,9 +11,9 @@ class ShipModelSpec extends Specification {
         ship.moveForwards()
 
         then:
-        ship.y == 10
-        ship.x == 0
-        ship.rotation == 0
+        Math.round(ship.x) == 0
+        Math.round(ship.y) == 10
+        Math.round(ship.rotation) == 90
     }
 
     def 'should be able to move backwards'() {
@@ -24,9 +24,9 @@ class ShipModelSpec extends Specification {
         ship.moveBackwards()
 
         then:
-        ship.y == -10
-        ship.x == 0
-        ship.rotation == 0
+        Math.round(ship.x) == 0
+        Math.round(ship.y) == -10
+        Math.round(ship.rotation) == 90
     }
 
     def 'should be able to rotate right'() {
@@ -37,9 +37,9 @@ class ShipModelSpec extends Specification {
         ship.rotateRight()
 
         then:
-        ship.y == 0
-        ship.x == 0
-        ship.rotation == -10
+        Math.round(ship.x) == 0
+        Math.round(ship.y) == 0
+        Math.round(ship.rotation) == 85
     }
 
     def 'should be able to rotate left'() {
@@ -50,9 +50,24 @@ class ShipModelSpec extends Specification {
         ship.rotateLeft()
 
         then:
-        ship.y == 0
-        ship.x == 0
-        ship.rotation == 10
+        Math.round(ship.x) == 0
+        Math.round(ship.y) == 0
+        Math.round(ship.rotation) == 95
+    }
+
+    def 'should move towards rotated direction'() {
+        given:
+        ShipModel ship = ship()
+
+        when:
+        ship.rotateRight()
+        ship.rotateRight()
+        ship.moveForwards()
+
+        then:
+        Math.round(ship.x) == 1
+        Math.round(ship.y) == 10
+        Math.round(ship.rotation) == 80
     }
 
     static ShipModel ship() {
