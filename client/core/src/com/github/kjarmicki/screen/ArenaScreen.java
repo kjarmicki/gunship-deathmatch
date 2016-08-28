@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.kjarmicki.camera.ChaseCamera;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
@@ -22,6 +23,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Player player;
     private final Ground ground;
     private final Viewport viewport;
+    private final ChaseCamera chaseCamera;
     private final Optional<Debugger> debug;
 
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls, Optional<Debugger> debug) {
@@ -30,6 +32,7 @@ public class ArenaScreen extends ScreenAdapter {
         this.controls = controls;
         this.debug = debug;
 
+        this.chaseCamera = new ChaseCamera(viewport.getCamera());
         this.player = new Player(
                 new ShipModel(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y),
                 new ShipView(new Texture(Gdx.files.internal(ShipView.DEFAULT_SKIN))),
@@ -44,10 +47,13 @@ public class ArenaScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        viewport.apply();
 
-        batch.setProjectionMatrix(viewport.getCamera().combined);
 
         player.update(delta);
+        chaseCamera.lookAt(player);
+
+        batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
         ground.draw(batch);

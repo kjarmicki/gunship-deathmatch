@@ -2,12 +2,13 @@ package com.github.kjarmicki.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.model.ShipModel;
 import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.view.ShipView;
 
-public class Player implements Debuggable {
+public class Player implements Debuggable, Entity {
     public static final float DEFAULT_PLAYER_X = 0;
     public static final float DEFAULT_PLAYER_Y = 0;
     private final ShipModel shipModel;
@@ -36,5 +37,10 @@ public class Player implements Debuggable {
     @Override
     public Polygon getDebugOutline() {
         return shipModel.getTakenArea();
+    }
+
+    @Override
+    public Vector2 getPosition() {
+        return new Vector2(shipModel.getX(), shipModel.getY());
     }
 }
