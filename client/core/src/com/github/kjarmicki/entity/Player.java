@@ -1,11 +1,13 @@
 package com.github.kjarmicki.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.model.ShipModel;
+import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.view.ShipView;
 
-public class Player {
+public class Player implements Debuggable {
     public static final float DEFAULT_PLAYER_X = 0;
     public static final float DEFAULT_PLAYER_Y = 0;
     private final ShipModel shipModel;
@@ -29,5 +31,10 @@ public class Player {
 
     public void draw(Batch batch) {
         shipView.draw(batch, shipModel.getX(), shipModel.getY(), ShipModel.WIDTH, ShipModel.HEIGHT, shipModel.getRotation());
+    }
+
+    @Override
+    public Polygon getDebugOutline() {
+        return shipModel.getTakenArea();
     }
 }

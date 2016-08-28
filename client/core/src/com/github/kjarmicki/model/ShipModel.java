@@ -1,17 +1,15 @@
 package com.github.kjarmicki.model;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.util.Debug;
 
 public class ShipModel {
-    public static final int WIDTH = 236;
-    public static final int HEIGHT = 233;
+    public static final float RATIO = 236f / 233f;
+    public static final float WIDTH = 20f;
+    public static final float HEIGHT = 20 * RATIO;
     private static final float DRAG = 1f;
-    private static final float ACCELERATION = 500.0f;
-    private static final float MAX_SPEED = 1000.0f;
+    private static final float ACCELERATION = 50.0f;
+    private static final float MAX_SPEED = 100.0f;
     private static final float ROTATION = 2.0f;
     private final Polygon takenArea;
     private final Vector2 velocity = new Vector2();
@@ -67,8 +65,10 @@ public class ShipModel {
         float y = getY() + delta * velocity.y;
         takenArea.setPosition(x, y);
         takenArea.rotate(rotating);
+    }
 
-        Debug.drawOutline(takenArea);
+    public Polygon getTakenArea() {
+        return new Polygon(takenArea.getTransformedVertices());
     }
 
     private Vector2 getDirectionVector() {
