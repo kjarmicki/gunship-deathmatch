@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class ShipModel {
     public static final float RATIO = 236f / 233f;
-    public static final float WIDTH = 20f;
-    public static final float HEIGHT = 20 * RATIO;
+    public static final float WIDTH = 5f;
+    public static final float HEIGHT = 5 * RATIO;
     private static final float DRAG = 1f;
-    private static final float ACCELERATION = 50.0f;
-    private static final float MAX_SPEED = 100.0f;
+    private static final float ACCELERATION = 10.0f;
+    private static final float MAX_SPEED = 20.0f;
     private static final float ROTATION = 2.0f;
     private final Polygon takenArea;
     private final Vector2 velocity = new Vector2();

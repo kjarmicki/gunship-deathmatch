@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.model.ShipModel;
 import com.github.kjarmicki.debugging.Debugger;
+import com.github.kjarmicki.view.GroundView;
 import com.github.kjarmicki.view.ShipView;
 
 import java.util.Optional;
@@ -18,6 +20,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
     private final Controls controls;
     private final Player player;
+    private final Ground ground;
     private final Viewport viewport;
     private final Optional<Debugger> debug;
 
@@ -32,6 +35,9 @@ public class ArenaScreen extends ScreenAdapter {
                 new ShipView(new Texture(Gdx.files.internal(ShipView.DEFAULT_SKIN))),
                 controls
         );
+        this.ground = new Ground(
+                new GroundView(new Texture(Gdx.files.internal(GroundView.DEFAULT_SKIN)))
+        );
     }
 
     @Override
@@ -44,6 +50,7 @@ public class ArenaScreen extends ScreenAdapter {
         player.update(delta);
 
         batch.begin();
+        ground.draw(batch);
         player.draw(batch);
         batch.end();
 
