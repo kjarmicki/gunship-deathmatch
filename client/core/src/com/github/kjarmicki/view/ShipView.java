@@ -7,12 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class ShipView {
     public static final String DEFAULT_SKIN = "ship.jpg";
     public static final float BASE_ROTATION = 90f;
-    private final Texture skin;
     private final TextureRegion skinRegion;
 
-    public ShipView(Texture skin) {
-        this.skin = skin;
-        this.skinRegion = new TextureRegion(skin);
+    public ShipView(TextureRegion skin) {
+        this.skinRegion = skin;
     }
 
     public void draw(Batch batch, float x, float y, float width, float height, float rotation) {

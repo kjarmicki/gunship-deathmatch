@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.camera.ChaseCamera;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.entity.Ground;
@@ -25,6 +26,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
     private final Optional<Debugger> debug;
+    private final PartsAssets partsAssets;
 
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls, Optional<Debugger> debug) {
         this.viewport = viewport;
@@ -32,10 +34,15 @@ public class ArenaScreen extends ScreenAdapter {
         this.controls = controls;
         this.debug = debug;
 
+        this.partsAssets = new PartsAssets(
+                PartsAssets.DEFAULT_ATLAS,
+                PartsAssets.DEFAULT_COLORS,
+                PartsAssets.DEFAULT_PARTS_COUNT
+        );
         this.chaseCamera = new ChaseCamera(viewport.getCamera());
         this.player = new Player(
                 new ShipModel(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y),
-                new ShipView(new Texture(Gdx.files.internal(ShipView.DEFAULT_SKIN))),
+                new ShipView(partsAssets.getPart("Blue", 26)),
                 controls
         );
         this.ground = new Ground(
