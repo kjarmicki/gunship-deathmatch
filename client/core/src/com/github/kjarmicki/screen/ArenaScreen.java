@@ -11,7 +11,7 @@ import com.github.kjarmicki.camera.ChaseCamera;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
-import com.github.kjarmicki.model.ShipModel;
+import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.view.GroundView;
 import com.github.kjarmicki.view.ShipView;
@@ -41,7 +41,7 @@ public class ArenaScreen extends ScreenAdapter {
         );
         this.chaseCamera = new ChaseCamera(viewport.getCamera());
         this.player = new Player(
-                new ShipModel(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y),
+                new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, partsAssets),
                 new ShipView(partsAssets.getPart("Blue", 26)),
                 controls
         );
