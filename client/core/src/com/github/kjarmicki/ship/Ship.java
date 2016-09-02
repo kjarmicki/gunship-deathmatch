@@ -4,16 +4,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.ship.parts.*;
 
-public class Ship {
-    public static final float RATIO = 236f / 233f;
-    public static final float WIDTH = 5f;
-    public static final float HEIGHT = 5 * RATIO;
+public class Ship implements Debuggable {
     private static final float DRAG = 1f;
-    private static final float ACCELERATION = 20.0f;
-    private static final float MAX_SPEED = 50.0f;
-    private static final float ROTATION = 3.0f;
+    private static final float ACCELERATION = 300.0f;
+    private static final float MAX_SPEED = 1000.0f;
+    private static final float ROTATION = 5f;
     private final Vector2 velocity = new Vector2();
     private float rotating;
 
@@ -75,7 +73,8 @@ public class Ship {
         core.getTakenArea().rotate(rotating);
     }
 
-    public Polygon getTakenArea() {
+    @Override
+    public Polygon getDebugOutline() {
         return core.getTakenArea();
     }
 
@@ -85,7 +84,7 @@ public class Ship {
 
     private Vector2 getDirectionVector() {
         float rotation = getRotation();
-        return new Vector2((float)Math.cos(Math.toRadians(rotation)), (float)Math.sin(Math.toRadians(rotation)));
+        return new Vector2(-(float)Math.sin(Math.toRadians(rotation)), (float)Math.cos(Math.toRadians(rotation)));
     }
 
 }

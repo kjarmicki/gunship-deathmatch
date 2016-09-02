@@ -34,7 +34,7 @@ public class Player implements Debuggable, Entity {
 
     @Override
     public Polygon getDebugOutline() {
-        return ship.getTakenArea();
+        return ship.getDebugOutline();
     }
 
     @Override

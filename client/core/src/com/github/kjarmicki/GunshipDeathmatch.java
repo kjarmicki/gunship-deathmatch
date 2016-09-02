@@ -14,8 +14,8 @@ import com.github.kjarmicki.util.Env;
 import java.util.Optional;
 
 public class GunshipDeathmatch extends Game {
-    public static final int WORLD_WIDTH = 100;
-    public static final int WORLD_HEIGHT = 100;
+    public static final int WORLD_WIDTH = 2000;
+    public static final int WORLD_HEIGHT = 2000;
 
     private final Viewport viewport = new FitViewport(GunshipDeathmatch.WORLD_WIDTH / 4, GunshipDeathmatch.WORLD_HEIGHT / 4);
     private final Controls controls = new Keyboard();
