@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debuggable;
-import com.github.kjarmicki.view.ShipView;
 
 public class Player implements Debuggable, Entity {
     public static final float DEFAULT_PLAYER_X = 0;
@@ -14,7 +13,7 @@ public class Player implements Debuggable, Entity {
     private final Ship ship;
     private final Controls controls;
 
-    public Player(Ship model, ShipView view, Controls controls) {
+    public Player(Ship model, Controls controls) {
         ship = model;
         this.controls = controls;
     }

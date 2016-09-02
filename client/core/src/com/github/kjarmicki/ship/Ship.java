@@ -35,10 +35,6 @@ public class Ship implements Debuggable {
         return core.getTakenArea().getY();
     }
 
-    public float getRotation() {
-        return core.getTakenArea().getRotation();
-    }
-
     public void moveForwards(float delta) {
         Vector2 direction = getDirectionVector();
         velocity.x += delta * ACCELERATION * direction.x;
@@ -80,6 +76,10 @@ public class Ship implements Debuggable {
 
     public void draw(Batch batch) {
         core.draw(batch);
+    }
+
+    private float getRotation() {
+        return core.getTakenArea().getRotation();
     }
 
     private Vector2 getDirectionVector() {
