@@ -19,14 +19,14 @@ public class BasicCorePart extends GenericPart implements CorePart {
     };
     public static final float WIDTH = 127f;
     public static final float HEIGHT = 149f;
-    public static final float ORIGIN_X = 63f;
-    public static final float ORIGIN_Y = 102f;
-    public static final float NOSE_SLOT_X = 64f;
-    public static final float NOSE_SLOT_Y = 110f;
+    public static final Vector2 ORIGIN = new Vector2(63f, 102f);
+    public static final Vector2 NOSE_SLOT = new Vector2(63f, 110f);
+    public static final Vector2 LEFT_WING_SLOT = new Vector2(55f, 92f);
+    public static final Vector2 RIGHT_WING_SLOT = new Vector2(112f, 92f);
 
     public BasicCorePart(float x, float y, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
-        takenArea.setOrigin(ORIGIN_X, ORIGIN_Y);
+        takenArea.setOrigin(ORIGIN.x, ORIGIN.y);
     }
 
     @Override
@@ -41,11 +41,16 @@ public class BasicCorePart extends GenericPart implements CorePart {
 
     @Override
     public Vector2 getNoseSlot() {
-        return new Vector2(NOSE_SLOT_X, NOSE_SLOT_Y);
+        return new Vector2(NOSE_SLOT);
+    }
+
+    @Override
+    public Vector2 getLeftWingSlot() {
+        return new Vector2(LEFT_WING_SLOT);
     }
 
     @Override
     public Vector2 getOrigin() {
-        return new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
+        return new Vector2(ORIGIN);
     }
 }

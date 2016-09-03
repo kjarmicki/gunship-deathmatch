@@ -7,6 +7,8 @@ import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.ship.parts.*;
 
+import java.util.Arrays;
+
 public class Ship implements Debuggable {
     private static final float DRAG = 1f;
     private static final float ACCELERATION = 300.0f;
@@ -24,6 +26,8 @@ public class Ship implements Debuggable {
     public Ship(float x, float y, PartsAssets assets) {
         core = new BasicCorePart(x, y, assets.getPart(BasicCorePart.DEFAULT_SKIN_COLOR, BasicCorePart.DEFAULT_INDEX));
         nose = new BasicNosePart(core.getNoseSlot(), core.getOrigin(), assets.getPart(BasicNosePart.DEFAULT_SKIN_COLOR, BasicNosePart.DEFAULT_INDEX));
+        leftWing = new BasicWingPart(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_INDEX));
+        rightWing = leftWing.getInverted();
     }
 
     public float getX() {
@@ -59,16 +63,16 @@ public class Ship implements Debuggable {
 
         velocity.x -= delta * DRAG * velocity.x;
         velocity.y -= delta * DRAG * velocity.y;
-
         rotating -= delta * DRAG * rotating;
 
         float x = delta * velocity.x;
         float y = delta * velocity.y;
         Vector2 movement = new Vector2(x, y);
-        core.moveBy(movement);
-        core.rotate(rotating);
-        nose.moveBy(movement);
-        nose.rotate(rotating);
+
+        Arrays.asList(core, nose, leftWing, rightWing).stream().forEach(part -> {
+            part.moveBy(movement);
+            part.rotate(rotating);
+        });
     }
 
     @Override
@@ -77,8 +81,9 @@ public class Ship implements Debuggable {
     }
 
     public void draw(Batch batch) {
-        nose.draw(batch);
-        core.draw(batch);
+        Arrays.asList(leftWing, rightWing, nose, core).stream().forEach(part ->  {
+            part.draw(batch);
+        });
     }
 
     private float getRotation() {
