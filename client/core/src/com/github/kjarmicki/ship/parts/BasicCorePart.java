@@ -1,13 +1,10 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
-public class BasicCorePart implements CorePart {
-    private final Polygon takenArea;
-    private final TextureRegion skinRegion;
+public class BasicCorePart extends GenericPart implements CorePart {
     public static final String DEFAULT_SKIN_COLOR = "Blue";
     public static final int DEFAULT_INDEX = 29;
     private static final float[] VERTICES = new float[] {
@@ -27,38 +24,19 @@ public class BasicCorePart implements CorePart {
     public static final float NOSE_SLOT_X = 64f;
     public static final float NOSE_SLOT_Y = 110f;
 
-
-    private float x;
-    private float y;
-
     public BasicCorePart(float x, float y, TextureRegion skinRegion) {
-        this.skinRegion = skinRegion;
-        this.x = x;
-        this.y = y;
-        this.takenArea = new Polygon(VERTICES);
+        super(new Polygon(VERTICES), skinRegion);
         takenArea.setOrigin(ORIGIN_X, ORIGIN_Y);
     }
 
     @Override
-    public void draw(Batch batch) {
-        batch.draw(skinRegion, takenArea.getX(), takenArea.getY(), takenArea.getOriginX(), takenArea.getOriginY(), WIDTH, HEIGHT, 1, 1, takenArea.getRotation());
+    public float getWidth() {
+        return WIDTH;
     }
 
     @Override
-    public void moveBy(Vector2 movement) {
-        float x = takenArea.getX();
-        float y = takenArea.getY();
-        takenArea.setPosition(movement.x + x, movement.y + y);
-    }
-
-    @Override
-    public void rotate(float degrees) {
-        takenArea.rotate(degrees);
-    }
-
-    @Override
-    public Polygon getTakenArea() {
-        return takenArea;
+    public float getHeight() {
+        return HEIGHT;
     }
 
     @Override
