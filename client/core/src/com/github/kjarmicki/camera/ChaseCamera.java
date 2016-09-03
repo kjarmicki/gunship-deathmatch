@@ -11,7 +11,7 @@ public class ChaseCamera {
     }
 
     public void lookAt(Entity observed) {
-        underlying.position.set(observed.getPosition(), 0);
+        underlying.position.set(observed.getCenterOfPosition(), 0);
     }
 
 }

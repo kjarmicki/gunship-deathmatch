@@ -23,7 +23,7 @@ public class Ground implements Entity {
     }
 
     @Override
-    public Vector2 getPosition() {
+    public Vector2 getCenterOfPosition() {
         return new Vector2(position);
     }
 }

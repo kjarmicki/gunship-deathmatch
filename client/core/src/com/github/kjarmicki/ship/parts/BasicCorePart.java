@@ -53,4 +53,9 @@ public class BasicCorePart extends GenericPart implements CorePart {
     public Vector2 getOrigin() {
         return new Vector2(ORIGIN);
     }
+
+    @Override
+    public Vector2 getCenter() {
+        return new Vector2(takenArea.getX() + WIDTH / 2, takenArea.getY() + HEIGHT / 2);
+    }
 }

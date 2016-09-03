@@ -80,6 +80,10 @@ public class Ship implements Debuggable {
         return core.getTakenArea();
     }
 
+    public Vector2 getCenter() {
+        return core.getCenter();
+    }
+
     public void draw(Batch batch) {
         Arrays.asList(leftWing, rightWing, nose, core).stream().forEach(part ->  {
             part.draw(batch);

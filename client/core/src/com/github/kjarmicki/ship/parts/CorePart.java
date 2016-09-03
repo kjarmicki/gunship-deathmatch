@@ -6,4 +6,5 @@ public interface CorePart extends Part {
     Vector2 getNoseSlot();
     Vector2 getLeftWingSlot();
     Vector2 getOrigin();
+    Vector2 getCenter();
 }

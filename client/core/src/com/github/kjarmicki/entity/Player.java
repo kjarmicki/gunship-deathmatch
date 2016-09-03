@@ -37,7 +37,7 @@ public class Player implements Debuggable, Entity {
     }
 
     @Override
-    public Vector2 getPosition() {
-        return new Vector2(ship.getX(), ship.getY());
+    public Vector2 getCenterOfPosition() {
+        return ship.getCenter();
     }
 }
