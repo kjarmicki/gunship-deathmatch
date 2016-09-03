@@ -16,8 +16,6 @@ public class Ship implements Debuggable {
     private float rotating;
 
     private CorePart core;
-    private EnginePart leftEngine;
-    private EnginePart rightEngine;
     private NosePart nose;
     private WeaponPart weapon;
     private WingPart leftWing;
@@ -25,6 +23,7 @@ public class Ship implements Debuggable {
 
     public Ship(float x, float y, PartsAssets assets) {
         core = new BasicCorePart(x, y, assets.getPart(BasicCorePart.DEFAULT_SKIN_COLOR, BasicCorePart.DEFAULT_INDEX));
+        nose = new BasicNosePart(core.getNoseSlot(), core.getOrigin(), assets.getPart(BasicNosePart.DEFAULT_SKIN_COLOR, BasicNosePart.DEFAULT_INDEX));
     }
 
     public float getX() {
@@ -63,10 +62,13 @@ public class Ship implements Debuggable {
 
         rotating -= delta * DRAG * rotating;
 
-        float x = getX() + delta * velocity.x;
-        float y = getY() + delta * velocity.y;
-        core.getTakenArea().setPosition(x, y);
-        core.getTakenArea().rotate(rotating);
+        float x = delta * velocity.x;
+        float y = delta * velocity.y;
+        Vector2 movement = new Vector2(x, y);
+        core.moveBy(movement);
+        core.rotate(rotating);
+        nose.moveBy(movement);
+        nose.rotate(rotating);
     }
 
     @Override
@@ -75,6 +77,7 @@ public class Ship implements Debuggable {
     }
 
     public void draw(Batch batch) {
+        nose.draw(batch);
         core.draw(batch);
     }
 

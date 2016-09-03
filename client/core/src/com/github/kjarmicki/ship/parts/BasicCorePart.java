@@ -3,6 +3,7 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
 
 public class BasicCorePart implements CorePart {
     private final Polygon takenArea;
@@ -23,6 +24,9 @@ public class BasicCorePart implements CorePart {
     public static final float HEIGHT = 149f;
     public static final float ORIGIN_X = 63f;
     public static final float ORIGIN_Y = 102f;
+    public static final float NOSE_SLOT_X = 64f;
+    public static final float NOSE_SLOT_Y = 110f;
+
 
     private float x;
     private float y;
@@ -37,11 +41,33 @@ public class BasicCorePart implements CorePart {
 
     @Override
     public void draw(Batch batch) {
-        batch.draw(skinRegion, takenArea.getX(), takenArea.getY(), ORIGIN_X, ORIGIN_Y, WIDTH, HEIGHT, 1, 1, takenArea.getRotation());
+        batch.draw(skinRegion, takenArea.getX(), takenArea.getY(), takenArea.getOriginX(), takenArea.getOriginY(), WIDTH, HEIGHT, 1, 1, takenArea.getRotation());
+    }
+
+    @Override
+    public void moveBy(Vector2 movement) {
+        float x = takenArea.getX();
+        float y = takenArea.getY();
+        takenArea.setPosition(movement.x + x, movement.y + y);
+    }
+
+    @Override
+    public void rotate(float degrees) {
+        takenArea.rotate(degrees);
     }
 
     @Override
     public Polygon getTakenArea() {
         return takenArea;
+    }
+
+    @Override
+    public Vector2 getNoseSlot() {
+        return new Vector2(NOSE_SLOT_X, NOSE_SLOT_Y);
+    }
+
+    @Override
+    public Vector2 getOrigin() {
+        return new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
     }
 }
