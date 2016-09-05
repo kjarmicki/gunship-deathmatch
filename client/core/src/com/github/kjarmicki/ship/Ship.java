@@ -26,16 +26,8 @@ public class Ship implements Debuggable {
     public Ship(float x, float y, PartsAssets assets) {
         core = new BasicCorePart(x, y, assets.getPart(BasicCorePart.DEFAULT_SKIN_COLOR, BasicCorePart.DEFAULT_INDEX));
         nose = new BasicNosePart(core.getNoseSlot(), core.getOrigin(), assets.getPart(BasicNosePart.DEFAULT_SKIN_COLOR, BasicNosePart.DEFAULT_INDEX));
-        leftWing = new BasicWingPart(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_INDEX));
-        rightWing = leftWing.getInverted();
-    }
-
-    public float getX() {
-        return core.getTakenArea().getX();
-    }
-
-    public float getY() {
-        return core.getTakenArea().getY();
+        leftWing = BasicWingPart.getLeftVariant(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_LEFT_INDEX));
+        rightWing = BasicWingPart.getRightVariant(core.getRightWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_RIGHT_INDEX));
     }
 
     public void moveForwards(float delta) {
@@ -77,7 +69,7 @@ public class Ship implements Debuggable {
 
     @Override
     public Polygon getDebugOutline() {
-        return core.getTakenArea();
+        return rightWing.getTakenArea();
     }
 
     public Vector2 getCenter() {
