@@ -53,6 +53,7 @@ public class ArenaScreen extends ScreenAdapter {
 
 
         player.update(delta);
+        player.checkPlacementWithinBounds(ground.getBounds());
         chaseCamera.lookAt(player);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);

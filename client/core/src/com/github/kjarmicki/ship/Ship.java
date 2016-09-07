@@ -1,18 +1,21 @@
 package com.github.kjarmicki.ship;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.ship.parts.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Ship implements Debuggable {
     private static final float DRAG = 1f;
-    private static final float ACCELERATION = 300.0f;
-    private static final float MAX_SPEED = 1000.0f;
+    private static final float ACCELERATION = 600.0f;
+    private static final float MAX_SPEED = 3000.0f;
     private static final float ROTATION = 5f;
     private final Vector2 velocity = new Vector2();
     private float rotating;
@@ -61,7 +64,7 @@ public class Ship implements Debuggable {
         float y = delta * velocity.y;
         Vector2 movement = new Vector2(x, y);
 
-        Arrays.asList(core, nose, leftWing, rightWing).stream().forEach(part -> {
+        allParts().stream().forEach(part -> {
             part.moveBy(movement);
             part.rotate(rotating);
         });
@@ -77,13 +80,36 @@ public class Ship implements Debuggable {
     }
 
     public void draw(Batch batch) {
-        Arrays.asList(leftWing, rightWing, nose, core).stream().forEach(part ->  {
+        allParts().stream().forEach(part ->  {
             part.draw(batch);
         });
     }
 
+    public void checkPlacementWithinBounds(Rectangle bounds) {
+        Vector2 zero = new Vector2(0, 0);
+        allParts().stream()
+                .map(part -> part.outsideBounds(bounds))
+                .filter(vector -> !vector.equals(zero))
+                .findFirst()
+                .ifPresent(shift -> {
+                    velocity.x = rebound(velocity.x);
+                    velocity.y = rebound(velocity.y);
+                    rotating = rebound(rotating);
+
+                    allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
+                });
+    }
+
+    private List<Part> allParts() {
+        return Arrays.asList(leftWing, rightWing, nose, core);
+    }
+
     private float getRotation() {
         return core.getTakenArea().getRotation();
+    }
+
+    private float rebound(float value) {
+        return -(value / 2);
     }
 
     private Vector2 getDirectionVector() {
