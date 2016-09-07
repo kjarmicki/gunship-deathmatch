@@ -27,6 +27,7 @@ public class BasicCorePart extends GenericPart implements CorePart {
     public BasicCorePart(float x, float y, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
         takenArea.setOrigin(ORIGIN.x, ORIGIN.y);
+        takenArea.setPosition(x, y);
     }
 
     @Override
@@ -41,22 +42,22 @@ public class BasicCorePart extends GenericPart implements CorePart {
 
     @Override
     public Vector2 getNoseSlot() {
-        return new Vector2(NOSE_SLOT);
+        return withPosition(NOSE_SLOT);
     }
 
     @Override
     public Vector2 getLeftWingSlot() {
-        return new Vector2(LEFT_WING_SLOT);
+        return withPosition(LEFT_WING_SLOT);
     }
 
     @Override
     public Vector2 getRightWingSlot() {
-        return new Vector2(RIGHT_WING_SLOT);
+        return withPosition(RIGHT_WING_SLOT);
     }
 
     @Override
     public Vector2 getOrigin() {
-        return new Vector2(ORIGIN);
+        return withPosition(ORIGIN);
     }
 
     @Override

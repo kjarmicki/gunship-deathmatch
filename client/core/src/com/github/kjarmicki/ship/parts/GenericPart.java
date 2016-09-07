@@ -36,4 +36,8 @@ public abstract class GenericPart implements Part {
     public void rotate(float degrees) {
         takenArea.rotate(degrees);
     }
+
+    public Vector2 withPosition(Vector2 base) {
+        return new Vector2(base.x + takenArea.getX(), base.y + takenArea.getY());
+    }
 }

@@ -8,8 +8,8 @@ import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debuggable;
 
 public class Player implements Debuggable, Entity {
-    public static final float DEFAULT_PLAYER_X = 0;
-    public static final float DEFAULT_PLAYER_Y = 0;
+    public static final float DEFAULT_PLAYER_X = 150;
+    public static final float DEFAULT_PLAYER_Y = 150;
     private final Ship ship;
     private final Controls controls;
 

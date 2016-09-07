@@ -7,8 +7,8 @@ import com.github.kjarmicki.GunshipDeathmatch;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1024;
-		config.height = 768;
+		config.width = 900;
+		config.height = 900;
 		new LwjglApplication(new GunshipDeathmatch(), config);
 	}
 }
