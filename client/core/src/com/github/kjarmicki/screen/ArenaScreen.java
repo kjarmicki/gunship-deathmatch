@@ -44,7 +44,7 @@ public class ArenaScreen extends ScreenAdapter {
                 controls
         );
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
-        chaseCamera.snapAt(player);
+        chaseCamera.snapAtNextObservable();
     }
 
     @Override
