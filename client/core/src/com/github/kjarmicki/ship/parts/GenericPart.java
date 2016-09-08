@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class GenericPart implements Part {
     protected final Polygon takenArea;
     protected final TextureRegion skinRegion;
+    protected float condition = 100f;
 
     public GenericPart(Polygon takenArea, TextureRegion skinRegion) {
         this.takenArea = takenArea;
@@ -35,6 +36,10 @@ public abstract class GenericPart implements Part {
 
     public void rotate(float degrees) {
         takenArea.rotate(degrees);
+    }
+
+    public void receiveDamage(float amount) {
+        condition -= amount;
     }
 
     public Vector2 withPosition(Vector2 base) {

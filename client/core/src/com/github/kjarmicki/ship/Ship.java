@@ -87,17 +87,24 @@ public class Ship implements Debuggable {
         });
     }
 
+    // check if ship went out of arena bounds
     public void checkPlacementWithinBounds(Rectangle bounds) {
         Vector2 zero = new Vector2(0, 0);
         allParts().stream()
-                .map(part -> part.outsideBounds(bounds))
-                .filter(vector -> !vector.equals(zero))
+                .filter(part -> !part.outsideBounds(bounds).equals(zero))
                 .findFirst()
-                .ifPresent(shift -> {
+                .ifPresent(outsidePart -> {
+                    Vector2 shift = outsidePart.outsideBounds(bounds);
+
+                    // rebound a ship off the wall
                     velocity.x = rebound(velocity.x);
                     velocity.y = rebound(velocity.y);
                     rotating = rebound(rotating);
 
+                    // damage part that went off
+                    outsidePart.receiveDamage(damageFromCollision(shift));
+
+                    // translate ship back to the area
                     allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
                 });
     }
@@ -117,6 +124,10 @@ public class Ship implements Debuggable {
     private Vector2 getDirectionVector() {
         float rotation = getRotation();
         return new Vector2(-(float)Math.sin(Math.toRadians(rotation)), (float)Math.cos(Math.toRadians(rotation)));
+    }
+
+    private float damageFromCollision(Vector2 collision) {
+        return (Math.round(Math.abs(collision.x)) + Math.round(Math.abs(collision.y)));
     }
 
 }

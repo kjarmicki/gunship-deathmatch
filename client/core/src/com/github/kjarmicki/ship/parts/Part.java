@@ -10,6 +10,7 @@ public interface Part {
     Polygon getTakenArea();
     void moveBy(Vector2 movement);
     void rotate(float degrees);
+    void receiveDamage(float amount);
     Vector2 outsideBounds(Rectangle bounds);
     void draw(Batch batch);
     void updateFeatures(ShipFeatures features);
