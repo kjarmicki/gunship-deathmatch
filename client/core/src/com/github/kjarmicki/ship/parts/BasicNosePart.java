@@ -3,6 +3,7 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.ship.ShipFeatures;
 
 public class BasicNosePart extends GenericPart implements NosePart {
     public static final String DEFAULT_SKIN_COLOR = "Blue";
@@ -40,5 +41,10 @@ public class BasicNosePart extends GenericPart implements NosePart {
     @Override
     public float getHeight() {
         return HEIGHT;
+    }
+
+    @Override
+    public void updateFeatures(ShipFeatures features) {
+        features.adjustAcceleration(1);
     }
 }

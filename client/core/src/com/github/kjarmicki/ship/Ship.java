@@ -1,7 +1,6 @@
 package com.github.kjarmicki.ship;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -13,11 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Ship implements Debuggable {
-    private static final float DRAG = 1f;
-    private static final float ACCELERATION = 600.0f;
-    private static final float MAX_SPEED = 3000.0f;
-    private static final float ROTATION = 5f;
     private final Vector2 velocity = new Vector2();
+    private final ShipFeatures features;
     private float rotating;
 
     private CorePart core;
@@ -26,7 +22,8 @@ public class Ship implements Debuggable {
     private WingPart leftWing;
     private WingPart rightWing;
 
-    public Ship(float x, float y, PartsAssets assets) {
+    public Ship(float x, float y, ShipFeatures features, PartsAssets assets) {
+        this.features = features;
         core = new BasicCorePart(x, y, assets.getPart(BasicCorePart.DEFAULT_SKIN_COLOR, BasicCorePart.DEFAULT_INDEX));
         nose = new BasicNosePart(core.getNoseSlot(), core.getOrigin(), assets.getPart(BasicNosePart.DEFAULT_SKIN_COLOR, BasicNosePart.DEFAULT_INDEX));
         leftWing = BasicWingPart.getLeftVariant(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_LEFT_INDEX));
@@ -35,30 +32,35 @@ public class Ship implements Debuggable {
 
     public void moveForwards(float delta) {
         Vector2 direction = getDirectionVector();
-        velocity.x += delta * ACCELERATION * direction.x;
-        velocity.y += delta * ACCELERATION * direction.y;
+        velocity.x += delta * features.getAcceleration() * direction.x;
+        velocity.y += delta * features.getAcceleration() * direction.y;
     }
 
     public void moveBackwards(float delta) {
         Vector2 direction = getDirectionVector();
-        velocity.x -= delta * ACCELERATION * direction.x;
-        velocity.y -= delta * ACCELERATION * direction.y;
+        velocity.x -= delta * features.getAcceleration() * direction.x;
+        velocity.y -= delta * features.getAcceleration() * direction.y;
     }
 
     public void rotateLeft(float delta) {
-        rotating += delta * ROTATION;
+        rotating += delta * features.getRotation();
     }
 
     public void rotateRight(float delta) {
-        rotating -= delta * ROTATION;
+        rotating -= delta * features.getRotation();
+    }
+
+    public void update() {
+        features.reset();
+        allParts().stream().forEach(part -> part.updateFeatures(features));
     }
 
     public void applyMovement(float delta) {
-        velocity.clamp(0, MAX_SPEED);
+        velocity.clamp(0, features.getMaxSpeed());
 
-        velocity.x -= delta * DRAG * velocity.x;
-        velocity.y -= delta * DRAG * velocity.y;
-        rotating -= delta * DRAG * rotating;
+        velocity.x -= delta * features.getDrag() * velocity.x;
+        velocity.y -= delta * features.getDrag() * velocity.y;
+        rotating -= delta * features.getDrag() * rotating;
 
         float x = delta * velocity.x;
         float y = delta * velocity.y;

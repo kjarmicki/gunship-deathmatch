@@ -3,6 +3,7 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.ship.ShipFeatures;
 
 public class BasicCorePart extends GenericPart implements CorePart {
     public static final String DEFAULT_SKIN_COLOR = "Blue";
@@ -63,5 +64,10 @@ public class BasicCorePart extends GenericPart implements CorePart {
     @Override
     public Vector2 getCenter() {
         return new Vector2(takenArea.getX() + WIDTH / 2, takenArea.getY() + HEIGHT / 2);
+    }
+
+    @Override
+    public void updateFeatures(ShipFeatures features) {
+        features.adjustAcceleration(1);
     }
 }

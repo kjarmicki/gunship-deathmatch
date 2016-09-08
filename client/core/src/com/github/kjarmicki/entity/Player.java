@@ -20,6 +20,8 @@ public class Player implements Debuggable, Entity {
     }
 
     public void update(float delta) {
+        ship.update();
+
         if(controls.up()) ship.moveForwards(delta);
         if(controls.down()) ship.moveBackwards(delta);
         if(controls.left()) ship.rotateLeft(delta);

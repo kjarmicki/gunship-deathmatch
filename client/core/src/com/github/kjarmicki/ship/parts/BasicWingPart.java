@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.debugging.Debuggable;
+import com.github.kjarmicki.ship.ShipFeatures;
 
 public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
     public static final String DEFAULT_SKIN_COLOR = "Blue";
@@ -60,5 +61,10 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
     @Override
     public Polygon getDebugOutline() {
         return takenArea;
+    }
+
+    @Override
+    public void updateFeatures(ShipFeatures features) {
+        features.adjustRotation(1);
     }
 }

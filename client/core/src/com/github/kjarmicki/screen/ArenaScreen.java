@@ -13,6 +13,7 @@ import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
+import com.github.kjarmicki.ship.ShipFeatures;
 
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class ArenaScreen extends ScreenAdapter {
         );
         this.chaseCamera = new ChaseCamera(viewport.getCamera());
         this.player = new Player(
-                new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, partsAssets),
+                new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, new ShipFeatures(), partsAssets),
                 controls
         );
         this.ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
