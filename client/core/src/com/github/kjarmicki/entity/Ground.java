@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.GunshipDeathmatch;
 
-public class Ground implements Entity {
+public class Ground {
     public static final String DEFAULT_SKIN = "asphalt.jpg";
     private final Sprite sprite;
     private final Vector2 position;
@@ -23,11 +23,6 @@ public class Ground implements Entity {
 
     public void draw(Batch batch) {
         sprite.draw(batch);
-    }
-
-    @Override
-    public Vector2 getCenterOfPosition() {
-        return new Vector2(position);
     }
 
     public Rectangle getBounds() {

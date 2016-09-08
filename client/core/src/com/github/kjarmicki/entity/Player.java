@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.camera.Observable;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debuggable;
 
-public class Player implements Debuggable, Entity {
+public class Player implements Debuggable, Observable {
     public static final float DEFAULT_PLAYER_X = 150;
     public static final float DEFAULT_PLAYER_Y = 150;
     private final Ship ship;

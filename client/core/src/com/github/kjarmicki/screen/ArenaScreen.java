@@ -33,17 +33,18 @@ public class ArenaScreen extends ScreenAdapter {
         this.controls = controls;
         this.debug = debug;
 
-        this.partsAssets = new PartsAssets(
+        partsAssets = new PartsAssets(
                 PartsAssets.DEFAULT_ATLAS,
                 PartsAssets.DEFAULT_COLORS,
                 PartsAssets.DEFAULT_PARTS_COUNT
         );
-        this.chaseCamera = new ChaseCamera(viewport.getCamera());
-        this.player = new Player(
+        chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
+        player = new Player(
                 new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, new ShipFeatures(), partsAssets),
                 controls
         );
-        this.ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
+        ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
+        chaseCamera.snapAt(player);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class ArenaScreen extends ScreenAdapter {
 
         player.update(delta);
         player.checkPlacementWithinBounds(ground.getBounds());
-        chaseCamera.lookAt(player);
+        chaseCamera.lookAt(player, delta);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
