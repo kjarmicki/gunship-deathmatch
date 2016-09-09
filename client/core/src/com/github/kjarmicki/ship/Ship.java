@@ -9,6 +9,7 @@ import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.ship.parts.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,17 +19,13 @@ public class Ship implements Debuggable {
     private float rotating;
 
     private CorePart core;
-    private NosePart nose;
-    private WeaponPart weapon;
-    private WingPart leftWing;
-    private WingPart rightWing;
 
     public Ship(float x, float y, ShipFeatures features, PartsAssets assets) {
         this.features = features;
         core = new BasicCorePart(x, y, assets.getPart(BasicCorePart.DEFAULT_SKIN_COLOR, BasicCorePart.DEFAULT_INDEX));
-        nose = new BasicNosePart(core.getNoseSlot(), core.getOrigin(), assets.getPart(BasicNosePart.DEFAULT_SKIN_COLOR, BasicNosePart.DEFAULT_INDEX));
-        leftWing = BasicWingPart.getLeftVariant(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_LEFT_INDEX));
-        rightWing = BasicWingPart.getRightVariant(core.getRightWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_RIGHT_INDEX));
+        core.mountSubpart("nose", new BasicNosePart(core.getNoseSlot(), core.getOrigin(), assets.getPart(BasicNosePart.DEFAULT_SKIN_COLOR, BasicNosePart.DEFAULT_INDEX)));
+        core.mountSubpart("left wing", BasicWingPart.getLeftVariant(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_LEFT_INDEX)));
+        core.mountSubpart("right wing", BasicWingPart.getRightVariant(core.getRightWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_RIGHT_INDEX)));
     }
 
     public void moveForwards(float delta) {
@@ -85,7 +82,7 @@ public class Ship implements Debuggable {
 
     @Override
     public Polygon getDebugOutline() {
-        return rightWing.getTakenArea();
+        return core.getTakenArea();
     }
 
     public Vector2 getCenter() {
@@ -121,7 +118,10 @@ public class Ship implements Debuggable {
     }
 
     private List<Part> allParts() {
-        return Arrays.asList(leftWing, rightWing, nose, core);
+        List<Part> parts = new ArrayList<>(core.getAllSubparts().values());
+        parts.add(core);
+        parts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());
+        return parts;
     }
 
     private float getRotation() {

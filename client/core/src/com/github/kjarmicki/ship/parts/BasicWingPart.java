@@ -64,6 +64,11 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
     }
 
     @Override
+    public int getZIndex() {
+        return 0;
+    }
+
+    @Override
     public void updateFeatures(ShipFeatures features) {
         features.adjustRotation(1f * condition / 100f);
     }

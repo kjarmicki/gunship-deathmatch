@@ -44,6 +44,11 @@ public class BasicNosePart extends GenericPart implements NosePart {
     }
 
     @Override
+    public int getZIndex() {
+        return 1;
+    }
+
+    @Override
     public void updateFeatures(ShipFeatures features) {
         features.adjustAcceleration(1);
     }

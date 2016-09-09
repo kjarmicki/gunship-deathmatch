@@ -5,6 +5,9 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.ship.ShipFeatures;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BasicCorePart extends GenericPart implements CorePart {
     public static final String DEFAULT_SKIN_COLOR = "Blue";
     public static final int DEFAULT_INDEX = 29;
@@ -64,6 +67,11 @@ public class BasicCorePart extends GenericPart implements CorePart {
     @Override
     public Vector2 getCenter() {
         return new Vector2(takenArea.getX() + WIDTH / 2, takenArea.getY() + HEIGHT / 2);
+    }
+
+    @Override
+    public int getZIndex() {
+        return 2;
     }
 
     @Override

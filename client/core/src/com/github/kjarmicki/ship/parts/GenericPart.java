@@ -6,10 +6,14 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class GenericPart implements Part {
     protected final Polygon takenArea;
     protected final TextureRegion skinRegion;
     protected float condition = 100f;
+    protected final Map<String, Part> subparts = new HashMap<>();
 
     public GenericPart(Polygon takenArea, TextureRegion skinRegion) {
         this.takenArea = takenArea;
@@ -40,6 +44,20 @@ public abstract class GenericPart implements Part {
 
     public void receiveDamage(float amount) {
         condition -= amount;
+    }
+
+    public void mountSubpart(String id, Part subpart) {
+        subparts.put(id, subpart);
+    }
+
+    public Map<String, Part> getAllSubparts() {
+        HashMap<String, Part> combined = new HashMap<>();
+        combined.putAll(subparts);
+        subparts.entrySet().stream().forEach(entry -> {
+            Part subpart = entry.getValue();
+            combined.putAll(subpart.getAllSubparts());
+        });
+        return combined;
     }
 
     public Vector2 withPosition(Vector2 base) {
