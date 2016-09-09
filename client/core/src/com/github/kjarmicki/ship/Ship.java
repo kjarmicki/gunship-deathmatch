@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.ship.parts.*;
 
@@ -50,9 +51,14 @@ public class Ship implements Debuggable {
         rotating -= delta * features.getRotation();
     }
 
-    public void update() {
-        features.reset();
-        allParts().stream().forEach(part -> part.updateFeatures(features));
+    public void update(Controls controls, float delta) {
+        if(controls.up()) moveForwards(delta);
+        if(controls.down()) moveBackwards(delta);
+        if(controls.left()) rotateLeft(delta);
+        if(controls.right()) rotateRight(delta);
+        applyMovement(delta);
+
+        updateFeatures();
     }
 
     public void applyMovement(float delta) {
@@ -70,6 +76,11 @@ public class Ship implements Debuggable {
             part.moveBy(movement);
             part.rotate(rotating);
         });
+    }
+
+    public void updateFeatures() {
+        features.reset();
+        allParts().stream().forEach(part -> part.updateFeatures(features));
     }
 
     @Override

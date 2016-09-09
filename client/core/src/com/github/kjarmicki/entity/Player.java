@@ -21,14 +21,7 @@ public class Player implements Debuggable, Observable {
     }
 
     public void update(float delta) {
-        ship.update();
-
-        if(controls.up()) ship.moveForwards(delta);
-        if(controls.down()) ship.moveBackwards(delta);
-        if(controls.left()) ship.rotateLeft(delta);
-        if(controls.right()) ship.rotateRight(delta);
-
-        ship.applyMovement(delta);
+        ship.update(controls, delta);
     }
 
     public void checkPlacementWithinBounds(Rectangle bounds) {
