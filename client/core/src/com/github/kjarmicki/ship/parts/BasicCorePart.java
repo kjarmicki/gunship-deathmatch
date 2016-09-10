@@ -76,7 +76,7 @@ public class BasicCorePart extends GenericPart implements CorePart {
 
     @Override
     public int getZIndex() {
-        return 2;
+        return 3;
     }
 
     @Override

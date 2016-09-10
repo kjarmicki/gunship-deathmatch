@@ -50,7 +50,7 @@ public class BasicNosePart extends GenericPart implements NosePart {
 
     @Override
     public int getZIndex() {
-        return 1;
+        return 2;
     }
 
     @Override

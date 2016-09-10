@@ -22,19 +22,22 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
     };
     public static final float WIDTH = 158f;
     public static final float HEIGHT = 185f;
+    public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(69, 30);
+    private final Vector2 engineSlot;
 
     public static WingPart getLeftVariant(Vector2 wingSlot, Vector2 origin, TextureRegion skinRegion) {
         Vector2 position = new Vector2(wingSlot.x - WIDTH, wingSlot.y - HEIGHT / 2);
-        return new BasicWingPart(position, origin, skinRegion, LEFT_VERTICES);
+        return new BasicWingPart(position, origin, skinRegion, LEFT_VERTICES, LEFT_ENGINE_SLOT);
     }
 
     public static WingPart getRightVariant(Vector2 wingSlot, Vector2 origin, TextureRegion skinRegion) {
         Vector2 position = new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2);
-        return new BasicWingPart(position, origin, skinRegion, makeRightVertices(LEFT_VERTICES));
+        return new BasicWingPart(position, origin, skinRegion, makeRightVertices(LEFT_VERTICES), makeRightVector(LEFT_ENGINE_SLOT));
     }
 
-    private BasicWingPart(Vector2 position, Vector2 origin, TextureRegion skinRegion, float[] vertices) {
+    private BasicWingPart(Vector2 position, Vector2 origin, TextureRegion skinRegion, float[] vertices, Vector2 engineSlot) {
         super(new Polygon(vertices), skinRegion);
+        this.engineSlot = engineSlot;
         takenArea.setPosition(position.x, position.y);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
     }
@@ -58,6 +61,10 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
         return inverted;
     }
 
+    private static Vector2 makeRightVector(Vector2 leftVector) {
+        return new Vector2(WIDTH - leftVector.x, leftVector.y);
+    }
+
     @Override
     public Polygon getDebugOutline() {
         return takenArea;
@@ -70,11 +77,16 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
 
     @Override
     public int getZIndex() {
-        return 0;
+        return 1;
     }
 
     @Override
     public void updateFeatures(ShipFeatures features) {
         features.adjustRotation(1f * condition / 100f);
+    }
+
+    @Override
+    public Vector2 getEngineSlot() {
+        return new Vector2(engineSlot);
     }
 }

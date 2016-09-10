@@ -22,8 +22,12 @@ public class Ship implements Debuggable {
         this.features = features;
         core = new BasicCorePart(x, y, assets.getPart(BasicCorePart.DEFAULT_SKIN_COLOR, BasicCorePart.DEFAULT_INDEX));
         core.mountSubpart("nose", new BasicNosePart(core.getNoseSlot(), core.getOrigin(), assets.getPart(BasicNosePart.DEFAULT_SKIN_COLOR, BasicNosePart.DEFAULT_INDEX)));
-        core.mountSubpart("left wing", BasicWingPart.getLeftVariant(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_LEFT_INDEX)));
-        core.mountSubpart("right wing", BasicWingPart.getRightVariant(core.getRightWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_RIGHT_INDEX)));
+
+        WingPart leftWing = BasicWingPart.getLeftVariant(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_LEFT_INDEX));
+        WingPart rightWing = BasicWingPart.getRightVariant(core.getRightWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_RIGHT_INDEX));
+        core.mountSubpart("left wing", leftWing);
+        core.mountSubpart("right wing", rightWing);
+        leftWing.mountSubpart("left engine", new BasicEnginePart(leftWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX)));
     }
 
     public void moveForwards(float delta) {
