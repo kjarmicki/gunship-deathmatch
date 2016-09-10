@@ -46,8 +46,12 @@ public abstract class GenericPart implements Part {
         condition -= amount;
     }
 
-    public void mountSubpart(String id, Part subpart) {
-        subparts.put(id, subpart);
+    public boolean isDestroyed() {
+        return condition <= 0;
+    }
+
+    public void mountSubpart(String slot, Part subpart) {
+        subparts.put(slot, subpart);
     }
 
     public Map<String, Part> getAllSubparts() {
@@ -58,6 +62,10 @@ public abstract class GenericPart implements Part {
             combined.putAll(subpart.getAllSubparts());
         });
         return combined;
+    }
+
+    public Map<String, Part> getDirectSubparts() {
+        return subparts;
     }
 
     public Vector2 withPosition(Vector2 base) {

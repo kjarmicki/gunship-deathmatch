@@ -9,9 +9,7 @@ import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.debugging.Debuggable;
 import com.github.kjarmicki.ship.parts.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Ship implements Debuggable {
     private final Vector2 velocity = new Vector2();
@@ -111,10 +109,39 @@ public class Ship implements Debuggable {
 
                     // damage part that went off
                     outsidePart.receiveDamage(damageFromCollision(shift));
+                    if(outsidePart.isDestroyed()) {
+                        removeDestroyedPart(outsidePart);
+                    }
 
                     // translate ship back to the area
                     allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
                 });
+    }
+
+    private void removeDestroyedPart(Part part) {
+        if(part.isCritical()) {
+            System.out.println("critical part destroyed = ship destroyed");
+            return;
+        }
+        // part is not critical, just remove it
+        removePart(part, core);
+    }
+
+    private void removePart(Part lookedFor, Part parent) {
+        Map<String, Part> subparts = parent.getDirectSubparts();
+
+        // search part at current level
+        for(Map.Entry<String, Part> entry: subparts.entrySet()) {
+            if(entry.getValue().equals(lookedFor)) {
+                subparts.remove(entry.getKey());
+                return;
+            }
+        }
+
+        // dig into subparts to find a part
+        for(Map.Entry<String, Part> entry: subparts.entrySet()) {
+            removePart(lookedFor, entry.getValue());
+        }
     }
 
     private List<Part> allParts() {
@@ -138,7 +165,7 @@ public class Ship implements Debuggable {
     }
 
     private float damageFromCollision(Vector2 collision) {
-        return (Math.round(Math.abs(collision.x)) + Math.round(Math.abs(collision.y)));
+        return (Math.round(Math.abs(collision.x)) + Math.round(Math.abs(collision.y))) * 10;
     }
 
 }

@@ -44,6 +44,11 @@ public class BasicNosePart extends GenericPart implements NosePart {
     }
 
     @Override
+    public boolean isCritical() {
+        return true;
+    }
+
+    @Override
     public int getZIndex() {
         return 1;
     }

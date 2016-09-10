@@ -64,6 +64,11 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
     }
 
     @Override
+    public boolean isCritical() {
+        return true;
+    }
+
+    @Override
     public int getZIndex() {
         return 0;
     }

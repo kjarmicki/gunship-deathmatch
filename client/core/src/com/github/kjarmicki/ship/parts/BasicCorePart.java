@@ -70,6 +70,11 @@ public class BasicCorePart extends GenericPart implements CorePart {
     }
 
     @Override
+    public boolean isCritical() {
+        return true;
+    }
+
+    @Override
     public int getZIndex() {
         return 2;
     }

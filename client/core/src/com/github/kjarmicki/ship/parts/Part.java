@@ -13,8 +13,11 @@ public interface Part {
     void moveBy(Vector2 movement);
     void rotate(float degrees);
     void receiveDamage(float amount);
-    void mountSubpart(String id, Part subpart);
+    boolean isDestroyed();
+    boolean isCritical();
+    void mountSubpart(String slot, Part subpart);
     Map<String, Part> getAllSubparts();
+    Map<String, Part> getDirectSubparts();
     int getZIndex();
     Vector2 outsideBounds(Rectangle bounds);
     void draw(Batch batch);

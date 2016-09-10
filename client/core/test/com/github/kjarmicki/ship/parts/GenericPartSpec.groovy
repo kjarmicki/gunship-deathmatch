@@ -3,6 +3,7 @@ package com.github.kjarmicki.ship.parts
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.github.kjarmicki.ship.ShipFeatures
 import spock.lang.Specification
 
 class GenericPartSpec extends Specification {
@@ -35,6 +36,21 @@ class GenericPartSpec extends Specification {
             @Override
             float getHeight() {
                 return null
+            }
+
+            @Override
+            boolean isCritical() {
+                return false
+            }
+
+            @Override
+            int getZIndex() {
+                return 0
+            }
+
+            @Override
+            void updateFeatures(ShipFeatures features) {
+
             }
         }
     }
