@@ -48,7 +48,6 @@ project(":desktop") {
     }
 }
 
-/*
 project(":android") {
     apply plugin: "android"
 
@@ -71,7 +70,6 @@ project(":android") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
     }
 }
-*/
 
 project(":html") {
     apply plugin: "gwt"
