@@ -3,10 +3,10 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.debugging.Debuggable;
+import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
 
-public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
+public class BasicWingPart extends GenericPart implements WingPart {
     public static final String DEFAULT_SKIN_COLOR = "Blue";
     public static final int DEFAULT_LEFT_INDEX = 18;
     public static final int DEFAULT_RIGHT_INDEX = 19;
@@ -33,10 +33,7 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
     public static WingPart getRightVariant(Vector2 wingSlot, Vector2 origin, TextureRegion skinRegion) {
         Vector2 position = new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2);
         Vector2 engineSlot = makeRightVector(LEFT_ENGINE_SLOT);
-        System.out.println(engineSlot.x);
-        System.out.println(wingSlot.x);
-//        engineSlot.x += wingSlot.x;
-        engineSlot.x = 273; // no idea yet how to get this.
+        engineSlot.x += wingSlot.x;
         return new BasicWingPart(position, origin, skinRegion, makeRightVertices(LEFT_VERTICES), engineSlot);
     }
 
@@ -68,11 +65,6 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
 
     private static Vector2 makeRightVector(Vector2 leftVector) {
         return new Vector2(WIDTH - leftVector.x, leftVector.y);
-    }
-
-    @Override
-    public Polygon getDebugOutline() {
-        return takenArea;
     }
 
     @Override

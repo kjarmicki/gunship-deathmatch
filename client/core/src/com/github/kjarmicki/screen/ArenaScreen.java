@@ -24,14 +24,12 @@ public class ArenaScreen extends ScreenAdapter {
     private final Ground ground;
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
-    private final Optional<Debugger> debug;
     private final PartsAssets partsAssets;
 
-    public ArenaScreen(Viewport viewport, Batch batch, Controls controls, Optional<Debugger> debug) {
+    public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
         this.viewport = viewport;
         this.batch = batch;
         this.controls = controls;
-        this.debug = debug;
 
         partsAssets = new PartsAssets(
                 PartsAssets.DEFAULT_ATLAS,
@@ -65,10 +63,8 @@ public class ArenaScreen extends ScreenAdapter {
         player.draw(batch);
         batch.end();
 
-        debug.ifPresent(debug -> {
-            debug.setProjection(viewport.getCamera().combined);
-            debug.drawOutline(player);
-        });
+        Debugger.setProjection(viewport.getCamera().combined);
+        Debugger.render();
     }
 
     @Override

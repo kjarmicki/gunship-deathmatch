@@ -1,17 +1,16 @@
 package com.github.kjarmicki.ship;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.controls.Controls;
-import com.github.kjarmicki.debugging.Debuggable;
+import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.parts.*;
 
 import java.util.*;
 
-public class Ship implements Debuggable {
+public class Ship {
     private final Vector2 velocity = new Vector2();
     private final ShipFeatures features;
     private float rotating;
@@ -25,10 +24,18 @@ public class Ship implements Debuggable {
 
         WingPart leftWing = BasicWingPart.getLeftVariant(core.getLeftWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_LEFT_INDEX));
         WingPart rightWing = BasicWingPart.getRightVariant(core.getRightWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_RIGHT_INDEX));
+        EnginePart leftEngine = BasicEnginePart.getLeftVariant(leftWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX));
+        EnginePart rightEngine = BasicEnginePart.getRightVariant(rightWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX));
         core.mountSubpart("left wing", leftWing);
         core.mountSubpart("right wing", rightWing);
-        leftWing.mountSubpart("left engine", BasicEnginePart.getLeftVariant(leftWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX)));
-        rightWing.mountSubpart("right engine", BasicEnginePart.getRightVariant(rightWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX)));
+        leftWing.mountSubpart("left engine", leftEngine);
+        rightWing.mountSubpart("right engine", rightEngine);
+
+        // debug
+        Debugger.polygon("left wing", leftWing.getTakenArea());
+        Debugger.polygon("right wing", rightWing.getTakenArea());
+        Debugger.polygon("left engine", leftEngine.getTakenArea());
+        Debugger.polygon("right engine", rightEngine.getTakenArea());
     }
 
     public void moveForwards(float delta) {
@@ -81,11 +88,6 @@ public class Ship implements Debuggable {
     public void updateFeatures() {
         features.reset();
         allParts().stream().forEach(part -> part.updateFeatures(features));
-    }
-
-    @Override
-    public Polygon getDebugOutline() {
-        return core.getTakenArea();
     }
 
     public Vector2 getCenter() {
