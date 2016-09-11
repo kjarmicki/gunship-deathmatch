@@ -27,7 +27,8 @@ public class Ship implements Debuggable {
         WingPart rightWing = BasicWingPart.getRightVariant(core.getRightWingSlot(), core.getOrigin(), assets.getPart(BasicWingPart.DEFAULT_SKIN_COLOR, BasicWingPart.DEFAULT_RIGHT_INDEX));
         core.mountSubpart("left wing", leftWing);
         core.mountSubpart("right wing", rightWing);
-        leftWing.mountSubpart("left engine", new BasicEnginePart(leftWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX)));
+        leftWing.mountSubpart("left engine", BasicEnginePart.getLeftVariant(leftWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX)));
+        rightWing.mountSubpart("right engine", BasicEnginePart.getRightVariant(rightWing.getEngineSlot(), core.getOrigin(), assets.getPart(BasicEnginePart.DEFAULT_SKIN_COLOR, BasicEnginePart.DEFAULT_INDEX)));
     }
 
     public void moveForwards(float delta) {

@@ -32,7 +32,12 @@ public class BasicWingPart extends GenericPart implements WingPart, Debuggable {
 
     public static WingPart getRightVariant(Vector2 wingSlot, Vector2 origin, TextureRegion skinRegion) {
         Vector2 position = new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2);
-        return new BasicWingPart(position, origin, skinRegion, makeRightVertices(LEFT_VERTICES), makeRightVector(LEFT_ENGINE_SLOT));
+        Vector2 engineSlot = makeRightVector(LEFT_ENGINE_SLOT);
+        System.out.println(engineSlot.x);
+        System.out.println(wingSlot.x);
+//        engineSlot.x += wingSlot.x;
+        engineSlot.x = 273; // no idea yet how to get this.
+        return new BasicWingPart(position, origin, skinRegion, makeRightVertices(LEFT_VERTICES), engineSlot);
     }
 
     private BasicWingPart(Vector2 position, Vector2 origin, TextureRegion skinRegion, float[] vertices, Vector2 engineSlot) {
