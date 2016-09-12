@@ -33,7 +33,6 @@ public class BasicWingPart extends GenericPart implements WingPart {
     public static WingPart getRightVariant(Vector2 wingSlot, Vector2 origin, TextureRegion skinRegion) {
         Vector2 position = new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2);
         Vector2 engineSlot = makeRightVector(LEFT_ENGINE_SLOT);
-        engineSlot.x += wingSlot.x;
         return new BasicWingPart(position, origin, skinRegion, makeRightVertices(LEFT_VERTICES), engineSlot);
     }
 
@@ -84,6 +83,6 @@ public class BasicWingPart extends GenericPart implements WingPart {
 
     @Override
     public Vector2 getEngineSlot() {
-        return new Vector2(engineSlot);
+        return withPosition(engineSlot);
     }
 }

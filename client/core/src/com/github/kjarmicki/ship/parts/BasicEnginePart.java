@@ -39,12 +39,12 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     public static final float HEIGHT = 168f;
 
     public static BasicEnginePart getLeftVariant(Vector2 engineSlot, Vector2 origin, TextureRegion skinRegion) {
-        Vector2 position = new Vector2(engineSlot.x + WIDTH / 2, engineSlot.y + HEIGHT / 2);
+        Vector2 position = new Vector2(engineSlot.x, engineSlot.y - 40);
         return new BasicEnginePart(position, origin, skinRegion);
     }
 
     public static BasicEnginePart getRightVariant(Vector2 engineSlot, Vector2 origin, TextureRegion skinRegion) {
-        Vector2 position = new Vector2(engineSlot.x - WIDTH / 2, engineSlot.y + HEIGHT / 2);
+        Vector2 position = new Vector2(engineSlot.x - WIDTH, engineSlot.y - 40);
         return new BasicEnginePart(position, origin, skinRegion);
     }
 
