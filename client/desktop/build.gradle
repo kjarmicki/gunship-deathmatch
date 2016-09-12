@@ -25,6 +25,15 @@ task dist(type: Jar) {
     }
 }
 
+task debug(dependsOn: classes, type: JavaExec) {
+    environment 'DEBUG_MODE', 'true'
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
+}
+
 dist.dependsOn classes
 
 eclipse {
