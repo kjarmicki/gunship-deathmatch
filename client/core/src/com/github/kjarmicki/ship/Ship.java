@@ -14,6 +14,7 @@ public class Ship {
     private final Vector2 velocity = new Vector2();
     private final ShipFeatures features;
     private float rotating;
+    private boolean isDestroyed = false;
 
     private CorePart core;
 
@@ -79,12 +80,14 @@ public class Ship {
     }
 
     public void update(Controls controls, float delta) {
-        if(controls.up()) moveForwards(delta);
-        if(controls.down()) moveBackwards(delta);
-        if(controls.left()) rotateLeft(delta);
-        if(controls.right()) rotateRight(delta);
-        applyMovement(delta);
+        if(!isDestroyed) {
+            if(controls.up()) moveForwards(delta);
+            if(controls.down()) moveBackwards(delta);
+            if(controls.left()) rotateLeft(delta);
+            if(controls.right()) rotateRight(delta);
+        }
 
+        applyMovement(delta);
         updateFeatures();
     }
 
@@ -147,10 +150,8 @@ public class Ship {
 
     private void removeDestroyedPart(Part part) {
         if(part.isCritical()) {
-            System.out.println("critical part destroyed = ship destroyed");
-            return;
+            isDestroyed = true;
         }
-        // part is not critical, just remove it
         removePart(part, core);
     }
 
