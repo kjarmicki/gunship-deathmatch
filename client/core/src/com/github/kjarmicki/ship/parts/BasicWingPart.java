@@ -22,6 +22,8 @@ public class BasicWingPart extends GenericPart implements WingPart {
     };
     public static final float WIDTH = 158f;
     public static final float HEIGHT = 185f;
+    public static final int Z_INDEX = 1;
+    public static final boolean IS_CRITICAL = true;
     public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(69, 30);
     private final Vector2 engineSlot;
 
@@ -68,12 +70,12 @@ public class BasicWingPart extends GenericPart implements WingPart {
 
     @Override
     public boolean isCritical() {
-        return true;
+        return IS_CRITICAL;
     }
 
     @Override
     public int getZIndex() {
-        return 1;
+        return Z_INDEX;
     }
 
     @Override

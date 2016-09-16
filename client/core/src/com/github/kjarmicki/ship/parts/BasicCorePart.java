@@ -23,6 +23,8 @@ public class BasicCorePart extends GenericPart implements CorePart {
     };
     public static final float WIDTH = 127f;
     public static final float HEIGHT = 149f;
+    public static final int Z_INDEX = 3;
+    public static final boolean IS_CRITICAL = false;
     public static final Vector2 ORIGIN = new Vector2(63f, 102f);
     public static final Vector2 NOSE_SLOT = new Vector2(63f, 110f);
     public static final Vector2 LEFT_WING_SLOT = new Vector2(55f, 92f);
@@ -71,12 +73,12 @@ public class BasicCorePart extends GenericPart implements CorePart {
 
     @Override
     public boolean isCritical() {
-        return true;
+        return IS_CRITICAL;
     }
 
     @Override
     public int getZIndex() {
-        return 3;
+        return Z_INDEX;
     }
 
     @Override

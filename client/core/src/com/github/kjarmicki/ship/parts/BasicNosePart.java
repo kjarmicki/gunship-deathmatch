@@ -21,6 +21,8 @@ public class BasicNosePart extends GenericPart implements NosePart {
     };
     public static final float WIDTH = 108f;
     public static final float HEIGHT = 116f;
+    public static final int Z_INDEX = 2;
+    public static final boolean IS_CRITICAL = true;
 
     public BasicNosePart(Vector2 noseSlot, Vector2 origin, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
@@ -45,12 +47,12 @@ public class BasicNosePart extends GenericPart implements NosePart {
 
     @Override
     public boolean isCritical() {
-        return true;
+        return IS_CRITICAL;
     }
 
     @Override
     public int getZIndex() {
-        return 2;
+        return Z_INDEX;
     }
 
     @Override

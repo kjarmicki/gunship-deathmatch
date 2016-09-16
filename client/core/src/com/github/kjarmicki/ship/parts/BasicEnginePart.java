@@ -37,6 +37,8 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     };
     public static final float WIDTH = 84f;
     public static final float HEIGHT = 168f;
+    public static final int Z_INDEX = 0;
+    public static final boolean IS_CRITICAL = false;
 
     public static BasicEnginePart getLeftVariant(Vector2 engineSlot, Vector2 origin, TextureRegion skinRegion) {
         Vector2 position = new Vector2(engineSlot.x, engineSlot.y - 40);
@@ -66,12 +68,12 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
 
     @Override
     public boolean isCritical() {
-        return false;
+        return IS_CRITICAL;
     }
 
     @Override
     public int getZIndex() {
-        return 0;
+        return Z_INDEX;
     }
 
     @Override
