@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.camera.ChaseCamera;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.entity.DumbEnemy;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.ship.Ship;
@@ -21,6 +22,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
     private final Controls controls;
     private final Player player;
+    private final DumbEnemy enemy;
     private final Ground ground;
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
@@ -41,6 +43,9 @@ public class ArenaScreen extends ScreenAdapter {
                 new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, new ShipFeatures(), partsAssets),
                 controls
         );
+        enemy = new DumbEnemy(
+                new Ship(DumbEnemy.DEFAULT_ENEMY_X, DumbEnemy.DEFAULT_ENEMY_Y, new ShipFeatures(), partsAssets)
+        );
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
         chaseCamera.snapAtNextObservable();
     }
@@ -53,7 +58,11 @@ public class ArenaScreen extends ScreenAdapter {
 
 
         player.update(delta);
+        enemy.update(delta);
         player.checkPlacementWithinBounds(ground.getBounds());
+        enemy.checkPlacementWithinBounds(ground.getBounds());
+        player.checkCollisionWithOtherShip(enemy.getShip());
+        enemy.checkCollisionWithOtherShip(player.getShip());
         chaseCamera.lookAt(player, delta);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -61,6 +70,7 @@ public class ArenaScreen extends ScreenAdapter {
         batch.begin();
         ground.draw(batch);
         player.draw(batch);
+        enemy.draw(batch);
         batch.end();
 
         Debugger.setProjection(viewport.getCamera().combined);

@@ -20,6 +20,7 @@ public interface Part {
     Map<String, Part> getDirectSubparts();
     int getZIndex();
     Vector2 outsideBounds(Rectangle bounds);
+    Vector2 collisionVector(Part otherPart);
     void draw(Batch batch);
     void updateFeatures(ShipFeatures features);
 }

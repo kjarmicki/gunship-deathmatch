@@ -11,6 +11,7 @@ import com.github.kjarmicki.ship.parts.*;
 import java.util.*;
 
 public class Ship {
+    private static final Vector2 ZERO = new Vector2(0, 0);
     private final Vector2 velocity = new Vector2();
     private final ShipFeatures features;
     private float rotating;
@@ -53,10 +54,10 @@ public class Ship {
         rightWing.mountSubpart("right engine", rightEngine);
 
         // debug
-        Debugger.polygon("left wing", leftWing.getTakenArea());
-        Debugger.polygon("right wing", rightWing.getTakenArea());
-        Debugger.polygon("left engine", leftEngine.getTakenArea());
-        Debugger.polygon("right engine", rightEngine.getTakenArea());
+//        Debugger.polygon("left wing", leftWing.getTakenArea());
+//        Debugger.polygon("right wing", rightWing.getTakenArea());
+//        Debugger.polygon("left engine", leftEngine.getTakenArea());
+//        Debugger.polygon("right engine", rightEngine.getTakenArea());
     }
 
     public void moveForwards(float delta) {
@@ -79,14 +80,16 @@ public class Ship {
         rotating -= delta * features.getRotation();
     }
 
-    public void update(Controls controls, float delta) {
+    public void control(Controls controls, float delta) {
         if(!isDestroyed) {
             if(controls.up()) moveForwards(delta);
             if(controls.down()) moveBackwards(delta);
             if(controls.left()) rotateLeft(delta);
             if(controls.right()) rotateRight(delta);
         }
+    }
 
+    public void update(float delta) {
         applyMovement(delta);
         updateFeatures();
     }
@@ -125,9 +128,8 @@ public class Ship {
 
     // check if ship went out of arena bounds
     public void checkPlacementWithinBounds(Rectangle bounds) {
-        Vector2 zero = new Vector2(0, 0);
         allParts().stream()
-                .filter(part -> !part.outsideBounds(bounds).equals(zero))
+                .filter(part -> !part.outsideBounds(bounds).equals(ZERO))
                 .findFirst()
                 .ifPresent(outsidePart -> {
                     Vector2 shift = outsidePart.outsideBounds(bounds);
@@ -138,14 +140,43 @@ public class Ship {
                     rotating = rebound(rotating);
 
                     // damage part that went off
-                    outsidePart.receiveDamage(damageFromCollision(shift));
-                    if(outsidePart.isDestroyed()) {
+                    outsidePart.receiveDamage(shift.len());
+                    if (outsidePart.isDestroyed()) {
                         removeDestroyedPart(outsidePart);
                     }
 
                     // translate ship back to the area
                     allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
                 });
+    }
+
+    public void checkCollisionWithOtherShip(Ship other) {
+        allParts().stream().forEach(myPart -> {
+            other.allParts().stream()
+                    .filter(foreignPart -> !myPart.collisionVector(foreignPart).equals(ZERO))
+                    .findFirst()
+                    .ifPresent(collidingForeignPart -> {
+                        Vector2 shift = myPart.collisionVector(collidingForeignPart);
+
+                        other.bump(velocity);
+                        bump(other.getVelocity());
+
+                        velocity.x = rebound(velocity.x);
+                        velocity.y = rebound(velocity.y);
+                        rotating = rebound(rotating);
+
+                        allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
+                    });
+        });
+    }
+
+    public void bump(Vector2 objectVelocity) {
+        velocity.x += objectVelocity.x;
+        velocity.y += objectVelocity.y;
+    }
+
+    public Vector2 getVelocity() {
+        return velocity;
     }
 
     private void removeDestroyedPart(Part part) {
@@ -191,9 +222,4 @@ public class Ship {
         float rotation = getRotation();
         return new Vector2(-(float)Math.sin(Math.toRadians(rotation)), (float)Math.cos(Math.toRadians(rotation)));
     }
-
-    private float damageFromCollision(Vector2 collision) {
-        return (Math.round(Math.abs(collision.x)) + Math.round(Math.abs(collision.y))) * 10;
-    }
-
 }

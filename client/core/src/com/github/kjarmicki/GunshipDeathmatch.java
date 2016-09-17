@@ -13,7 +13,7 @@ public class GunshipDeathmatch extends Game {
     public static final int WORLD_WIDTH = 3000;
     public static final int WORLD_HEIGHT = 3000;
 
-    private final Viewport viewport = new FitViewport(GunshipDeathmatch.WORLD_WIDTH / 4, GunshipDeathmatch.WORLD_HEIGHT / 4);
+    private final Viewport viewport = new FitViewport(GunshipDeathmatch.WORLD_WIDTH / 3, GunshipDeathmatch.WORLD_HEIGHT / 3);
     private final Controls controls = new Keyboard();
 
 	@Override

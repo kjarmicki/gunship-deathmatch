@@ -2,10 +2,13 @@ package com.github.kjarmicki.ship.parts;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.debugging.Debugger;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,5 +89,18 @@ public abstract class GenericPart implements Part {
             if(y > bounds.getHeight()) vectorY = bounds.getHeight() - y;
         }
         return new Vector2(vectorX, vectorY);
+    }
+
+    public Vector2 collisionVector(Part otherPart) {
+        Polygon intersection = new Polygon();
+        if(Intersector.intersectPolygons(otherPart.getTakenArea(), getTakenArea(), intersection)) {
+            Rectangle thisBounds = getTakenArea().getBoundingRectangle();
+            Rectangle otherBounds = otherPart.getTakenArea().getBoundingRectangle();
+            Rectangle intersectionBounds = intersection.getBoundingRectangle();
+            boolean xDiff = (thisBounds.getX() + thisBounds.getWidth()) - (otherBounds.getX() + otherBounds.getWidth()) > 0;
+            boolean yDiff = (thisBounds.getY() + thisBounds.getHeight()) - (otherBounds.getY() + otherBounds.getHeight()) > 0;
+            return new Vector2(intersectionBounds.getWidth() * (xDiff ? 1 : -1), intersectionBounds.getHeight() * (yDiff ? 1 : -1));
+        }
+        return new Vector2(0, 0);
     }
 }

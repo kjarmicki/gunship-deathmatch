@@ -20,7 +20,8 @@ public class Player implements Observable {
     }
 
     public void update(float delta) {
-        ship.update(controls, delta);
+        ship.control(controls, delta);
+        ship.update(delta);
     }
 
     public void checkPlacementWithinBounds(Rectangle bounds) {
@@ -29,6 +30,14 @@ public class Player implements Observable {
 
     public void draw(Batch batch) {
         ship.draw(batch);
+    }
+
+    public void checkCollisionWithOtherShip(Ship other) {
+        ship.checkCollisionWithOtherShip(other);
+    }
+
+    public Ship getShip() {
+        return ship;
     }
 
     @Override

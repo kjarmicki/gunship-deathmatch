@@ -26,7 +26,7 @@ public class PartsAssets implements Disposable, AssetErrorListener {
         this.assetManager = new AssetManager();
         this.cachedRegions = new HashMap<>();
         initAssetManager(assetManager, atlas);
-        initTextureRegions((TextureAtlas) assetManager.get(atlas), colors, count);
+        initTextureRegions(assetManager.get(atlas), colors, count);
     }
 
     private void initAssetManager(AssetManager am, String atlas) {
