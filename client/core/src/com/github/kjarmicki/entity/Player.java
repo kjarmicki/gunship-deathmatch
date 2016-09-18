@@ -9,8 +9,8 @@ import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.ship.Ship;
 
 public class Player implements Observable {
-    public static final float DEFAULT_PLAYER_X = 150;
-    public static final float DEFAULT_PLAYER_Y = 150;
+    public static final float DEFAULT_X = 150;
+    public static final float DEFAULT_Y = 150;
     private final Ship ship;
     private final Controls controls;
 

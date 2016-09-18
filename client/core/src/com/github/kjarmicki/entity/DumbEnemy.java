@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.ship.Ship;
 
 public class DumbEnemy {
-    public static final float DEFAULT_ENEMY_X = 500;
-    public static final float DEFAULT_ENEMY_Y = 500;
+    public static final float DEFAULT_X = 500;
+    public static final float DEFAULT_Y = 500;
     private final Ship ship;
 
     public DumbEnemy(Ship ship) {
@@ -23,10 +23,6 @@ public class DumbEnemy {
 
     public void draw(Batch batch) {
         ship.draw(batch);
-    }
-
-    public void checkCollisionWithOtherShip(Ship other) {
-        ship.checkCollisionWithOtherShip(other);
     }
 
     public Ship getShip() {

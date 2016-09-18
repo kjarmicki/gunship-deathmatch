@@ -16,8 +16,6 @@ import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
 
-import java.util.Optional;
-
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
     private final Controls controls;
@@ -40,11 +38,11 @@ public class ArenaScreen extends ScreenAdapter {
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
         player = new Player(
-                new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, new ShipFeatures(), PartsAssets.SkinColor.BLUE, partsAssets),
+                new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), PartsAssets.SkinColor.BLUE, partsAssets),
                 controls
         );
         enemy = new DumbEnemy(
-                new Ship(DumbEnemy.DEFAULT_ENEMY_X, DumbEnemy.DEFAULT_ENEMY_Y, new ShipFeatures(), PartsAssets.SkinColor.RED, partsAssets)
+                new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), PartsAssets.SkinColor.RED, partsAssets)
         );
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
         chaseCamera.snapAtNextObservable();
