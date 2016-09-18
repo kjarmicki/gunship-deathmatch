@@ -7,11 +7,11 @@ import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.parts.*;
+import com.github.kjarmicki.util.Points;
 
 import java.util.*;
 
 public class Ship {
-    private static final Vector2 ZERO = new Vector2(0, 0);
     private final Vector2 velocity = new Vector2();
     private final ShipFeatures features;
     private float rotating;
@@ -129,7 +129,7 @@ public class Ship {
     // check if ship went out of arena bounds
     public void checkPlacementWithinBounds(Rectangle bounds) {
         allParts().stream()
-                .filter(part -> !part.outsideBounds(bounds).equals(ZERO))
+                .filter(part -> !part.outsideBounds(bounds).equals(Points.ZERO))
                 .findFirst()
                 .ifPresent(outsidePart -> {
                     Vector2 shift = outsidePart.outsideBounds(bounds);
@@ -153,7 +153,7 @@ public class Ship {
     public void checkCollisionWithOtherShip(Ship other) {
         allParts().stream().forEach(myPart -> {
             other.allParts().stream()
-                    .filter(foreignPart -> !myPart.collisionVector(foreignPart).equals(ZERO))
+                    .filter(foreignPart -> !myPart.collisionVector(foreignPart).equals(Points.ZERO))
                     .findFirst()
                     .ifPresent(collidingForeignPart -> {
                         Vector2 shift = myPart.collisionVector(collidingForeignPart);

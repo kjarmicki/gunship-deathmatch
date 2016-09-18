@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.util.Points;
 
 public class BasicWingPart extends GenericPart implements WingPart {
     public static final int DEFAULT_LEFT_INDEX = 18;
@@ -33,8 +34,8 @@ public class BasicWingPart extends GenericPart implements WingPart {
 
     public static WingPart getRightVariant(Vector2 wingSlot, Vector2 origin, TextureRegion skinRegion) {
         Vector2 position = new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2);
-        Vector2 engineSlot = makeRightVector(LEFT_ENGINE_SLOT);
-        return new BasicWingPart(position, origin, skinRegion, makeRightVertices(LEFT_VERTICES), engineSlot);
+        Vector2 engineSlot = Points.makeRightVector(LEFT_ENGINE_SLOT, WIDTH);
+        return new BasicWingPart(position, origin, skinRegion, Points.makeRightVertices(LEFT_VERTICES, WIDTH), engineSlot);
     }
 
     private BasicWingPart(Vector2 position, Vector2 origin, TextureRegion skinRegion, float[] vertices, Vector2 engineSlot) {
@@ -52,19 +53,6 @@ public class BasicWingPart extends GenericPart implements WingPart {
     @Override
     public float getHeight() {
         return HEIGHT;
-    }
-
-    private static float[] makeRightVertices(float[] vertices) {
-        float[] inverted = new float[vertices.length];
-        for(int i = 0; i < vertices.length; i++) {
-            if(i %2 != 0) inverted[i] = vertices[i];
-            else inverted[i] = WIDTH - vertices[i];
-        }
-        return inverted;
-    }
-
-    private static Vector2 makeRightVector(Vector2 leftVector) {
-        return new Vector2(WIDTH - leftVector.x, leftVector.y);
     }
 
     @Override
