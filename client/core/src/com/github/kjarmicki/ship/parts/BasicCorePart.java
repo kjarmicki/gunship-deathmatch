@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BasicCorePart extends GenericPart implements CorePart {
-    public static final String DEFAULT_SKIN_COLOR = "Blue";
     public static final int DEFAULT_INDEX = 29;
     private static final float[] VERTICES = new float[] {
             121,    149,

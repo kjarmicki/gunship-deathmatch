@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.ship.ShipFeatures;
 
 public class BasicNosePart extends GenericPart implements NosePart {
-    public static final String DEFAULT_SKIN_COLOR = "Blue";
     public static final int DEFAULT_INDEX = 26;
     private static final float[] VERTICES = new float[] {
             30,     0,

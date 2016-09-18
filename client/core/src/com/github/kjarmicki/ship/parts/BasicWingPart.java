@@ -7,7 +7,6 @@ import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
 
 public class BasicWingPart extends GenericPart implements WingPart {
-    public static final String DEFAULT_SKIN_COLOR = "Blue";
     public static final int DEFAULT_LEFT_INDEX = 18;
     public static final int DEFAULT_RIGHT_INDEX = 19;
     private static final float[] LEFT_VERTICES = new float[] {

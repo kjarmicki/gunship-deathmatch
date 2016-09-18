@@ -35,16 +35,16 @@ public class ArenaScreen extends ScreenAdapter {
 
         partsAssets = new PartsAssets(
                 PartsAssets.DEFAULT_ATLAS,
-                PartsAssets.DEFAULT_COLORS,
+                PartsAssets.SkinColor.asStringList(),
                 PartsAssets.DEFAULT_PARTS_COUNT
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
         player = new Player(
-                new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, new ShipFeatures(), partsAssets),
+                new Ship(Player.DEFAULT_PLAYER_X, Player.DEFAULT_PLAYER_Y, new ShipFeatures(), PartsAssets.SkinColor.BLUE, partsAssets),
                 controls
         );
         enemy = new DumbEnemy(
-                new Ship(DumbEnemy.DEFAULT_ENEMY_X, DumbEnemy.DEFAULT_ENEMY_Y, new ShipFeatures(), partsAssets)
+                new Ship(DumbEnemy.DEFAULT_ENEMY_X, DumbEnemy.DEFAULT_ENEMY_Y, new ShipFeatures(), PartsAssets.SkinColor.RED, partsAssets)
         );
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
         chaseCamera.snapAtNextObservable();

@@ -8,7 +8,6 @@ import com.github.kjarmicki.ship.ShipFeatures;
 
 
 public class BasicEnginePart extends GenericPart implements EnginePart {
-    public static final String DEFAULT_SKIN_COLOR = "Blue";
     public static final int DEFAULT_INDEX = 1;
     private static final float[] VERTICES = new float[] {
             24, 4,

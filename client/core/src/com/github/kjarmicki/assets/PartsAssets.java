@@ -14,10 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
+
 public class PartsAssets implements Disposable, AssetErrorListener {
     public static final String NAME = PartsAssets.class.getName();
     public static final String DEFAULT_ATLAS = "sprites/parts.pack.atlas";
-    public static final List<String> DEFAULT_COLORS = Arrays.asList("Blue", "Green", "Orange", "Red");
     public static final int DEFAULT_PARTS_COUNT = 50;
     private final AssetManager assetManager;
     private final Map<String, TextureRegion> cachedRegions;
@@ -44,8 +45,8 @@ public class PartsAssets implements Disposable, AssetErrorListener {
         });
     }
 
-    public TextureRegion getPart(String color, int index) {
-        PartKey key = new PartKey(color, index);
+    public TextureRegion getPart(SkinColor color, int index) {
+        PartKey key = new PartKey(color.toString(), index);
         return cachedRegions.get(key.toString());
     }
 
@@ -57,6 +58,31 @@ public class PartsAssets implements Disposable, AssetErrorListener {
     @Override
     public void dispose() {
         assetManager.dispose();
+    }
+
+    public enum SkinColor {
+        BLUE("Blue"),
+        GREEN("Green"),
+        ORANGE("Orange"),
+        RED("Red");
+
+        private final String key;
+
+        SkinColor(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String toString() {
+            return key;
+        }
+
+        public static List<String> asStringList() {
+            return Arrays.asList(values())
+                    .stream()
+                    .map(SkinColor::toString)
+                    .collect(toList());
+        }
     }
 
     private class PartKey {
