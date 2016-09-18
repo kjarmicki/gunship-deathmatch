@@ -48,16 +48,28 @@ public class Ship {
                 core.getOrigin(),
                 assets.getPart(color, BasicEnginePart.DEFAULT_INDEX)
         );
+        PrimaryWeaponPart leftWeapon = BasicPrimaryWeaponPart.getLeftVariant(
+                core.getLeftWeaponSlot(),
+                core.getOrigin(),
+                assets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_LEFT_INDEX)
+        );
+        PrimaryWeaponPart rightWeapon = BasicPrimaryWeaponPart.getRightVariant(
+                core.getRightWeaponSlot(),
+                core.getOrigin(),
+                assets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_RIGHT_INDEX)
+        );
         core.mountSubpart("left wing", leftWing);
         core.mountSubpart("right wing", rightWing);
+        core.mountSubpart("left primary weapon", leftWeapon);
+        core.mountSubpart("right primary weapon", rightWeapon);
         leftWing.mountSubpart("left engine", leftEngine);
         rightWing.mountSubpart("right engine", rightEngine);
 
         // debug
 //        Debugger.polygon("left wing", leftWing.getTakenArea());
 //        Debugger.polygon("right wing", rightWing.getTakenArea());
-//        Debugger.polygon("left engine", leftEngine.getTakenArea());
-//        Debugger.polygon("right engine", rightEngine.getTakenArea());
+        Debugger.polygon("left weapon", leftWeapon.getTakenArea());
+        Debugger.polygon("right weapon", rightWeapon.getTakenArea());
     }
 
     public void moveForwards(float delta) {

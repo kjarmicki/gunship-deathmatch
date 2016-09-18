@@ -17,6 +17,10 @@ public class DumbEnemy {
         ship.checkPlacementWithinBounds(bounds);
     }
 
+    public void checkCollisionWithOtherShip(Ship other) {
+        ship.checkCollisionWithOtherShip(other);
+    }
+
     public void update(float delta) {
         ship.update(delta);
     }

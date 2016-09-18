@@ -28,6 +28,8 @@ public class BasicCorePart extends GenericPart implements CorePart {
     public static final Vector2 NOSE_SLOT = new Vector2(63f, 110f);
     public static final Vector2 LEFT_WING_SLOT = new Vector2(55f, 92f);
     public static final Vector2 RIGHT_WING_SLOT = new Vector2(72f, 92f);
+    public static final Vector2 LEFT_WEAPON_SLOT = new Vector2(23f, 115f);
+    public static final Vector2 RIGHT_WEAPON_SLOT = new Vector2(104f, 115f);
 
     public BasicCorePart(float x, float y, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
@@ -58,6 +60,16 @@ public class BasicCorePart extends GenericPart implements CorePart {
     @Override
     public Vector2 getRightWingSlot() {
         return withPosition(RIGHT_WING_SLOT);
+    }
+
+    @Override
+    public Vector2 getLeftWeaponSlot() {
+        return withPosition(LEFT_WEAPON_SLOT);
+    }
+
+    @Override
+    public Vector2 getRightWeaponSlot() {
+        return withPosition(RIGHT_WEAPON_SLOT);
     }
 
     @Override

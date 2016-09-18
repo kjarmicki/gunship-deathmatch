@@ -60,6 +60,7 @@ public class ArenaScreen extends ScreenAdapter {
         player.checkPlacementWithinBounds(ground.getBounds());
         enemy.checkPlacementWithinBounds(ground.getBounds());
         player.checkCollisionWithOtherShip(enemy.getShip());
+        enemy.checkCollisionWithOtherShip(player.getShip());
         chaseCamera.lookAt(player, delta);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
