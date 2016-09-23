@@ -3,15 +3,12 @@ package com.github.kjarmicki.entity;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.ship.Ship;
+import com.github.kjarmicki.ship.ShipOwner;
 
-public class DumbEnemy {
+public class DumbEnemy implements ShipOwner {
     public static final float DEFAULT_X = 500;
     public static final float DEFAULT_Y = 500;
-    private final Ship ship;
-
-    public DumbEnemy(Ship ship) {
-        this.ship = ship;
-    }
+    private Ship ship;
 
     public void checkPlacementWithinBounds(Rectangle bounds) {
         ship.checkPlacementWithinBounds(bounds);
@@ -29,6 +26,12 @@ public class DumbEnemy {
         ship.draw(batch);
     }
 
+    @Override
+    public void setShip(Ship ship) {
+        this.ship = ship;
+    }
+
+    @Override
     public Ship getShip() {
         return ship;
     }

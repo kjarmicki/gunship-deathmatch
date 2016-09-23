@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.kjarmicki.assets.Assets;
+import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.camera.ChaseCamera;
 import com.github.kjarmicki.controls.Controls;
@@ -15,6 +17,7 @@ import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.ship.bullets.BulletsContainer;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
@@ -25,6 +28,8 @@ public class ArenaScreen extends ScreenAdapter {
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
     private final PartsAssets partsAssets;
+    private final BulletsAssets bulletsAssets;
+    private final BulletsContainer bulletsContainer;
 
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
         this.viewport = viewport;
@@ -36,14 +41,19 @@ public class ArenaScreen extends ScreenAdapter {
                 PartsAssets.SkinColor.asStringList(),
                 PartsAssets.DEFAULT_PARTS_COUNT
         );
+        bulletsAssets = new BulletsAssets(
+                BulletsAssets.DEFAULT_ATLAS,
+                BulletsAssets.Variant.asMap()
+        );
+
+        bulletsContainer = new BulletsContainer();
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
         player = new Player(
-                new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), PartsAssets.SkinColor.BLUE, partsAssets),
                 controls
         );
-        enemy = new DumbEnemy(
-                new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), PartsAssets.SkinColor.RED, partsAssets)
-        );
+        player.setShip(new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), player, PartsAssets.SkinColor.BLUE, partsAssets, bulletsAssets, bulletsContainer));
+        enemy = new DumbEnemy();
+        enemy.setShip(new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), enemy, PartsAssets.SkinColor.RED, partsAssets, bulletsAssets, bulletsContainer));
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
         chaseCamera.snapAtNextObservable();
     }
@@ -57,6 +67,7 @@ public class ArenaScreen extends ScreenAdapter {
 
         player.update(delta);
         enemy.update(delta);
+        bulletsContainer.updateBullets(delta);
         player.checkPlacementWithinBounds(ground.getBounds());
         enemy.checkPlacementWithinBounds(ground.getBounds());
         player.checkCollisionWithOtherShip(enemy.getShip());
@@ -69,6 +80,7 @@ public class ArenaScreen extends ScreenAdapter {
         ground.draw(batch);
         player.draw(batch);
         enemy.draw(batch);
+        bulletsContainer.drawBullets(batch);
         batch.end();
 
         Debugger.setProjection(viewport.getCamera().combined);

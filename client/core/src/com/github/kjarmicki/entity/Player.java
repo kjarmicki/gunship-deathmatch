@@ -7,15 +7,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.camera.Observable;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.ship.Ship;
+import com.github.kjarmicki.ship.ShipOwner;
 
-public class Player implements Observable {
+public class Player implements ShipOwner, Observable {
     public static final float DEFAULT_X = 150;
     public static final float DEFAULT_Y = 150;
-    private final Ship ship;
     private final Controls controls;
+    private Ship ship;
 
-    public Player(Ship model, Controls controls) {
-        ship = model;
+    public Player(Controls controls) {
         this.controls = controls;
     }
 
@@ -36,6 +36,12 @@ public class Player implements Observable {
         ship.checkCollisionWithOtherShip(other);
     }
 
+    @Override
+    public void setShip(Ship ship) {
+        this.ship = ship;
+    }
+
+    @Override
     public Ship getShip() {
         return ship;
     }

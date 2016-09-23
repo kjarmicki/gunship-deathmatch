@@ -3,9 +3,12 @@ package com.github.kjarmicki.ship;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.debugging.Debugger;
+import com.github.kjarmicki.ship.bullets.Bullet;
+import com.github.kjarmicki.ship.bullets.BulletsContainer;
 import com.github.kjarmicki.ship.parts.*;
 import com.github.kjarmicki.util.Points;
 
@@ -13,50 +16,57 @@ import java.util.*;
 
 public class Ship {
     private final Vector2 velocity = new Vector2();
+    private final List<WeaponPart> weaponParts = new ArrayList<>();
     private final ShipFeatures features;
+    private final BulletsContainer bulletsContainer;
+    private final ShipOwner owner;
     private float rotating;
     private boolean isDestroyed = false;
 
     private CorePart core;
 
-    public Ship(float x, float y, ShipFeatures features, PartsAssets.SkinColor color, PartsAssets assets) {
+    public Ship(float x, float y, ShipFeatures features, ShipOwner owner, PartsAssets.SkinColor color, PartsAssets partsAssets, BulletsAssets bulletsAssets, BulletsContainer bulletsContainer) {
         this.features = features;
-        core = new BasicCorePart(x, y, assets.getPart(color, BasicCorePart.DEFAULT_INDEX));
+        this.bulletsContainer = bulletsContainer;
+        this.owner = owner;
+        core = new BasicCorePart(x, y, partsAssets.getPart(color, BasicCorePart.DEFAULT_INDEX));
         core.mountSubpart("nose", new BasicNosePart(
                 core.getNoseSlot(),
                 core.getOrigin(),
-                assets.getPart(color, BasicNosePart.DEFAULT_INDEX)
+                partsAssets.getPart(color, BasicNosePart.DEFAULT_INDEX)
         ));
 
         WingPart leftWing = BasicWingPart.getLeftVariant(
                 core.getLeftWingSlot(),
                 core.getOrigin(),
-                assets.getPart(color, BasicWingPart.DEFAULT_LEFT_INDEX)
+                partsAssets.getPart(color, BasicWingPart.DEFAULT_LEFT_INDEX)
         );
         WingPart rightWing = BasicWingPart.getRightVariant(
                 core.getRightWingSlot(),
                 core.getOrigin(),
-                assets.getPart(color, BasicWingPart.DEFAULT_RIGHT_INDEX)
+                partsAssets.getPart(color, BasicWingPart.DEFAULT_RIGHT_INDEX)
         );
         EnginePart leftEngine = BasicEnginePart.getLeftVariant(
                 leftWing.getEngineSlot(),
                 core.getOrigin(),
-                assets.getPart(color, BasicEnginePart.DEFAULT_INDEX)
+                partsAssets.getPart(color, BasicEnginePart.DEFAULT_INDEX)
         );
         EnginePart rightEngine = BasicEnginePart.getRightVariant(
                 rightWing.getEngineSlot(),
                 core.getOrigin(),
-                assets.getPart(color, BasicEnginePart.DEFAULT_INDEX)
+                partsAssets.getPart(color, BasicEnginePart.DEFAULT_INDEX)
         );
         PrimaryWeaponPart leftWeapon = BasicPrimaryWeaponPart.getLeftVariant(
                 core.getLeftWeaponSlot(),
                 core.getOrigin(),
-                assets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_LEFT_INDEX)
+                partsAssets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_LEFT_INDEX),
+                bulletsAssets
         );
         PrimaryWeaponPart rightWeapon = BasicPrimaryWeaponPart.getRightVariant(
                 core.getRightWeaponSlot(),
                 core.getOrigin(),
-                assets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_RIGHT_INDEX)
+                partsAssets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_RIGHT_INDEX),
+                bulletsAssets
         );
         core.mountSubpart("left wing", leftWing);
         core.mountSubpart("right wing", rightWing);
@@ -64,6 +74,8 @@ public class Ship {
         core.mountSubpart("right primary weapon", rightWeapon);
         leftWing.mountSubpart("left engine", leftEngine);
         rightWing.mountSubpart("right engine", rightEngine);
+        weaponParts.add(leftWeapon);
+        weaponParts.add(rightWeapon);
 
         // debug
 //        Debugger.polygon("left wing", leftWing.getTakenArea());
@@ -92,12 +104,28 @@ public class Ship {
         rotating -= delta * features.getRotation();
     }
 
+    public void startShooting(float delta) {
+        weaponParts.stream().forEach(weaponPart -> {
+            Optional<Bullet> bullet = weaponPart.startShooting(delta);
+            bullet.ifPresent(b -> bulletsContainer.addBullet(b, owner));
+        });
+    }
+
+    public void stopShooting(float delta) {
+        weaponParts.stream().forEach(weaponPart -> weaponPart.stopShooting(delta));
+    }
+
     public void control(Controls controls, float delta) {
         if(!isDestroyed) {
             if(controls.up()) moveForwards(delta);
             if(controls.down()) moveBackwards(delta);
             if(controls.left()) rotateLeft(delta);
             if(controls.right()) rotateRight(delta);
+
+            if(controls.shoot())
+                startShooting(delta);
+            else
+                stopShooting(delta);
         }
     }
 

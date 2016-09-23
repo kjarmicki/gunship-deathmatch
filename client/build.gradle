@@ -102,12 +102,15 @@ project(":core") {
 
     task packTextures {
         def partsDir = "$rootDir/core/rawAssets/parts"
+        def bulletsDir = "$rootDir/core/rawAssets/bullets"
         def outputDir = "$rootDir/android/assets/sprites"
         inputs.dir partsDir
+        inputs.dir bulletsDir
         outputs.dir outputDir
         doLast {
             delete(outputDir)
             TexturePacker.process(partsDir, outputDir, "parts.pack")
+            TexturePacker.process(bulletsDir, outputDir, "bullets.pack")
         }
     }
     project.tasks.compileJava.dependsOn packTextures
