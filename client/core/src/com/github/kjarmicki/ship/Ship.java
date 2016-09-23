@@ -85,13 +85,13 @@ public class Ship {
     }
 
     public void moveForwards(float delta) {
-        Vector2 direction = getDirectionVector();
+        Vector2 direction = Points.getDirectionVector(getRotation());
         velocity.x += delta * features.getAcceleration() * direction.x;
         velocity.y += delta * features.getAcceleration() * direction.y;
     }
 
     public void moveBackwards(float delta) {
-        Vector2 direction = getDirectionVector();
+        Vector2 direction = Points.getDirectionVector(getRotation());
         velocity.x -= delta * features.getAcceleration() * direction.x;
         velocity.y -= delta * features.getAcceleration() * direction.y;
     }
@@ -256,10 +256,5 @@ public class Ship {
 
     private float rebound(float value) {
         return -(value / 2);
-    }
-
-    private Vector2 getDirectionVector() {
-        float rotation = getRotation();
-        return new Vector2(-(float)Math.sin(Math.toRadians(rotation)), (float)Math.cos(Math.toRadians(rotation)));
     }
 }

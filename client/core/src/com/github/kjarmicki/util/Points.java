@@ -17,4 +17,8 @@ public class Points {
     public static Vector2 makeRightVector(Vector2 leftVector, float width) {
         return new Vector2(width - leftVector.x, leftVector.y);
     }
+
+    public static Vector2 getDirectionVector(float rotation) {
+        return new Vector2(-(float)Math.sin(Math.toRadians(rotation)), (float)Math.cos(Math.toRadians(rotation)));
+    }
 }

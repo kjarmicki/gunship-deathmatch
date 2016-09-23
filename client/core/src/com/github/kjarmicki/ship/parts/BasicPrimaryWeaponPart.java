@@ -3,6 +3,7 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.BasicBullet;
@@ -35,10 +36,13 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     public static final float WIDTH = 42f;
     public static final float HEIGHT = 131f;
     public static final int Z_INDEX = 3;
+    public static final long SHOT_INTERVAL = 200;
     public static final boolean IS_CRITICAL = false;
     public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(15f, 130f);
+    private final Vector2 baseOrigin;
     private final Vector2 bulletOutput;
     private final BulletsAssets bulletsAssets;
+    private long lastShot = 0;
 
 
     public static BasicPrimaryWeaponPart getLeftVariant(Vector2 weaponSlot, Vector2 origin, TextureRegion skinRegion, BulletsAssets bulletsAssets) {
@@ -58,6 +62,7 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
         this.bulletsAssets = bulletsAssets;
         takenArea.setPosition(position.x, position.y);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
     }
 
     @Override
@@ -72,8 +77,13 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
 
     @Override
     public Optional<Bullet> startShooting(float delta) {
-        Bullet bullet = new BasicBullet(getBulletOutput(), bulletsAssets.getBullet(BasicBullet.TEXTURE_VARIANT));
-        return Optional.of(bullet);
+        long now = TimeUtils.millis();
+        if(now - lastShot > SHOT_INTERVAL) {
+            Bullet bullet = new BasicBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(BasicBullet.TEXTURE_VARIANT));
+            lastShot = TimeUtils.millis();
+            return Optional.of(bullet);
+        }
+        return Optional.empty();
     }
 
     @Override
