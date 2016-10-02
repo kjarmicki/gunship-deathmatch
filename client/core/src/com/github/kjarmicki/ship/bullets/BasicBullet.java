@@ -22,6 +22,7 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
     public static final int HEIGHT = 115;
     public static final int MAX_SPEED = 10000;
     public static final int ACCELERATION = 3000;
+    public static final float IMPACT = 20;
 
     private final Vector2 velocity = new Vector2(0, 0);
     private boolean isDestroyed = false;
@@ -59,6 +60,11 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
         Vector2 movement = new Vector2(x, y);
 
         moveBy(movement);
+    }
+
+    @Override
+    public float getImpact() {
+        return IMPACT;
     }
 
     @Override

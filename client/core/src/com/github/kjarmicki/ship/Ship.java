@@ -218,12 +218,13 @@ public class Ship {
                 .findFirst()
                 .ifPresent(myPart -> {
                     Vector2 shift = myPart.collisionVector(bullet);
-
                     velocity.x += shift.x * 2;
                     velocity.y += shift.y * 2;
 
-                    // TODO: damage based on bullets power
-
+                    myPart.receiveDamage(bullet.getImpact());
+                    if(myPart.isDestroyed()) {
+                        removeDestroyedPart(myPart);
+                    }
                     bullet.destroy();
                 });
     }
