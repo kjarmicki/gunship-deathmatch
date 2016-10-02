@@ -4,4 +4,6 @@ import com.github.kjarmicki.basis.VisibleThing;
 
 public interface Bullet extends VisibleThing {
     void update(float delta);
+    void destroy();
+    boolean isDestroyed();
 }

@@ -190,7 +190,7 @@ public class Ship {
                 });
     }
 
-    public void checkCollisionWithOtherShip(Ship other) {
+    public void checkCollisionWith(Ship other) {
         allParts().stream().forEach(myPart -> {
             other.allParts().stream()
                     .filter(foreignPart -> !myPart.collisionVector(foreignPart).equals(Points.ZERO))
@@ -205,9 +205,27 @@ public class Ship {
                         velocity.y = rebound(velocity.y);
                         rotating = rebound(rotating);
 
+                        // TODO: damage
+
                         allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
                     });
         });
+    }
+
+    public void checkCollisionWith(Bullet bullet) {
+        allParts().stream()
+                .filter(myPart -> !myPart.collisionVector(bullet).equals(Points.ZERO))
+                .findFirst()
+                .ifPresent(myPart -> {
+                    Vector2 shift = myPart.collisionVector(bullet);
+
+                    velocity.x += shift.x * 2;
+                    velocity.y += shift.y * 2;
+
+                    // TODO: damage based on bullets power
+
+                    bullet.destroy();
+                });
     }
 
     public void bump(Vector2 objectVelocity) {

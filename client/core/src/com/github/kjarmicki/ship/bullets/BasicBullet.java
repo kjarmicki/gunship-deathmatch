@@ -24,6 +24,7 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
     public static final int ACCELERATION = 3000;
 
     private final Vector2 velocity = new Vector2(0, 0);
+    private boolean isDestroyed = false;
 
     public BasicBullet(Vector2 position, Vector2 origin, float rotation, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
@@ -58,5 +59,15 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
         Vector2 movement = new Vector2(x, y);
 
         moveBy(movement);
+    }
+
+    @Override
+    public void destroy() {
+        isDestroyed = true;
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return isDestroyed;
     }
 }

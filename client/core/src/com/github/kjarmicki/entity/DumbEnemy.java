@@ -15,7 +15,7 @@ public class DumbEnemy implements ShipOwner {
     }
 
     public void checkCollisionWithOtherShip(Ship other) {
-        ship.checkCollisionWithOtherShip(other);
+        ship.checkCollisionWith(other);
     }
 
     public void update(float delta) {

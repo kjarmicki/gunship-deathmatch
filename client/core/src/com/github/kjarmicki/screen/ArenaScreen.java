@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.kjarmicki.assets.Assets;
 import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.camera.ChaseCamera;
@@ -18,6 +17,8 @@ import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.BulletsContainer;
+
+import java.util.Arrays;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
@@ -72,6 +73,8 @@ public class ArenaScreen extends ScreenAdapter {
         enemy.checkPlacementWithinBounds(ground.getBounds());
         player.checkCollisionWithOtherShip(enemy.getShip());
         enemy.checkCollisionWithOtherShip(player.getShip());
+        bulletsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
+        bulletsContainer.cleanup(ground.getBounds());
         chaseCamera.lookAt(player, delta);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
