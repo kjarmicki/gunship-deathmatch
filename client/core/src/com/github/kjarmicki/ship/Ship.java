@@ -218,11 +218,11 @@ public class Ship {
                 .findFirst()
                 .ifPresent(myPart -> {
                     Vector2 shift = myPart.collisionVector(bullet);
-                    velocity.x += shift.x * 2;
-                    velocity.y += shift.y * 2;
+                    velocity.x += shift.x * 20;
+                    velocity.y += shift.y * 20;
 
                     myPart.receiveDamage(bullet.getImpact());
-                    if(myPart.isDestroyed()) {
+                    if (myPart.isDestroyed()) {
                         removeDestroyedPart(myPart);
                     }
                     bullet.destroy();

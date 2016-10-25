@@ -3,11 +3,10 @@ package com.github.kjarmicki.basis;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.github.kjarmicki.util.Points;
+
+import static com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 
 public abstract class GenericVisibleThing implements VisibleThing {
     protected final Polygon takenArea;
@@ -61,14 +60,9 @@ public abstract class GenericVisibleThing implements VisibleThing {
     }
 
     public Vector2 collisionVector(VisibleThing otherThing) {
-        Polygon intersection = new Polygon();
-        if(Intersector.intersectPolygons(otherThing.getTakenArea(), getTakenArea(), intersection)) {
-            Rectangle thisBounds = getTakenArea().getBoundingRectangle();
-            Rectangle otherBounds = otherThing.getTakenArea().getBoundingRectangle();
-            Rectangle intersectionBounds = intersection.getBoundingRectangle();
-            boolean xDiff = (thisBounds.getX() + thisBounds.getWidth()) - (otherBounds.getX() + otherBounds.getWidth()) > 0;
-            boolean yDiff = (thisBounds.getY() + thisBounds.getHeight()) - (otherBounds.getY() + otherBounds.getHeight()) > 0;
-            return new Vector2(intersectionBounds.getWidth() * (xDiff ? 1 : -1), intersectionBounds.getHeight() * (yDiff ? 1 : -1));
+        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        if(Intersector.overlapConvexPolygons(otherThing.getTakenArea(), getTakenArea(), mtv)) {
+            return new Vector2(-mtv.normal.x, -mtv.normal.y);
         }
         return Points.ZERO;
     }
