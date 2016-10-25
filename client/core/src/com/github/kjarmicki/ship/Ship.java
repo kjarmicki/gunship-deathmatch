@@ -238,6 +238,10 @@ public class Ship {
         return velocity;
     }
 
+    public boolean isDestroyed() {
+        return isDestroyed;
+    }
+
     private void removeDestroyedPart(Part part) {
         if(part.isCritical()) {
             isDestroyed = true;

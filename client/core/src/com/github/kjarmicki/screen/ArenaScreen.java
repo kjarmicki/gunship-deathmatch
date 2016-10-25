@@ -54,9 +54,13 @@ public class ArenaScreen extends ScreenAdapter {
         );
         player.setShip(new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), player, PartsAssets.SkinColor.BLUE, partsAssets, bulletsAssets, bulletsContainer));
         enemy = new DumbEnemy();
-        enemy.setShip(new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), enemy, PartsAssets.SkinColor.RED, partsAssets, bulletsAssets, bulletsContainer));
+        enemy.setShip(makeNewEnemyShip());
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
         chaseCamera.snapAtNextObservable();
+    }
+
+    private Ship makeNewEnemyShip() {
+        return new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), enemy, PartsAssets.SkinColor.RED, partsAssets, bulletsAssets, bulletsContainer);
     }
 
     @Override
@@ -68,6 +72,9 @@ public class ArenaScreen extends ScreenAdapter {
 
         player.update(delta);
         enemy.update(delta);
+        if(enemy.getShip().isDestroyed()) {
+            enemy.setShip(makeNewEnemyShip());
+        }
         bulletsContainer.updateBullets(delta);
         player.checkPlacementWithinBounds(ground.getBounds());
         enemy.checkPlacementWithinBounds(ground.getBounds());
