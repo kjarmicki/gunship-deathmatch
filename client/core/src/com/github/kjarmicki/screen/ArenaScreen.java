@@ -52,7 +52,7 @@ public class ArenaScreen extends ScreenAdapter {
         player = new Player(
                 controls
         );
-        player.setShip(new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), player, PartsAssets.SkinColor.BLUE, partsAssets, bulletsAssets, bulletsContainer));
+        player.setShip(makeNewPlayerShip());
         enemy = new DumbEnemy();
         enemy.setShip(makeNewEnemyShip());
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
@@ -61,6 +61,10 @@ public class ArenaScreen extends ScreenAdapter {
 
     private Ship makeNewEnemyShip() {
         return new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), enemy, PartsAssets.SkinColor.RED, partsAssets, bulletsAssets, bulletsContainer);
+    }
+
+    private Ship makeNewPlayerShip() {
+        return new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), player, PartsAssets.SkinColor.BLUE, partsAssets, bulletsAssets, bulletsContainer);
     }
 
     @Override
@@ -74,6 +78,10 @@ public class ArenaScreen extends ScreenAdapter {
         enemy.update(delta);
         if(enemy.getShip().isDestroyed()) {
             enemy.setShip(makeNewEnemyShip());
+        }
+        // TODO: when player ship is destroyed, make sure it's parts are actually removed from the game (ex. weapons)
+        if(player.getShip().isDestroyed()) {
+            player.setShip(makeNewPlayerShip());
         }
         bulletsContainer.updateBullets(delta);
         player.checkPlacementWithinBounds(ground.getBounds());
