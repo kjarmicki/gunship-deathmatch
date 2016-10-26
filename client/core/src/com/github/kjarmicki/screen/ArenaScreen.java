@@ -79,7 +79,6 @@ public class ArenaScreen extends ScreenAdapter {
         if(enemy.getShip().isDestroyed()) {
             enemy.setShip(makeNewEnemyShip());
         }
-        // TODO: when player ship is destroyed, make sure it's parts are actually removed from the game (ex. weapons)
         if(player.getShip().isDestroyed()) {
             player.setShip(makeNewPlayerShip());
         }

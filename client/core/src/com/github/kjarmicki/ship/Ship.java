@@ -14,9 +14,10 @@ import com.github.kjarmicki.util.Points;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 public class Ship {
     private final Vector2 velocity = new Vector2();
-    private final List<WeaponPart> weaponParts = new ArrayList<>();
     private final ShipFeatures features;
     private final BulletsContainer bulletsContainer;
     private final ShipOwner owner;
@@ -74,8 +75,6 @@ public class Ship {
         core.mountSubpart("right primary weapon", rightWeapon);
         leftWing.mountSubpart("left engine", leftEngine);
         rightWing.mountSubpart("right engine", rightEngine);
-        weaponParts.add(leftWeapon);
-        weaponParts.add(rightWeapon);
 
         // debug
 //        Debugger.polygon("left wing", leftWing.getTakenArea());
@@ -105,14 +104,14 @@ public class Ship {
     }
 
     public void startShooting(float delta) {
-        weaponParts.stream().forEach(weaponPart -> {
+        weapons().stream().forEach(weaponPart -> {
             Optional<Bullet> bullet = weaponPart.startShooting(delta);
             bullet.ifPresent(b -> bulletsContainer.addBullet(b, owner));
         });
     }
 
     public void stopShooting(float delta) {
-        weaponParts.stream().forEach(weaponPart -> weaponPart.stopShooting(delta));
+        weapons().stream().forEach(weaponPart -> weaponPart.stopShooting(delta));
     }
 
     public void control(Controls controls, float delta) {
@@ -271,6 +270,13 @@ public class Ship {
         parts.add(core);
         parts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());
         return parts;
+    }
+
+    private List<WeaponPart> weapons() {
+        return allParts().stream()
+                .filter(part -> part instanceof WeaponPart)
+                .map(part -> (WeaponPart)part)
+                .collect(toList());
     }
 
     private float getRotation() {
