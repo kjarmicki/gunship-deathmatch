@@ -23,15 +23,19 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
     public static final int MAX_SPEED = 10000;
     public static final int ACCELERATION = 3000;
     public static final float IMPACT = 20;
+    public static final float RANGE = 500;
 
     private final Vector2 velocity = new Vector2(0, 0);
+    private final Vector2 startingPosition = new Vector2(0, 0);
     private boolean isDestroyed = false;
+    private boolean isRangeExceeded = false;
 
     public BasicBullet(Vector2 position, Vector2 origin, float rotation, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
         takenArea.setPosition(position.x, position.y);
         takenArea.setRotation(rotation);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        startingPosition.set(position.x, position.y);
     }
 
     @Override
@@ -46,6 +50,13 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
 
     @Override
     public void update(float delta) {
+        // check if bullet got out of it's range
+        Vector2 position = new Vector2(takenArea.getX(), takenArea.getY());
+        if(startingPosition.dst(position) > RANGE) {
+            isRangeExceeded = true;
+            return;
+        }
+
         Vector2 direction = Points.getDirectionVector(takenArea.getRotation());
         if(velocity.equals(Points.ZERO)) {
             velocity.x += ACCELERATION / 10 * direction.x;
@@ -65,6 +76,11 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
     @Override
     public float getImpact() {
         return IMPACT;
+    }
+
+    @Override
+    public boolean isRangeExceeded() {
+        return isRangeExceeded;
     }
 
     @Override

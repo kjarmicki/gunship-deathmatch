@@ -54,14 +54,15 @@ public class BulletsContainer {
 
     public void cleanup(Rectangle bounds) {
         destroyOutOfBounds(bounds);
-        removeDestroyed();
+        removeDestroyedAndOutOfRange();
     }
 
-    private void removeDestroyed() {
+    private void removeDestroyedAndOutOfRange() {
         // TODO: support for a nice kaboom animation here
         Map<Bullet, ShipOwner> filtered = bulletsByOwners.entrySet()
                 .stream()
                 .filter(entry -> !entry.getKey().isDestroyed())
+                .filter(entry -> !entry.getKey().isRangeExceeded())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         bulletsByOwners.clear();
         bulletsByOwners.putAll(filtered);
