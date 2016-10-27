@@ -32,6 +32,8 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
 
     public BasicBullet(Vector2 position, Vector2 origin, float rotation, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
+        position.x -= WIDTH / 2;
+        position.y -= 30;
         takenArea.setPosition(position.x, position.y);
         takenArea.setRotation(rotation);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
