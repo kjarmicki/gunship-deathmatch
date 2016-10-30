@@ -1,10 +1,19 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.assets.BulletsAssets;
+import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
+
+import java.util.function.Function;
+
+import static com.github.kjarmicki.ship.parts.PartSlotName.*;
+import static com.github.kjarmicki.ship.parts.PartSlotName.LEFT_ENGINE;
+import static com.github.kjarmicki.ship.parts.PartSlotName.LEFT_WING;
+import static com.github.kjarmicki.ship.parts.PartSlotName.RIGHT_ENGINE;
 
 
 public class BasicEnginePart extends GenericPart implements EnginePart {
@@ -38,19 +47,29 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     public static final float HEIGHT = 168f;
     public static final int Z_INDEX = 0;
     public static final boolean IS_CRITICAL = false;
+    private final PartSlotName slotName;
 
-    public static BasicEnginePart getLeftVariant(Vector2 engineSlot, Vector2 origin, TextureRegion skinRegion) {
-        Vector2 position = new Vector2(engineSlot.x, engineSlot.y - 40);
-        return new BasicEnginePart(position, origin, skinRegion);
+    public static BasicEnginePart getLeftVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
+        Variant left = Variant.LEFT;
+        TextureRegion skinRegion = partsAssets.getPart(color, DEFAULT_INDEX);
+        return new BasicEnginePart(skinRegion, left, ship);
     }
 
-    public static BasicEnginePart getRightVariant(Vector2 engineSlot, Vector2 origin, TextureRegion skinRegion) {
-        Vector2 position = new Vector2(engineSlot.x - WIDTH, engineSlot.y - 40);
-        return new BasicEnginePart(position, origin, skinRegion);
+    public static BasicEnginePart getRightVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
+        Variant right = Variant.RIGHT;
+        TextureRegion skinRegion = partsAssets.getPart(color, DEFAULT_INDEX);
+        return new BasicEnginePart(skinRegion, right, ship);
     }
 
-    private BasicEnginePart(Vector2 position, Vector2 origin, TextureRegion skinRegion) {
+    private BasicEnginePart(TextureRegion skinRegion, Variant variant, Ship ship) {
         super(new Polygon(VERTICES), skinRegion);
+        this.slotName = variant.slotName;
+
+        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
+        Vector2 origin = core.getOrigin();
+        Part parent = ship.getPartBySlotName(variant.parentSlotName).get();
+        Vector2 engineSlot = parent.getSlotFor(slotName);
+        Vector2 position = variant.computePosition.apply(engineSlot);
         takenArea.setPosition(position.x, position.y);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
     }
@@ -76,7 +95,35 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     }
 
     @Override
+    public PartSlotName getSlotName() {
+        return slotName;
+    }
+
+    @Override
     public void updateFeatures(ShipFeatures features) {
 
+    }
+
+    private enum Variant {
+        LEFT(
+                LEFT_ENGINE,
+                LEFT_WING,
+                engineSlot -> new Vector2(engineSlot.x, engineSlot.y - 40)
+        ),
+        RIGHT(
+                RIGHT_ENGINE,
+                RIGHT_WING,
+                engineSlot -> new Vector2(engineSlot.x - WIDTH, engineSlot.y - 40)
+        );
+
+        PartSlotName slotName;
+        PartSlotName parentSlotName;
+        Function<Vector2, Vector2> computePosition;
+
+        Variant(PartSlotName slotName, PartSlotName parentSlotName, Function<Vector2, Vector2> computePosition) {
+            this.slotName = slotName;
+            this.parentSlotName = parentSlotName;
+            this.computePosition = computePosition;
+        }
     }
 }

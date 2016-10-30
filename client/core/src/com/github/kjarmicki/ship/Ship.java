@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.controls.Controls;
-import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.bullets.BulletsContainer;
 import com.github.kjarmicki.ship.parts.*;
@@ -14,6 +13,7 @@ import com.github.kjarmicki.util.Points;
 
 import java.util.*;
 
+import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
 import static java.util.stream.Collectors.toList;
 
 public class Ship {
@@ -21,66 +21,24 @@ public class Ship {
     private final ShipFeatures features;
     private final BulletsContainer bulletsContainer;
     private final ShipOwner owner;
+    private final CorePart core;
     private float rotating;
     private boolean isDestroyed = false;
 
-    private CorePart core;
 
     public Ship(float x, float y, ShipFeatures features, ShipOwner owner, PartsAssets.SkinColor color, PartsAssets partsAssets, BulletsAssets bulletsAssets, BulletsContainer bulletsContainer) {
         this.features = features;
         this.bulletsContainer = bulletsContainer;
         this.owner = owner;
         core = new BasicCorePart(x, y, partsAssets.getPart(color, BasicCorePart.DEFAULT_INDEX));
-        core.mountSubpart("nose", new BasicNosePart(
-                core.getNoseSlot(),
-                core.getOrigin(),
-                partsAssets.getPart(color, BasicNosePart.DEFAULT_INDEX)
-        ));
 
-        WingPart leftWing = BasicWingPart.getLeftVariant(
-                core.getLeftWingSlot(),
-                core.getOrigin(),
-                partsAssets.getPart(color, BasicWingPart.DEFAULT_LEFT_INDEX)
-        );
-        WingPart rightWing = BasicWingPart.getRightVariant(
-                core.getRightWingSlot(),
-                core.getOrigin(),
-                partsAssets.getPart(color, BasicWingPart.DEFAULT_RIGHT_INDEX)
-        );
-        EnginePart leftEngine = BasicEnginePart.getLeftVariant(
-                leftWing.getEngineSlot(),
-                core.getOrigin(),
-                partsAssets.getPart(color, BasicEnginePart.DEFAULT_INDEX)
-        );
-        EnginePart rightEngine = BasicEnginePart.getRightVariant(
-                rightWing.getEngineSlot(),
-                core.getOrigin(),
-                partsAssets.getPart(color, BasicEnginePart.DEFAULT_INDEX)
-        );
-        PrimaryWeaponPart leftWeapon = BasicPrimaryWeaponPart.getLeftVariant(
-                core.getLeftWeaponSlot(),
-                core.getOrigin(),
-                partsAssets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_LEFT_INDEX),
-                bulletsAssets
-        );
-        PrimaryWeaponPart rightWeapon = BasicPrimaryWeaponPart.getRightVariant(
-                core.getRightWeaponSlot(),
-                core.getOrigin(),
-                partsAssets.getPart(color, BasicPrimaryWeaponPart.DEFAULT_RIGHT_INDEX),
-                bulletsAssets
-        );
-        core.mountSubpart("left wing", leftWing);
-        core.mountSubpart("right wing", rightWing);
-        core.mountSubpart("left primary weapon", leftWeapon);
-        core.mountSubpart("right primary weapon", rightWeapon);
-        leftWing.mountSubpart("left engine", leftEngine);
-        rightWing.mountSubpart("right engine", rightEngine);
-
-        // debug
-//        Debugger.polygon("left wing", leftWing.getTakenArea());
-//        Debugger.polygon("right wing", rightWing.getTakenArea());
-        Debugger.polygon("left weapon", leftWeapon.getTakenArea());
-        Debugger.polygon("right weapon", rightWeapon.getTakenArea());
+        this.mountPart(new BasicNosePart(partsAssets, color, this));
+        this.mountPart(BasicWingPart.getLeftVariant(partsAssets, color, this));
+        this.mountPart(BasicWingPart.getRightVariant(partsAssets, color, this));
+        this.mountPart(BasicEnginePart.getLeftVariant(partsAssets, color, this));
+        this.mountPart(BasicEnginePart.getRightVariant(partsAssets, color, this));
+        this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(partsAssets, bulletsAssets, color, this));
+        this.mountPart(BasicPrimaryWeaponPart.getRightVariant(partsAssets, bulletsAssets, color, this));
     }
 
     public void moveForwards(float delta) {
@@ -112,6 +70,18 @@ public class Ship {
 
     public void stopShooting(float delta) {
         weapons().stream().forEach(weaponPart -> weaponPart.stopShooting(delta));
+    }
+
+    public void mountPart(Part part) {
+        findPartWithSlotAvailableFor(part).ifPresent(parentPart -> parentPart.mountSubpart(part));
+    }
+
+    public Optional<Part> getPartBySlotName(PartSlotName name) {
+        if(name == CORE) return Optional.of(core);
+        return allParts()
+                .stream()
+                .filter(part -> part.getSlotName().equals(name))
+                .findFirst();
     }
 
     public void control(Controls controls, float delta) {
@@ -249,10 +219,10 @@ public class Ship {
     }
 
     private void removePart(Part lookedFor, Part parent) {
-        Map<String, Part> subparts = parent.getDirectSubparts();
+        Map<PartSlotName, Part> subparts = parent.getDirectSubparts();
 
         // search part at current level
-        for(Map.Entry<String, Part> entry: subparts.entrySet()) {
+        for(Map.Entry<PartSlotName, Part> entry: subparts.entrySet()) {
             if(entry.getValue().equals(lookedFor)) {
                 subparts.remove(entry.getKey());
                 return;
@@ -260,7 +230,7 @@ public class Ship {
         }
 
         // dig into subparts to find a part
-        for(Map.Entry<String, Part> entry: subparts.entrySet()) {
+        for(Map.Entry<PartSlotName, Part> entry: subparts.entrySet()) {
             removePart(lookedFor, entry.getValue());
         }
     }
@@ -270,6 +240,12 @@ public class Ship {
         parts.add(core);
         parts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());
         return parts;
+    }
+
+    private Optional<Part> findPartWithSlotAvailableFor(Part otherPart) {
+        return allParts().stream()
+                .filter(part -> part.getChildSlotNames().contains(otherPart.getSlotName()))
+                .findFirst();
     }
 
     private List<WeaponPart> weapons() {

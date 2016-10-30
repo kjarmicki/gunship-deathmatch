@@ -3,32 +3,36 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.basis.GenericVisibleThing;
+import com.github.kjarmicki.ship.Ship;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class GenericPart extends GenericVisibleThing implements Part {
     protected float condition = 100f;
-    protected final Map<String, Part> subparts = new HashMap<>();
+    protected final Map<PartSlotName, Part> subparts = new HashMap<>();
 
     public GenericPart(Polygon takenArea, TextureRegion skinRegion) {
         super(takenArea, skinRegion);
     }
 
+    @Override
     public void receiveDamage(float amount) {
         condition -= amount;
     }
 
+    @Override
     public boolean isDestroyed() {
         return condition <= 0;
     }
 
-    public void mountSubpart(String slot, Part subpart) {
-        subparts.put(slot, subpart);
+    @Override
+    public void mountSubpart(Part subpart) {
+        subparts.put(subpart.getSlotName(), subpart);
     }
 
-    public Map<String, Part> getAllSubparts() {
-        HashMap<String, Part> combined = new HashMap<>();
+    public Map<PartSlotName, Part> getAllSubparts() {
+        Map<PartSlotName, Part> combined = new HashMap<>();
         combined.putAll(subparts);
         subparts.entrySet().stream().forEach(entry -> {
             Part subpart = entry.getValue();
@@ -37,7 +41,7 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
         return combined;
     }
 
-    public Map<String, Part> getDirectSubparts() {
+    public Map<PartSlotName, Part> getDirectSubparts() {
         return subparts;
     }
 }

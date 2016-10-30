@@ -3,10 +3,13 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
 public class BasicCorePart extends GenericPart implements CorePart {
     public static final int DEFAULT_INDEX = 29;
@@ -23,13 +26,17 @@ public class BasicCorePart extends GenericPart implements CorePart {
     public static final float WIDTH = 127f;
     public static final float HEIGHT = 149f;
     public static final int Z_INDEX = 3;
-    public static final boolean IS_CRITICAL = false;
+    public static final boolean IS_CRITICAL = true;
     public static final Vector2 ORIGIN = new Vector2(63f, 102f);
-    public static final Vector2 NOSE_SLOT = new Vector2(63f, 110f);
-    public static final Vector2 LEFT_WING_SLOT = new Vector2(55f, 92f);
-    public static final Vector2 RIGHT_WING_SLOT = new Vector2(72f, 92f);
-    public static final Vector2 LEFT_WEAPON_SLOT = new Vector2(23f, 115f);
-    public static final Vector2 RIGHT_WEAPON_SLOT = new Vector2(104f, 115f);
+
+    public static final Map<PartSlotName, Vector2> SLOT_VECTORS = new HashMap<>();
+    static {
+        SLOT_VECTORS.put(NOSE, new Vector2(63f, 110f));
+        SLOT_VECTORS.put(LEFT_WING, new Vector2(55f, 92f));
+        SLOT_VECTORS.put(RIGHT_WING, new Vector2(72f, 92f));
+        SLOT_VECTORS.put(LEFT_PRIMARY_WEAPON, new Vector2(23f, 115f));
+        SLOT_VECTORS.put(RIGHT_PRIMARY_WEAPON, new Vector2(104f, 115f));
+    }
 
     public BasicCorePart(float x, float y, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
@@ -48,28 +55,8 @@ public class BasicCorePart extends GenericPart implements CorePart {
     }
 
     @Override
-    public Vector2 getNoseSlot() {
-        return withPosition(NOSE_SLOT);
-    }
-
-    @Override
-    public Vector2 getLeftWingSlot() {
-        return withPosition(LEFT_WING_SLOT);
-    }
-
-    @Override
-    public Vector2 getRightWingSlot() {
-        return withPosition(RIGHT_WING_SLOT);
-    }
-
-    @Override
-    public Vector2 getLeftWeaponSlot() {
-        return withPosition(LEFT_WEAPON_SLOT);
-    }
-
-    @Override
-    public Vector2 getRightWeaponSlot() {
-        return withPosition(RIGHT_WEAPON_SLOT);
+    public Vector2 getSlotFor(PartSlotName name) {
+        return withPosition(SLOT_VECTORS.get(name));
     }
 
     @Override

@@ -5,12 +5,19 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.assets.BulletsAssets;
+import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.BasicBullet;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
 import java.util.Optional;
+import java.util.function.Function;
+
+import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
+import static com.github.kjarmicki.ship.parts.PartSlotName.LEFT_PRIMARY_WEAPON;
+import static com.github.kjarmicki.ship.parts.PartSlotName.RIGHT_PRIMARY_WEAPON;
 
 public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeaponPart {
     public static final int DEFAULT_LEFT_INDEX = 38;
@@ -39,27 +46,37 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     public static final long SHOT_INTERVAL = 200;
     public static final boolean IS_CRITICAL = false;
     public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(15f, 130f);
+    private final PartSlotName slotName;
     private final Vector2 baseOrigin;
     private final Vector2 bulletOutput;
     private final BulletsAssets bulletsAssets;
     private long lastShot = 0;
 
 
-    public static BasicPrimaryWeaponPart getLeftVariant(Vector2 weaponSlot, Vector2 origin, TextureRegion skinRegion, BulletsAssets bulletsAssets) {
-        Vector2 position = new Vector2(weaponSlot.x - 30, weaponSlot.y - 30);
-        return new BasicPrimaryWeaponPart(position, origin, skinRegion, LEFT_VERTICES, LEFT_BULLET_OUTPUT, bulletsAssets);
+    public static BasicPrimaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
+                                                        PartsAssets.SkinColor color, Ship ship) {
+        Variant left = Variant.LEFT;
+        TextureRegion skinRegion = partsAssets.getPart(color, left.skinIndex);
+        return new BasicPrimaryWeaponPart(skinRegion, bulletsAssets, left, ship);
     }
 
-    public static BasicPrimaryWeaponPart getRightVariant(Vector2 weaponSlot, Vector2 origin, TextureRegion skinRegion, BulletsAssets bulletsAssets) {
-        Vector2 position = new Vector2(weaponSlot.x - 12, weaponSlot.y - 30);
-        return new BasicPrimaryWeaponPart(position, origin, skinRegion,
-                Points.makeRightVertices(LEFT_VERTICES, WIDTH), Points.makeRightVector(LEFT_BULLET_OUTPUT, WIDTH), bulletsAssets);
+    public static BasicPrimaryWeaponPart getRightVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
+                                                         PartsAssets.SkinColor color, Ship ship) {
+        Variant right = Variant.RIGHT;
+        TextureRegion skinRegion = partsAssets.getPart(color, right.skinIndex);
+        return new BasicPrimaryWeaponPart(skinRegion, bulletsAssets, right, ship);
     }
 
-    private BasicPrimaryWeaponPart(Vector2 position, Vector2 origin, TextureRegion skinRegion, float[] vertices, Vector2 bulletOutput, BulletsAssets bulletsAssets) {
-        super(new Polygon(vertices), skinRegion);
-        this.bulletOutput = bulletOutput;
+    private BasicPrimaryWeaponPart(TextureRegion skinRegion, BulletsAssets bulletsAssets, Variant variant, Ship ship) {
+        super(new Polygon(variant.vertices), skinRegion);
+        this.bulletOutput = variant.bulletOutput;
         this.bulletsAssets = bulletsAssets;
+        this.slotName = variant.slotName;
+
+        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
+        Vector2 origin = core.getOrigin();
+        Vector2 weaponSlot = core.getSlotFor(slotName);
+        Vector2 position = variant.computePosition.apply(weaponSlot);
         takenArea.setPosition(position.x, position.y);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
         this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
@@ -107,7 +124,43 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     }
 
     @Override
+    public PartSlotName getSlotName() {
+        return slotName;
+    }
+
+    @Override
     public void updateFeatures(ShipFeatures features) {
 
+    }
+
+    private enum Variant {
+        LEFT(
+                DEFAULT_LEFT_INDEX,
+                LEFT_VERTICES,
+                LEFT_BULLET_OUTPUT,
+                LEFT_PRIMARY_WEAPON,
+                weaponSlot -> new Vector2(weaponSlot.x - 30, weaponSlot.y - 30)
+        ),
+        RIGHT(
+                DEFAULT_RIGHT_INDEX,
+                Points.makeRightVertices(LEFT_VERTICES, WIDTH),
+                Points.makeRightVector(LEFT_BULLET_OUTPUT, WIDTH),
+                RIGHT_PRIMARY_WEAPON,
+                weaponSlot -> new Vector2(weaponSlot.x - 12, weaponSlot.y - 30)
+        );
+
+        int skinIndex;
+        float[] vertices;
+        Vector2 bulletOutput;
+        PartSlotName slotName;
+        Function<Vector2, Vector2> computePosition;
+
+        Variant(int skinIndex, float[] vertices, Vector2 bulletOutput, PartSlotName slotName, Function<Vector2, Vector2> computePosition) {
+            this.skinIndex = skinIndex;
+            this.vertices = vertices;
+            this.bulletOutput = bulletOutput;
+            this.slotName = slotName;
+            this.computePosition = computePosition;
+        }
     }
 }

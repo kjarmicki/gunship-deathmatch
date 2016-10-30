@@ -3,7 +3,11 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
+
+import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
 public class BasicNosePart extends GenericPart implements NosePart {
     public static final int DEFAULT_INDEX = 26;
@@ -23,15 +27,15 @@ public class BasicNosePart extends GenericPart implements NosePart {
     public static final int Z_INDEX = 2;
     public static final boolean IS_CRITICAL = true;
 
-    public BasicNosePart(Vector2 noseSlot, Vector2 origin, TextureRegion skinRegion) {
-        super(new Polygon(VERTICES), skinRegion);
+    public BasicNosePart(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
+        super(new Polygon(VERTICES), partsAssets.getPart(color, BasicNosePart.DEFAULT_INDEX));
+
+        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
+        Vector2 noseSlot = core.getSlotFor(NOSE);
+        Vector2 origin = core.getOrigin();
         Vector2 position = computeSlotPlacement(noseSlot);
         takenArea.setPosition(position.x, position.y);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
-    }
-
-    private Vector2 computeSlotPlacement(Vector2 noseSlot) {
-        return new Vector2(noseSlot.x - WIDTH / 2, noseSlot.y);
     }
 
     @Override
@@ -55,7 +59,16 @@ public class BasicNosePart extends GenericPart implements NosePart {
     }
 
     @Override
+    public Vector2 getSlotFor(PartSlotName part) {
+        throw new UnsupportedOperationException("This part does not have any slots");
+    }
+
+    @Override
     public void updateFeatures(ShipFeatures features) {
         features.adjustAcceleration(1);
+    }
+
+    private Vector2 computeSlotPlacement(Vector2 noseSlot) {
+        return new Vector2(noseSlot.x - WIDTH / 2, noseSlot.y);
     }
 }
