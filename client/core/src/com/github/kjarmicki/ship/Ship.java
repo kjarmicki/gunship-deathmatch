@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.bullets.BulletsContainer;
 import com.github.kjarmicki.ship.parts.*;
@@ -22,13 +23,19 @@ public class Ship {
     private final BulletsContainer bulletsContainer;
     private final ShipOwner owner;
     private final CorePart core;
-    private float rotating;
+    private final PartsAssets.SkinColor color;
+    private final PartsAssets partsAssets;
+    private final BulletsAssets bulletsAssets;
+    private float rotation;
     private boolean isDestroyed = false;
 
 
     public Ship(float x, float y, ShipFeatures features, ShipOwner owner, PartsAssets.SkinColor color, PartsAssets partsAssets, BulletsAssets bulletsAssets, BulletsContainer bulletsContainer) {
         this.features = features;
         this.bulletsContainer = bulletsContainer;
+        this.partsAssets = partsAssets;
+        this.bulletsAssets = bulletsAssets;
+        this.color = color;
         this.owner = owner;
         core = new BasicCorePart(x, y, partsAssets.getPart(color, BasicCorePart.DEFAULT_INDEX));
 
@@ -39,8 +46,6 @@ public class Ship {
         this.mountPart(BasicEnginePart.getRightVariant(partsAssets, color, this));
         this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(partsAssets, bulletsAssets, color, this));
         this.mountPart(BasicPrimaryWeaponPart.getRightVariant(partsAssets, bulletsAssets, color, this));
-        this.mountPart(BasicSecondaryWeaponPart.getLeftVariant(partsAssets, bulletsAssets, color, this));
-        this.mountPart(BasicSecondaryWeaponPart.getRightVariant(partsAssets, bulletsAssets, color, this));
     }
 
     public void moveForwards(float delta) {
@@ -56,11 +61,11 @@ public class Ship {
     }
 
     public void rotateLeft(float delta) {
-        rotating += delta * features.getRotation();
+        rotation += delta * features.getRotation();
     }
 
     public void rotateRight(float delta) {
-        rotating -= delta * features.getRotation();
+        rotation -= delta * features.getRotation();
     }
 
     public void startShooting(float delta) {
@@ -110,7 +115,7 @@ public class Ship {
 
         velocity.x -= delta * features.getDrag() * velocity.x;
         velocity.y -= delta * features.getDrag() * velocity.y;
-        rotating -= delta * features.getDrag() * rotating;
+        rotation -= delta * features.getDrag() * rotation;
 
         float x = delta * velocity.x;
         float y = delta * velocity.y;
@@ -118,7 +123,7 @@ public class Ship {
 
         allParts().stream().forEach(part -> {
             part.moveBy(movement);
-            part.rotate(rotating);
+            part.rotate(rotation);
         });
     }
 
@@ -148,7 +153,7 @@ public class Ship {
                     // rebound a ship off the wall
                     velocity.x = rebound(velocity.x);
                     velocity.y = rebound(velocity.y);
-                    rotating = rebound(rotating);
+                    rotation = rebound(rotation);
 
                     // damage part that went off
                     outsidePart.receiveDamage(shift.len());
@@ -174,7 +179,7 @@ public class Ship {
 
                         velocity.x = rebound(velocity.x);
                         velocity.y = rebound(velocity.y);
-                        rotating = rebound(rotating);
+                        rotation = rebound(rotation);
 
                         // TODO: damage
 
@@ -200,6 +205,15 @@ public class Ship {
                 });
     }
 
+    public void checkCollisionWith(Powerup powerup) {
+        allParts().stream()
+                .filter(myPart -> !myPart.collisionVector(powerup).equals(Points.ZERO))
+                .findFirst()
+                .ifPresent(myPart -> {
+                    powerup.apply(this);
+                });
+    }
+
     public void bump(Vector2 objectVelocity) {
         velocity.x += objectVelocity.x;
         velocity.y += objectVelocity.y;
@@ -207,6 +221,18 @@ public class Ship {
 
     public Vector2 getVelocity() {
         return velocity;
+    }
+
+    public PartsAssets.SkinColor getColor() {
+        return color;
+    }
+
+    public PartsAssets getPartsAssets() {
+        return partsAssets;
+    }
+
+    public BulletsAssets getBulletsAssets() {
+        return bulletsAssets;
     }
 
     public boolean isDestroyed() {

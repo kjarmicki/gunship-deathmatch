@@ -39,6 +39,10 @@ public abstract class GenericVisibleThing implements VisibleThing {
         takenArea.rotate(degrees);
     }
 
+    public float getRotation() {
+        return takenArea.getRotation();
+    }
+
     public Vector2 withPosition(Vector2 base) {
         return new Vector2(base.x + takenArea.getX(), base.y + takenArea.getY());
     }

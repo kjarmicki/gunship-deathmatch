@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
@@ -13,6 +14,8 @@ import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.entity.DumbEnemy;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
+import com.github.kjarmicki.powerup.BasicSecondaryWeaponPowerup;
+import com.github.kjarmicki.powerup.PowerupsContainer;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
@@ -31,6 +34,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
     private final BulletsContainer bulletsContainer;
+    private final PowerupsContainer powerupsContainer;
 
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
         this.viewport = viewport;
@@ -48,6 +52,9 @@ public class ArenaScreen extends ScreenAdapter {
         );
 
         bulletsContainer = new BulletsContainer();
+
+        powerupsContainer = new PowerupsContainer();
+        powerupsContainer.addPowerup(new Vector2(1000, 1000), new BasicSecondaryWeaponPowerup(partsAssets));
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
         player = new Player(
                 controls
@@ -87,7 +94,9 @@ public class ArenaScreen extends ScreenAdapter {
         enemy.checkPlacementWithinBounds(ground.getBounds());
         player.checkCollisionWithOtherShip(enemy.getShip());
         bulletsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
+        powerupsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
         bulletsContainer.cleanup(ground.getBounds());
+        powerupsContainer.cleanup();
         chaseCamera.lookAt(player, delta);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -97,6 +106,7 @@ public class ArenaScreen extends ScreenAdapter {
         player.draw(batch);
         enemy.draw(batch);
         bulletsContainer.drawBullets(batch);
+        powerupsContainer.drawPowerups(batch);
         batch.end();
 
         Debugger.setProjection(viewport.getCamera().combined);

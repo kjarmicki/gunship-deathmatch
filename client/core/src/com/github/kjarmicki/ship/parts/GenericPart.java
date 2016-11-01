@@ -29,6 +29,7 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
     @Override
     public void mountSubpart(Part subpart) {
         subparts.put(subpart.getSlotName(), subpart);
+        subpart.rotate(this.getRotation());
     }
 
     public Map<PartSlotName, Part> getAllSubparts() {
