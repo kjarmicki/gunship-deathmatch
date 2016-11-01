@@ -35,6 +35,7 @@ public class BasicWingPart extends GenericPart implements WingPart {
     public static final int Z_INDEX = 1;
     public static final boolean IS_CRITICAL = true;
     public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(69, 30);
+    public static final Vector2 LEFT_SECONDARY_WEAPON_SLOT = new Vector2(68, 30);
     private final Vector2 engineSlot;
     private final List<PartSlotName> childSlotNames;
     private final PartSlotName slotName;
@@ -94,6 +95,8 @@ public class BasicWingPart extends GenericPart implements WingPart {
     public Vector2 getSlotFor(PartSlotName part) {
         if(part == LEFT_ENGINE) return withPosition(Variant.LEFT.engineSlot);
         if(part == RIGHT_ENGINE) return withPosition(Variant.RIGHT.engineSlot);
+        if(part == LEFT_SECONDARY_WEAPON) return withPosition(Variant.LEFT.secondaryWeaponSlot);
+        if(part == RIGHT_SECONDARY_WEAPON) return withPosition(Variant.RIGHT.secondaryWeaponSlot);
         return null;
     }
 
@@ -117,7 +120,8 @@ public class BasicWingPart extends GenericPart implements WingPart {
                 DEFAULT_LEFT_INDEX,
                 LEFT_VERTICES,
                 LEFT_ENGINE_SLOT,
-                Collections.singletonList(LEFT_ENGINE),
+                LEFT_SECONDARY_WEAPON_SLOT,
+                Arrays.asList(LEFT_ENGINE, LEFT_SECONDARY_WEAPON),
                 LEFT_WING,
                 wingSlot -> new Vector2(wingSlot.x - WIDTH, wingSlot.y - HEIGHT / 2)
         ),
@@ -125,7 +129,8 @@ public class BasicWingPart extends GenericPart implements WingPart {
                 DEFAULT_RIGHT_INDEX,
                 Points.makeRightVertices(LEFT_VERTICES, WIDTH),
                 Points.makeRightVector(LEFT_ENGINE_SLOT, WIDTH),
-                Collections.singletonList(RIGHT_ENGINE),
+                Points.makeRightVector(LEFT_SECONDARY_WEAPON_SLOT, WIDTH),
+                Arrays.asList(RIGHT_ENGINE, RIGHT_SECONDARY_WEAPON),
                 RIGHT_WING,
                 wingSlot -> new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2)
         );
@@ -133,15 +138,17 @@ public class BasicWingPart extends GenericPart implements WingPart {
         int skinIndex;
         float[] vertices;
         Vector2 engineSlot;
+        Vector2 secondaryWeaponSlot;
         List<PartSlotName> childSlotNames;
         PartSlotName slotName;
         Function<Vector2, Vector2> computePosition;
 
-        Variant(int skinIndex, float[] vertices, Vector2 engineSlot, List<PartSlotName> childSlotNames,
+        Variant(int skinIndex, float[] vertices, Vector2 engineSlot, Vector2 secondaryWeaponSlot, List<PartSlotName> childSlotNames,
                 PartSlotName slotName, Function<Vector2, Vector2> computePosition) {
             this.skinIndex = skinIndex;
             this.vertices = vertices;
             this.engineSlot = engineSlot;
+            this.secondaryWeaponSlot = secondaryWeaponSlot;
             this.childSlotNames = childSlotNames;
             this.slotName = slotName;
             this.computePosition = computePosition;

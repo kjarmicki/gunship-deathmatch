@@ -39,6 +39,8 @@ public class Ship {
         this.mountPart(BasicEnginePart.getRightVariant(partsAssets, color, this));
         this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(partsAssets, bulletsAssets, color, this));
         this.mountPart(BasicPrimaryWeaponPart.getRightVariant(partsAssets, bulletsAssets, color, this));
+        this.mountPart(BasicSecondaryWeaponPart.getLeftVariant(partsAssets, bulletsAssets, color, this));
+        this.mountPart(BasicSecondaryWeaponPart.getRightVariant(partsAssets, bulletsAssets, color, this));
     }
 
     public void moveForwards(float delta) {
