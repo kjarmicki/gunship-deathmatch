@@ -15,13 +15,18 @@ import com.github.kjarmicki.entity.DumbEnemy;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.powerup.BasicSecondaryWeaponPowerup;
+import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.powerup.PowerupsContainer;
+import com.github.kjarmicki.powerup.PowerupsRespawner;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.BulletsContainer;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
@@ -35,6 +40,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final BulletsAssets bulletsAssets;
     private final BulletsContainer bulletsContainer;
     private final PowerupsContainer powerupsContainer;
+    private final PowerupsRespawner powerupsRespawner;
 
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
         this.viewport = viewport;
@@ -54,7 +60,10 @@ public class ArenaScreen extends ScreenAdapter {
         bulletsContainer = new BulletsContainer();
 
         powerupsContainer = new PowerupsContainer();
-        powerupsContainer.addPowerup(new Vector2(1000, 1000), new BasicSecondaryWeaponPowerup(partsAssets));
+        Map<Vector2, Supplier<Powerup>> respawnablePowerups = new HashMap<>();
+        respawnablePowerups.put(new Vector2(1000, 1000), () -> new BasicSecondaryWeaponPowerup(partsAssets));
+        powerupsRespawner = new PowerupsRespawner(respawnablePowerups, powerupsContainer);
+
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
         player = new Player(
                 controls
@@ -93,6 +102,7 @@ public class ArenaScreen extends ScreenAdapter {
         player.checkPlacementWithinBounds(ground.getBounds());
         enemy.checkPlacementWithinBounds(ground.getBounds());
         player.checkCollisionWithOtherShip(enemy.getShip());
+        powerupsRespawner.update(delta);
         bulletsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
         powerupsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
         bulletsContainer.cleanup(ground.getBounds());

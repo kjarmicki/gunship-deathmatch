@@ -41,6 +41,10 @@ public class PowerupsContainer {
                 });
     }
 
+    public boolean isPositionTaken(Vector2 position) {
+        return powerupsByPosition.containsKey(position);
+    }
+
     public void cleanup() {
         Map<Vector2, Powerup> filtered = powerupsByPosition.entrySet()
                 .stream()
