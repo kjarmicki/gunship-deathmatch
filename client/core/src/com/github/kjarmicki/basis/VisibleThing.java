@@ -10,6 +10,8 @@ public interface VisibleThing {
     void moveBy(Vector2 movement);
     void rotate(float degrees);
     void draw(Batch batch);
+    float getWidth();
+    float getHeight();
     Vector2 outsideBounds(Rectangle bounds);
     Vector2 collisionVector(VisibleThing otherPart);
 }

@@ -36,7 +36,12 @@ public class BulletsAssets extends Assets {
         BLUE_BLAST("BlueBlast", 1),
         BLUE_SCALE("BlueScale", 4),
         BLUE_SPIN("BlueSpin", 4),
-        BLUE_TAIL("BlueTail", 4);
+        BLUE_TAIL("BlueTail", 4),
+
+        ORANGE_BLAST("OrangeBlast", 1),
+        ORANGE_SCALE("OrangeScale", 4),
+        ORANGE_SPIN("OrangeSpin", 4),
+        ORANGE_TAIL("OrangeTail", 4);
 
         final String name;
         final int frames;

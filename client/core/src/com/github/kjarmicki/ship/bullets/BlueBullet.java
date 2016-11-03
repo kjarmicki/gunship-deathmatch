@@ -7,7 +7,7 @@ import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.basis.GenericVisibleThing;
 import com.github.kjarmicki.util.Points;
 
-public class BasicBullet extends GenericVisibleThing implements Bullet {
+public class BlueBullet extends GenericBullet {
     public static final BulletsAssets.Variant TEXTURE_VARIANT = BulletsAssets.Variant.BLUE_TAIL;
     public static final float[] VERTICES = new float[] {
             18, 12,
@@ -25,12 +25,7 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
     public static final float IMPACT = 20;
     public static final float RANGE = 500;
 
-    private final Vector2 velocity = new Vector2(0, 0);
-    private final Vector2 startingPosition = new Vector2(0, 0);
-    private boolean isDestroyed = false;
-    private boolean isRangeExceeded = false;
-
-    public BasicBullet(Vector2 position, Vector2 origin, float rotation, TextureRegion skinRegion) {
+    public BlueBullet(Vector2 position, Vector2 origin, float rotation, TextureRegion skinRegion) {
         super(new Polygon(VERTICES), skinRegion);
         position.x -= WIDTH / 2;
         position.y -= 30;
@@ -51,47 +46,22 @@ public class BasicBullet extends GenericVisibleThing implements Bullet {
     }
 
     @Override
-    public void update(float delta) {
-        // check if bullet got out of it's range
-        Vector2 position = new Vector2(takenArea.getX(), takenArea.getY());
-        if(startingPosition.dst(position) > RANGE) {
-            isRangeExceeded = true;
-            return;
-        }
-
-        Vector2 direction = Points.getDirectionVector(takenArea.getRotation());
-        if(velocity.equals(Points.ZERO)) {
-            velocity.x += ACCELERATION / 10 * direction.x;
-            velocity.y += ACCELERATION / 10 * direction.y;
-        }
-        velocity.x += delta * ACCELERATION * direction.x;
-        velocity.y += delta * ACCELERATION * direction.y;
-        velocity.clamp(0, MAX_SPEED);
-
-        float x = delta * velocity.x;
-        float y = delta * velocity.y;
-        Vector2 movement = new Vector2(x, y);
-
-        moveBy(movement);
-    }
-
-    @Override
     public float getImpact() {
         return IMPACT;
     }
 
     @Override
-    public boolean isRangeExceeded() {
-        return isRangeExceeded;
+    public float getRange() {
+        return RANGE;
     }
 
     @Override
-    public void destroy() {
-        isDestroyed = true;
+    public int getAcceleration() {
+        return ACCELERATION;
     }
 
     @Override
-    public boolean isDestroyed() {
-        return isDestroyed;
+    public int getMaxSpeed() {
+        return MAX_SPEED;
     }
 }

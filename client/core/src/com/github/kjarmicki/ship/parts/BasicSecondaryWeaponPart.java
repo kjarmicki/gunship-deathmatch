@@ -8,8 +8,9 @@ import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
-import com.github.kjarmicki.ship.bullets.BasicBullet;
+import com.github.kjarmicki.ship.bullets.BlueBullet;
 import com.github.kjarmicki.ship.bullets.Bullet;
+import com.github.kjarmicki.ship.bullets.OrangeBullet;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -91,7 +92,7 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL && ammo > 0) {
-            Bullet bullet = new BasicBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(BasicBullet.TEXTURE_VARIANT));
+            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(OrangeBullet.TEXTURE_VARIANT));
             lastShot = TimeUtils.millis();
             ammo--;
             return Optional.of(bullet);

@@ -8,7 +8,7 @@ import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
-import com.github.kjarmicki.ship.bullets.BasicBullet;
+import com.github.kjarmicki.ship.bullets.BlueBullet;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
@@ -96,7 +96,7 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL) {
-            Bullet bullet = new BasicBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(BasicBullet.TEXTURE_VARIANT));
+            Bullet bullet = new BlueBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(BlueBullet.TEXTURE_VARIANT));
             lastShot = TimeUtils.millis();
             return Optional.of(bullet);
         }

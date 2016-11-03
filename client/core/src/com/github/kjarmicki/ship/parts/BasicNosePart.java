@@ -59,11 +59,6 @@ public class BasicNosePart extends GenericPart implements NosePart {
     }
 
     @Override
-    public Vector2 getSlotFor(PartSlotName part) {
-        throw new UnsupportedOperationException("This part does not have any slots");
-    }
-
-    @Override
     public void updateFeatures(ShipFeatures features) {
         features.adjustAcceleration(1);
     }
