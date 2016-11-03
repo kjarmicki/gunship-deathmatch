@@ -40,10 +40,12 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     public static final long SHOT_INTERVAL = 450;
     public static final boolean IS_CRITICAL = false;
     public static final Vector2 BULLET_OUTPUT = new Vector2(25f, HEIGHT);
+    public static final int AMMO = 10;
     private final PartSlotName slotName;
     private final Vector2 baseOrigin;
     private final BulletsAssets bulletsAssets;
     private long lastShot = 0;
+    private int ammo = AMMO;
 
     public static BasicSecondaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
                                                         PartsAssets.SkinColor color, Ship ship) {
@@ -88,9 +90,10 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     @Override
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
-        if(now - lastShot > SHOT_INTERVAL) {
+        if(now - lastShot > SHOT_INTERVAL && ammo > 0) {
             Bullet bullet = new BasicBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(BasicBullet.TEXTURE_VARIANT));
             lastShot = TimeUtils.millis();
+            ammo--;
             return Optional.of(bullet);
         }
         return Optional.empty();
