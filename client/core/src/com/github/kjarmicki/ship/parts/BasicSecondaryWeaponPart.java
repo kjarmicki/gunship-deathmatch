@@ -19,7 +19,7 @@ import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
 public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart {
     public static final int DEFAULT_INDEX = 42;
-    private static final float[] VERTICES = new float[] {
+    public static final float[] VERTICES = new float[] {
             15,     0,
             11,     9,
             11,     73,

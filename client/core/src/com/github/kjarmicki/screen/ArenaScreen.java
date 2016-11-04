@@ -14,10 +14,7 @@ import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.entity.DumbEnemy;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
-import com.github.kjarmicki.powerup.BasicSecondaryWeaponPowerup;
-import com.github.kjarmicki.powerup.Powerup;
-import com.github.kjarmicki.powerup.PowerupsContainer;
-import com.github.kjarmicki.powerup.PowerupsRespawner;
+import com.github.kjarmicki.powerup.*;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
@@ -62,6 +59,7 @@ public class ArenaScreen extends ScreenAdapter {
         powerupsContainer = new PowerupsContainer();
         Map<Vector2, Supplier<Powerup>> respawnablePowerups = new HashMap<>();
         respawnablePowerups.put(new Vector2(1000, 1000), () -> new BasicSecondaryWeaponPowerup(partsAssets));
+        respawnablePowerups.put(new Vector2(1300, 1300), () -> new AdvancedPrimaryWeaponPowerup(partsAssets));
         powerupsRespawner = new PowerupsRespawner(respawnablePowerups, powerupsContainer);
 
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);

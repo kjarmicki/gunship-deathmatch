@@ -8,66 +8,78 @@ import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
-import com.github.kjarmicki.ship.bullets.BlueBullet;
 import com.github.kjarmicki.ship.bullets.Bullet;
+import com.github.kjarmicki.ship.bullets.OrangeBullet;
 import com.github.kjarmicki.util.Points;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
-import static com.github.kjarmicki.ship.parts.PartSlotName.LEFT_PRIMARY_WEAPON;
-import static com.github.kjarmicki.ship.parts.PartSlotName.RIGHT_PRIMARY_WEAPON;
+import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
-public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeaponPart {
-    public static final int DEFAULT_LEFT_INDEX = 38;
-    public static final int DEFAULT_RIGHT_INDEX = 39;
-    private static final float[] LEFT_VERTICES = new float[] {
-            5,  0,
-            0,  6,
-            0,  57,
-            5,  62,
-            7,  62,
-            7,  101,
-            5,  105,
-            5,  131,
-            23, 131,
-            23, 105,
-            20, 101,
-            20, 62,
-            25, 62,
-            29, 57,
-            29, 5,
-            24, 0
+public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWeaponPart {
+    public static final int DEFAULT_LEFT_INDEX = 40;
+    public static final int DEFAULT_RIGHT_INDEX = 41;
+    public static final float[] LEFT_VERTICES = new float[] {
+            32,     0,
+            28,     3,
+            28,     10,
+            25,     13,
+            25,     22,
+            14,     32,
+            14,     67,
+            9,      67,
+            5,      72,
+            4,      78,
+            0,      82,
+            0,      113,
+            5,      117,
+            4,      122,
+            10,     127,
+            18,     127,
+            26,     135,
+            49,     135,
+            57,     127,
+            57,     112,
+            67,     99,
+            57,     83,
+            57,     68,
+            50,     63,
+            46,     63,
+            47,     36,
+            50,     32,
+            50,     14,
+            47,     9,
+            47,     4,
+            44,     0
     };
-    public static final float WIDTH = 42f;
-    public static final float HEIGHT = 131f;
+    public static final float WIDTH = 67f;
+    public static final float HEIGHT = 135f;
     public static final int Z_INDEX = 3;
-    public static final long SHOT_INTERVAL = 200;
+    public static final long SHOT_INTERVAL = 300;
     public static final boolean IS_CRITICAL = false;
-    public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(15f, HEIGHT);
+    public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(38f, HEIGHT);
     private final PartSlotName slotName;
     private final Vector2 baseOrigin;
     private final Vector2 bulletOutput;
     private final BulletsAssets bulletsAssets;
     private long lastShot = 0;
 
-
-    public static BasicPrimaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
+    public static AdvancedPrimaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
                                                         PartsAssets.SkinColor color, Ship ship) {
         Variant left = Variant.LEFT;
         TextureRegion skinRegion = partsAssets.getPart(color, left.skinIndex);
-        return new BasicPrimaryWeaponPart(skinRegion, bulletsAssets, left, ship);
+        return new AdvancedPrimaryWeaponPart(skinRegion, bulletsAssets, left, ship);
     }
 
-    public static BasicPrimaryWeaponPart getRightVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
+    public static AdvancedPrimaryWeaponPart getRightVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
                                                          PartsAssets.SkinColor color, Ship ship) {
         Variant right = Variant.RIGHT;
         TextureRegion skinRegion = partsAssets.getPart(color, right.skinIndex);
-        return new BasicPrimaryWeaponPart(skinRegion, bulletsAssets, right, ship);
+        return new AdvancedPrimaryWeaponPart(skinRegion, bulletsAssets, right, ship);
     }
 
-    private BasicPrimaryWeaponPart(TextureRegion skinRegion, BulletsAssets bulletsAssets, Variant variant, Ship ship) {
+    private AdvancedPrimaryWeaponPart(TextureRegion skinRegion, BulletsAssets bulletsAssets, Variant variant, Ship ship) {
         super(new Polygon(variant.vertices), skinRegion);
         this.bulletOutput = variant.bulletOutput;
         this.bulletsAssets = bulletsAssets;
@@ -83,20 +95,10 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     }
 
     @Override
-    public float getWidth() {
-        return WIDTH;
-    }
-
-    @Override
-    public float getHeight() {
-        return HEIGHT;
-    }
-
-    @Override
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL) {
-            Bullet bullet = new BlueBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(BlueBullet.TEXTURE_VARIANT));
+            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(OrangeBullet.TEXTURE_VARIANT));
             lastShot = TimeUtils.millis();
             return Optional.of(bullet);
         }
@@ -133,20 +135,30 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
 
     }
 
+    @Override
+    public float getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public float getHeight() {
+        return HEIGHT;
+    }
+
     private enum Variant {
         LEFT(
                 DEFAULT_LEFT_INDEX,
                 LEFT_VERTICES,
                 LEFT_BULLET_OUTPUT,
                 LEFT_PRIMARY_WEAPON,
-                weaponSlot -> new Vector2(weaponSlot.x - 30, weaponSlot.y - 30)
+                weaponSlot -> new Vector2(weaponSlot.x - 52, weaponSlot.y - 25)
         ),
         RIGHT(
                 DEFAULT_RIGHT_INDEX,
                 Points.makeRightVertices(LEFT_VERTICES, WIDTH),
                 Points.makeRightVector(LEFT_BULLET_OUTPUT, WIDTH),
                 RIGHT_PRIMARY_WEAPON,
-                weaponSlot -> new Vector2(weaponSlot.x - 12, weaponSlot.y - 30)
+                weaponSlot -> new Vector2(weaponSlot.x - 15, weaponSlot.y - 25)
         );
 
         int skinIndex;

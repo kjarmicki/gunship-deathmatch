@@ -14,6 +14,14 @@ public class Points {
         return inverted;
     }
 
+    public static float[] scaleVertices(float[] vertices, float scale) {
+        float[] scaled = new float[vertices.length];
+        for(int i = 0; i < vertices.length; i++) {
+            scaled[i] = vertices[i] * scale;
+        }
+        return scaled;
+    }
+
     public static Vector2 makeRightVector(Vector2 leftVector, float width) {
         return new Vector2(width - leftVector.x, leftVector.y);
     }
