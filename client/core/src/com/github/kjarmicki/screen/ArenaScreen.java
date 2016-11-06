@@ -11,12 +11,12 @@ import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.camera.ChaseCamera;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.entity.DumbEnemy;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.powerup.*;
 import com.github.kjarmicki.ship.Ship;
-import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.BulletsContainer;
 
@@ -60,6 +60,7 @@ public class ArenaScreen extends ScreenAdapter {
         Map<Vector2, Supplier<Powerup>> respawnablePowerups = new HashMap<>();
         respawnablePowerups.put(new Vector2(1000, 1000), () -> new BasicSecondaryWeaponPowerup(partsAssets));
         respawnablePowerups.put(new Vector2(1300, 1300), () -> new AdvancedPrimaryWeaponPowerup(partsAssets));
+        respawnablePowerups.put(new Vector2(1500, 1500), () -> new FastWingPowerup(partsAssets));
         powerupsRespawner = new PowerupsRespawner(respawnablePowerups, powerupsContainer);
 
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);

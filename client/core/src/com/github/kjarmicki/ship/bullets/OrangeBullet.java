@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.BulletsAssets;
-import com.github.kjarmicki.basis.GenericVisibleThing;
 import com.github.kjarmicki.util.Points;
 
 public class OrangeBullet extends GenericBullet {

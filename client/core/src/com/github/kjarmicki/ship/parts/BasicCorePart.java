@@ -3,7 +3,6 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
 import java.util.HashMap;
@@ -72,6 +71,11 @@ public class BasicCorePart extends GenericPart implements CorePart {
     @Override
     public boolean isCritical() {
         return IS_CRITICAL;
+    }
+
+    @Override
+    public void positionWithinOwner() {
+        // core part, no need to reposition
     }
 
     @Override

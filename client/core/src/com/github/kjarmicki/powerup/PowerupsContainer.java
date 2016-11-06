@@ -3,7 +3,6 @@ package com.github.kjarmicki.powerup;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.ship.ShipOwner;
-import com.github.kjarmicki.ship.bullets.Bullet;
 
 import java.util.HashMap;
 import java.util.List;

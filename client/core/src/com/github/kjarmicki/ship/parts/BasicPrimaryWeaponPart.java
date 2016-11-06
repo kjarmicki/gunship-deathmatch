@@ -15,9 +15,7 @@ import com.github.kjarmicki.util.Points;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
-import static com.github.kjarmicki.ship.parts.PartSlotName.LEFT_PRIMARY_WEAPON;
-import static com.github.kjarmicki.ship.parts.PartSlotName.RIGHT_PRIMARY_WEAPON;
+import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
 public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeaponPart {
     public static final int DEFAULT_LEFT_INDEX = 38;
@@ -47,9 +45,11 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     public static final boolean IS_CRITICAL = false;
     public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(15f, HEIGHT);
     private final PartSlotName slotName;
-    private final Vector2 baseOrigin;
     private final Vector2 bulletOutput;
     private final BulletsAssets bulletsAssets;
+    private final Variant variant;
+    private final Ship owner;
+    private Vector2 baseOrigin;
     private long lastShot = 0;
 
 
@@ -72,14 +72,9 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
         this.bulletOutput = variant.bulletOutput;
         this.bulletsAssets = bulletsAssets;
         this.slotName = variant.slotName;
-
-        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
-        Vector2 origin = core.getOrigin();
-        Vector2 weaponSlot = core.getSlotFor(slotName);
-        Vector2 position = variant.computePosition.apply(weaponSlot);
-        takenArea.setPosition(position.x, position.y);
-        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
-        this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
+        this.variant = variant;
+        this.owner = ship;
+        positionWithinOwner();
     }
 
     @Override
@@ -116,6 +111,17 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     @Override
     public boolean isCritical() {
         return IS_CRITICAL;
+    }
+
+    @Override
+    public void positionWithinOwner() {
+        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        Vector2 origin = core.getOrigin();
+        Vector2 weaponSlot = core.getSlotFor(slotName);
+        Vector2 position = variant.computePosition.apply(weaponSlot);
+        takenArea.setPosition(position.x, position.y);
+        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
     }
 
     @Override

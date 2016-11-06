@@ -1,6 +1,7 @@
 package com.github.kjarmicki.controls;
 
 import com.badlogic.gdx.Gdx;
+
 import static com.badlogic.gdx.Input.Keys.*;
 
 public class Keyboard implements Controls {

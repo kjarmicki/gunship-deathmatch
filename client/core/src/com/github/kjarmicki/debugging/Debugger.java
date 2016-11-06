@@ -9,7 +9,9 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.util.Env;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class Debugger {
     private static final ShapeRenderer sr = new ShapeRenderer();

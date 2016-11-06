@@ -3,12 +3,11 @@ package com.github.kjarmicki.powerup;
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
-import com.github.kjarmicki.basis.GenericVisibleThing;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.parts.AdvancedPrimaryWeaponPart;
 import com.github.kjarmicki.util.Points;
 
-import static com.github.kjarmicki.assets.PartsAssets.*;
+import static com.github.kjarmicki.assets.PartsAssets.SkinColor;
 
 public class AdvancedPrimaryWeaponPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = AdvancedPrimaryWeaponPart.DEFAULT_LEFT_INDEX;

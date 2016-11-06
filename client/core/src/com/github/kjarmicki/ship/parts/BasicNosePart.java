@@ -1,13 +1,13 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
-import static com.github.kjarmicki.ship.parts.PartSlotName.*;
+import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
+import static com.github.kjarmicki.ship.parts.PartSlotName.NOSE;
 
 public class BasicNosePart extends GenericPart implements NosePart {
     public static final int DEFAULT_INDEX = 26;
@@ -26,16 +26,12 @@ public class BasicNosePart extends GenericPart implements NosePart {
     public static final float HEIGHT = 116f;
     public static final int Z_INDEX = 2;
     public static final boolean IS_CRITICAL = true;
+    private final Ship owner;
 
     public BasicNosePart(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
         super(new Polygon(VERTICES), partsAssets.getPart(color, BasicNosePart.DEFAULT_INDEX));
-
-        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
-        Vector2 noseSlot = core.getSlotFor(NOSE);
-        Vector2 origin = core.getOrigin();
-        Vector2 position = computeSlotPlacement(noseSlot);
-        takenArea.setPosition(position.x, position.y);
-        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        this.owner = ship;
+        positionWithinOwner();
     }
 
     @Override
@@ -51,6 +47,16 @@ public class BasicNosePart extends GenericPart implements NosePart {
     @Override
     public boolean isCritical() {
         return IS_CRITICAL;
+    }
+
+    @Override
+    public void positionWithinOwner() {
+        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        Vector2 noseSlot = core.getSlotFor(NOSE);
+        Vector2 origin = core.getOrigin();
+        Vector2 position = computeSlotPlacement(noseSlot);
+        takenArea.setPosition(position.x, position.y);
+        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
     }
 
     @Override

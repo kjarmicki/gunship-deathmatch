@@ -21,37 +21,37 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     public static final int DEFAULT_LEFT_INDEX = 40;
     public static final int DEFAULT_RIGHT_INDEX = 41;
     public static final float[] LEFT_VERTICES = new float[] {
-            32,     0,
-            28,     3,
-            28,     10,
-            25,     13,
-            25,     22,
-            14,     32,
-            14,     67,
-            9,      67,
-            5,      72,
-            4,      78,
-            0,      82,
-            0,      113,
-            5,      117,
-            4,      122,
-            10,     127,
-            18,     127,
-            26,     135,
-            49,     135,
-            57,     127,
-            57,     112,
-            67,     99,
-            57,     83,
-            57,     68,
-            50,     63,
-            46,     63,
-            47,     36,
-            50,     32,
-            50,     14,
-            47,     9,
-            47,     4,
-            44,     0
+            32,		135,
+            28,		132,
+            28,		125,
+            25,		122,
+            25,		113,
+            14,		103,
+            14,		68,
+            9,		68,
+            5,		63,
+            4,		57,
+            0,		53,
+            0,		22,
+            5,		18,
+            4,		13,
+            10,		8,
+            18,		8,
+            26,		0,
+            49,		0,
+            57,		8,
+            57,		23,
+            67,		36,
+            57,		52,
+            57,		67,
+            50,		72,
+            46,		72,
+            47,		99,
+            50,		103,
+            50,		121,
+            47,		126,
+            47,		131,
+            44,		135
     };
     public static final float WIDTH = 67f;
     public static final float HEIGHT = 135f;
@@ -60,9 +60,11 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     public static final boolean IS_CRITICAL = false;
     public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(38f, HEIGHT);
     private final PartSlotName slotName;
-    private final Vector2 baseOrigin;
     private final Vector2 bulletOutput;
     private final BulletsAssets bulletsAssets;
+    private final Variant variant;
+    private final Ship owner;
+    private Vector2 baseOrigin;
     private long lastShot = 0;
 
     public static AdvancedPrimaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
@@ -84,14 +86,9 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
         this.bulletOutput = variant.bulletOutput;
         this.bulletsAssets = bulletsAssets;
         this.slotName = variant.slotName;
-
-        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
-        Vector2 origin = core.getOrigin();
-        Vector2 weaponSlot = core.getSlotFor(slotName);
-        Vector2 position = variant.computePosition.apply(weaponSlot);
-        takenArea.setPosition(position.x, position.y);
-        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
-        this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
+        this.variant = variant;
+        this.owner = ship;
+        positionWithinOwner();
     }
 
     @Override
@@ -118,6 +115,17 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     @Override
     public boolean isCritical() {
         return IS_CRITICAL;
+    }
+
+    @Override
+    public void positionWithinOwner() {
+        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        Vector2 origin = core.getOrigin();
+        Vector2 weaponSlot = core.getSlotFor(slotName);
+        Vector2 position = variant.computePosition.apply(weaponSlot);
+        takenArea.setPosition(position.x, position.y);
+        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
     }
 
     @Override

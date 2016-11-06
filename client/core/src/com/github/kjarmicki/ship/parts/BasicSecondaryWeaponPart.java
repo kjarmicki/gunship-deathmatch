@@ -8,7 +8,6 @@ import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
-import com.github.kjarmicki.ship.bullets.BlueBullet;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.bullets.OrangeBullet;
 
@@ -20,20 +19,20 @@ import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart {
     public static final int DEFAULT_INDEX = 42;
     public static final float[] VERTICES = new float[] {
-            15,     0,
-            11,     9,
-            11,     73,
-            8,      73,
-            0,      90,
-            0,      203,
-            8,      211,
-            41,     211,
-            48,     203,
-            48,     90,
-            41,     75,
-            41,     73,
-            41,     9,
-            34,     0
+            15,		212,
+            11,		203,
+            11,		139,
+            8,		139,
+            0,		122,
+            0,		9,
+            8,		1,
+            41,		1,
+            48,		9,
+            48,		122,
+            41,		137,
+            41,		139,
+            41,		203,
+            34,		212
     };
     public static final float WIDTH = 50f;
     public static final float HEIGHT = 212f;
@@ -43,8 +42,10 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     public static final Vector2 BULLET_OUTPUT = new Vector2(25f, HEIGHT);
     public static final int AMMO = 10;
     private final PartSlotName slotName;
-    private final Vector2 baseOrigin;
     private final BulletsAssets bulletsAssets;
+    private final Variant variant;
+    private final Ship owner;
+    private Vector2 baseOrigin;
     private long lastShot = 0;
     private int ammo = AMMO;
 
@@ -67,15 +68,9 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
 
         this.bulletsAssets = bulletsAssets;
         this.slotName = variant.slotName;
-
-        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
-        Vector2 origin = core.getOrigin();
-        Part parent = ship.getPartBySlotName(variant.parentSlotName).get();
-        Vector2 weaponSlot = parent.getSlotFor(slotName);
-        Vector2 position = variant.computePosition.apply(weaponSlot);
-        takenArea.setPosition(position.x, position.y);
-        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
-        this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
+        this.variant = variant;
+        this.owner = ship;
+        positionWithinOwner();
     }
 
     @Override
@@ -113,6 +108,18 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     @Override
     public boolean isCritical() {
         return IS_CRITICAL;
+    }
+
+    @Override
+    public void positionWithinOwner() {
+        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        Vector2 origin = core.getOrigin();
+        Part parent = owner.getPartBySlotName(variant.parentSlotName).get();
+        Vector2 weaponSlot = parent.getSlotFor(slotName);
+        Vector2 position = variant.computePosition.apply(weaponSlot);
+        takenArea.setPosition(position.x, position.y);
+        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        this.baseOrigin = new Vector2(takenArea.getOriginX(), takenArea.getOriginY());
     }
 
     @Override

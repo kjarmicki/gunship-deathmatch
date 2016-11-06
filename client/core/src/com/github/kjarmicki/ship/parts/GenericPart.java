@@ -3,10 +3,10 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.basis.GenericVisibleThing;
-import com.github.kjarmicki.ship.Ship;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class GenericPart extends GenericVisibleThing implements Part {
     protected float condition = 100f;
@@ -27,9 +27,21 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
     }
 
     @Override
-    public void mountSubpart(Part subpart) {
-        subparts.put(subpart.getSlotName(), subpart);
-        subpart.rotate(this.getRotation());
+    public void inheritSubpartsFrom(Part other) {
+        Map<PartSlotName, Part> direct = other.getDirectSubparts();
+        subparts.clear();
+        subparts.putAll(direct);
+        direct.entrySet().stream().map(Map.Entry::getValue).forEach(Part::positionWithinOwner);
+    }
+
+    @Override
+    public void mountSubpart(Part newPart) {
+        // grab a hold on the part that's going to be replaced
+        Optional<Part> toBeReplaced = Optional.ofNullable(subparts.get(newPart.getSlotName()));
+        subparts.put(newPart.getSlotName(), newPart);
+        // if there was a part in this slot already, inherit it's subparts
+        toBeReplaced.ifPresent(newPart::inheritSubpartsFrom);
+        newPart.rotate(this.getRotation());
     }
 
     public Map<PartSlotName, Part> getAllSubparts() {

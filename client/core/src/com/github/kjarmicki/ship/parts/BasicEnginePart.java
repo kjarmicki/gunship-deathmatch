@@ -3,7 +3,6 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.assets.BulletsAssets;
 import com.github.kjarmicki.assets.PartsAssets;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
@@ -11,9 +10,6 @@ import com.github.kjarmicki.ship.ShipFeatures;
 import java.util.function.Function;
 
 import static com.github.kjarmicki.ship.parts.PartSlotName.*;
-import static com.github.kjarmicki.ship.parts.PartSlotName.LEFT_ENGINE;
-import static com.github.kjarmicki.ship.parts.PartSlotName.LEFT_WING;
-import static com.github.kjarmicki.ship.parts.PartSlotName.RIGHT_ENGINE;
 
 
 public class BasicEnginePart extends GenericPart implements EnginePart {
@@ -47,7 +43,9 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     public static final float HEIGHT = 168f;
     public static final int Z_INDEX = 0;
     public static final boolean IS_CRITICAL = false;
+    private final Variant variant;
     private final PartSlotName slotName;
+    private final Ship owner;
 
     public static BasicEnginePart getLeftVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
         Variant left = Variant.LEFT;
@@ -64,14 +62,9 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     private BasicEnginePart(TextureRegion skinRegion, Variant variant, Ship ship) {
         super(new Polygon(VERTICES), skinRegion);
         this.slotName = variant.slotName;
-
-        CorePart core = (CorePart)ship.getPartBySlotName(CORE).get();
-        Vector2 origin = core.getOrigin();
-        Part parent = ship.getPartBySlotName(variant.parentSlotName).get();
-        Vector2 engineSlot = parent.getSlotFor(slotName);
-        Vector2 position = variant.computePosition.apply(engineSlot);
-        takenArea.setPosition(position.x, position.y);
-        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        this.variant = variant;
+        this.owner = ship;
+        positionWithinOwner();
     }
 
     @Override
@@ -87,6 +80,17 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     @Override
     public boolean isCritical() {
         return IS_CRITICAL;
+    }
+
+    @Override
+    public void positionWithinOwner() {
+        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        Vector2 origin = core.getOrigin();
+        Part parent = owner.getPartBySlotName(variant.parentSlotName).get();
+        Vector2 engineSlot = parent.getSlotFor(slotName);
+        Vector2 position = variant.computePosition.apply(engineSlot);
+        takenArea.setPosition(position.x, position.y);
+        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
     }
 
     @Override

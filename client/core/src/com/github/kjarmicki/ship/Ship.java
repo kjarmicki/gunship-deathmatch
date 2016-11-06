@@ -12,7 +12,10 @@ import com.github.kjarmicki.ship.bullets.BulletsContainer;
 import com.github.kjarmicki.ship.parts.*;
 import com.github.kjarmicki.util.Points;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
 import static java.util.stream.Collectors.toList;

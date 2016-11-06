@@ -14,25 +14,25 @@ import java.util.function.Function;
 
 import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
-public class BasicWingPart extends GenericPart implements WingPart {
-    public static final int DEFAULT_LEFT_INDEX = 18;
-    public static final int DEFAULT_RIGHT_INDEX = 19;
-    private static final float[] LEFT_VERTICES = new float[] {
-            142,    0,
-            54,     20,
-            0,      16,
-            8,      52,
-            75,     117,
-            105,    167,
-            148,    184,
-            148,    10
+public class FastWingPart extends GenericPart implements WingPart {
+    public static final int DEFAULT_LEFT_INDEX = 14;
+    public static final int DEFAULT_RIGHT_INDEX = 15;
+    public static final float[] LEFT_VERTICES = new float[] {
+            140,		132,
+            7,  		51,
+            0,	    	1,
+            43,	    	13,
+            120,		23,
+            134,		38,
+            167,		45,
+            191,		88,
     };
-    public static final float WIDTH = 158f;
-    public static final float HEIGHT = 185f;
+    public static final float WIDTH = 192f;
+    public static final float HEIGHT = 132f;
     public static final int Z_INDEX = 1;
     public static final boolean IS_CRITICAL = true;
-    public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(69, 30);
-    public static final Vector2 LEFT_SECONDARY_WEAPON_SLOT = new Vector2(68, 30);
+    public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(81, 27);
+    public static final Vector2 LEFT_SECONDARY_WEAPON_SLOT = new Vector2(75, 38);
     private final Vector2 engineSlot;
     private final List<PartSlotName> childSlotNames;
     private final PartSlotName slotName;
@@ -42,16 +42,16 @@ public class BasicWingPart extends GenericPart implements WingPart {
     public static WingPart getLeftVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
         Variant left = Variant.LEFT;
         TextureRegion skinRegion = partsAssets.getPart(color, left.skinIndex);
-        return new BasicWingPart(skinRegion, left, ship);
+        return new FastWingPart(skinRegion, left, ship);
     }
 
     public static WingPart getRightVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
         Variant right = Variant.RIGHT;
         TextureRegion skinRegion = partsAssets.getPart(color, right.skinIndex);
-        return new BasicWingPart(skinRegion, right, ship);
+        return new FastWingPart(skinRegion, right, ship);
     }
 
-    private BasicWingPart(TextureRegion skinRegion, Variant variant, Ship ship) {
+    private FastWingPart(TextureRegion skinRegion, Variant variant, Ship ship) {
         super(new Polygon(variant.vertices), skinRegion);
         this.engineSlot = variant.engineSlot;
         this.childSlotNames = variant.childSlotNames;
@@ -128,7 +128,7 @@ public class BasicWingPart extends GenericPart implements WingPart {
                 LEFT_SECONDARY_WEAPON_SLOT,
                 Arrays.asList(LEFT_ENGINE, LEFT_SECONDARY_WEAPON),
                 LEFT_WING,
-                wingSlot -> new Vector2(wingSlot.x - WIDTH, wingSlot.y - HEIGHT / 2)
+                wingSlot -> new Vector2(wingSlot.x - WIDTH + 20, wingSlot.y - HEIGHT / 2)
         ),
         RIGHT(
                 DEFAULT_RIGHT_INDEX,
@@ -137,7 +137,7 @@ public class BasicWingPart extends GenericPart implements WingPart {
                 Points.makeRightVector(LEFT_SECONDARY_WEAPON_SLOT, WIDTH),
                 Arrays.asList(RIGHT_ENGINE, RIGHT_SECONDARY_WEAPON),
                 RIGHT_WING,
-                wingSlot -> new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2)
+                wingSlot -> new Vector2(wingSlot.x - 20, wingSlot.y - HEIGHT / 2)
         );
 
         int skinIndex;

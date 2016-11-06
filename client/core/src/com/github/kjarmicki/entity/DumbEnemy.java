@@ -6,8 +6,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipOwner;
 
-import java.sql.Time;
-
 public class DumbEnemy implements ShipOwner {
     public static final float DEFAULT_X = 500;
     public static final float DEFAULT_Y = 500;
