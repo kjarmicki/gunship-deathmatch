@@ -1,9 +1,9 @@
 package com.github.kjarmicki.powerup;
 
 import com.badlogic.gdx.math.Polygon;
-import com.github.kjarmicki.assets.BulletsAssets;
-import com.github.kjarmicki.assets.PartsAssets;
-import com.github.kjarmicki.assets.PartsAssets.SkinColor;
+import com.github.kjarmicki.client.assets.BulletsAssets;
+import com.github.kjarmicki.client.assets.PartsAssets;
+import com.github.kjarmicki.client.assets.PartsAssets.SkinColor;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.parts.BasicSecondaryWeaponPart;
 import com.github.kjarmicki.util.Points;

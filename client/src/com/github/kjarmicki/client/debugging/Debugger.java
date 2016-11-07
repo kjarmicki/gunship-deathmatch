@@ -1,4 +1,4 @@
-package com.github.kjarmicki.debugging;
+package com.github.kjarmicki.client.debugging;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

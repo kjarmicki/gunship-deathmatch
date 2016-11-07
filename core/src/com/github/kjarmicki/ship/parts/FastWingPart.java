@@ -3,7 +3,7 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.client.assets.PartsAssets;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.util.Points;

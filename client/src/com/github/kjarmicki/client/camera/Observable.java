@@ -1,4 +1,4 @@
-package com.github.kjarmicki.camera;
+package com.github.kjarmicki.client.camera;
 
 import com.badlogic.gdx.math.Vector2;
 

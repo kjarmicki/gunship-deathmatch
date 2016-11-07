@@ -24,10 +24,6 @@ public abstract class GenericVisibleThing implements VisibleThing {
         return takenArea;
     }
 
-    public void draw(Batch batch) {
-        batch.draw(skinRegion, takenArea.getX(), takenArea.getY(), takenArea.getOriginX(), takenArea.getOriginY(), getWidth(), getHeight(), 1, 1, takenArea.getRotation());
-    }
-
     public void moveBy(Vector2 movement) {
         float x = takenArea.getX();
         float y = takenArea.getY();

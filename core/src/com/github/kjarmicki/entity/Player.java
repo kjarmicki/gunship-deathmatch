@@ -3,7 +3,7 @@ package com.github.kjarmicki.entity;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.camera.Observable;
+import com.github.kjarmicki.client.camera.Observable;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipOwner;

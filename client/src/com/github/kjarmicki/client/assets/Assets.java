@@ -1,4 +1,4 @@
-package com.github.kjarmicki.assets;
+package com.github.kjarmicki.client.assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;

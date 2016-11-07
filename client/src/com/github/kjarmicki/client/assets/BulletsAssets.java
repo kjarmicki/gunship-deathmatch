@@ -1,4 +1,4 @@
-package com.github.kjarmicki.assets;
+package com.github.kjarmicki.client.assets;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

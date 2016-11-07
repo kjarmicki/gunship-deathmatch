@@ -1,6 +1,7 @@
-package com.github.kjarmicki.controls;
+package com.github.kjarmicki.client.controls;
 
 import com.badlogic.gdx.Gdx;
+import com.github.kjarmicki.controls.Controls;
 
 import static com.badlogic.gdx.Input.Keys.*;
 
