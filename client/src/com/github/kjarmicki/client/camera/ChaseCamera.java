@@ -1,8 +1,9 @@
-package com.github.kjarmicki.camera;
+package com.github.kjarmicki.client.camera;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.github.kjarmicki.entity.Observable;
 
 public class ChaseCamera {
     private final Camera underlying;

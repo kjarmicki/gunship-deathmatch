@@ -2,7 +2,7 @@ package com.github.kjarmicki.ship.parts;
 
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
@@ -26,11 +26,11 @@ public class BasicNosePart extends GenericPart implements NosePart {
     public static final float HEIGHT = 116f;
     public static final int Z_INDEX = 2;
     public static final boolean IS_CRITICAL = true;
-    private final Ship owner;
+    private final Ship ship;
 
-    public BasicNosePart(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
-        super(new Polygon(VERTICES), partsAssets.getPart(color, BasicNosePart.DEFAULT_INDEX));
-        this.owner = ship;
+    public BasicNosePart(Ship ship) {
+        super(new Polygon(VERTICES));
+        this.ship = ship;
         positionWithinOwner();
     }
 
@@ -45,13 +45,18 @@ public class BasicNosePart extends GenericPart implements NosePart {
     }
 
     @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
+    }
+
+    @Override
     public boolean isCritical() {
         return IS_CRITICAL;
     }
 
     @Override
     public void positionWithinOwner() {
-        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
         Vector2 noseSlot = core.getSlotFor(NOSE);
         Vector2 origin = core.getOrigin();
         Vector2 position = computeSlotPlacement(noseSlot);

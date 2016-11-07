@@ -1,7 +1,7 @@
-package com.github.kjarmicki.powerup;
+package com.github.kjarmicki.container;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.ship.ShipOwner;
 
 import java.util.HashMap;
@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PowerupsContainer {
+import static java.util.stream.Collectors.toList;
+
+public class PowerupsContainer implements Container<Powerup> {
     private final Map<Vector2, Powerup> powerupsByPosition = new HashMap<>();
 
     public void addPowerup(Vector2 position, Powerup powerup) {
@@ -17,11 +19,12 @@ public class PowerupsContainer {
         powerupsByPosition.put(position, powerup);
     }
 
-    public void drawPowerups(Batch batch) {
-        powerupsByPosition.entrySet()
+    @Override
+    public List<Powerup> getContents() {
+        return powerupsByPosition.entrySet()
                 .stream()
                 .map(Map.Entry::getValue)
-                .forEach(powerup -> powerup.draw(batch));
+                .collect(toList());
     }
 
     public void checkCollisionsWithShipOwners(List<ShipOwner> ownerList) {

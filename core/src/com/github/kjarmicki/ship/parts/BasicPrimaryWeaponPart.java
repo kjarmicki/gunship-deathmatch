@@ -1,11 +1,9 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.github.kjarmicki.assets.BulletsAssets;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.BlueBullet;
@@ -46,34 +44,26 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(15f, HEIGHT);
     private final PartSlotName slotName;
     private final Vector2 bulletOutput;
-    private final BulletsAssets bulletsAssets;
     private final Variant variant;
-    private final Ship owner;
+    private final Ship ship;
     private Vector2 baseOrigin;
     private long lastShot = 0;
 
 
-    public static BasicPrimaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
-                                                        PartsAssets.SkinColor color, Ship ship) {
-        Variant left = Variant.LEFT;
-        TextureRegion skinRegion = partsAssets.getPart(color, left.skinIndex);
-        return new BasicPrimaryWeaponPart(skinRegion, bulletsAssets, left, ship);
+    public static BasicPrimaryWeaponPart getLeftVariant(Ship ship) {
+        return new BasicPrimaryWeaponPart(Variant.LEFT, ship);
     }
 
-    public static BasicPrimaryWeaponPart getRightVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
-                                                         PartsAssets.SkinColor color, Ship ship) {
-        Variant right = Variant.RIGHT;
-        TextureRegion skinRegion = partsAssets.getPart(color, right.skinIndex);
-        return new BasicPrimaryWeaponPart(skinRegion, bulletsAssets, right, ship);
+    public static BasicPrimaryWeaponPart getRightVariant(Ship ship) {
+        return new BasicPrimaryWeaponPart(Variant.RIGHT, ship);
     }
 
-    private BasicPrimaryWeaponPart(TextureRegion skinRegion, BulletsAssets bulletsAssets, Variant variant, Ship ship) {
-        super(new Polygon(variant.vertices), skinRegion);
+    private BasicPrimaryWeaponPart(Variant variant, Ship ship) {
+        super(new Polygon(variant.vertices));
         this.bulletOutput = variant.bulletOutput;
-        this.bulletsAssets = bulletsAssets;
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.owner = ship;
+        this.ship = ship;
         positionWithinOwner();
     }
 
@@ -88,10 +78,15 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
     }
 
     @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(ship.getColor(), variant.skinIndex);
+    }
+
+    @Override
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL) {
-            Bullet bullet = new BlueBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(BlueBullet.TEXTURE_VARIANT));
+            Bullet bullet = new BlueBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation());
             lastShot = TimeUtils.millis();
             return Optional.of(bullet);
         }
@@ -115,7 +110,7 @@ public class BasicPrimaryWeaponPart extends GenericPart implements PrimaryWeapon
 
     @Override
     public void positionWithinOwner() {
-        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
         Vector2 origin = core.getOrigin();
         Vector2 weaponSlot = core.getSlotFor(slotName);
         Vector2 position = variant.computePosition.apply(weaponSlot);

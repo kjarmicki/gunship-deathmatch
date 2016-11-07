@@ -1,8 +1,6 @@
 package com.github.kjarmicki.basis;
 
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -13,19 +11,13 @@ import static com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 
 public abstract class GenericVisibleThing implements VisibleThing {
     protected final Polygon takenArea;
-    protected final TextureRegion skinRegion;
 
-    public GenericVisibleThing(Polygon takenArea, TextureRegion skinRegion) {
+    public GenericVisibleThing(Polygon takenArea) {
         this.takenArea = takenArea;
-        this.skinRegion = skinRegion;
     }
 
     public Polygon getTakenArea() {
         return takenArea;
-    }
-
-    public void draw(Batch batch) {
-        batch.draw(skinRegion, takenArea.getX(), takenArea.getY(), takenArea.getOriginX(), takenArea.getOriginY(), getWidth(), getHeight(), 1, 1, takenArea.getRotation());
     }
 
     public void moveBy(Vector2 movement) {

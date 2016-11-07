@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.GunshipDeathmatch;
 
+// TODO: completely redo this, with powerup placements and sprite-based rendering
 public class Ground {
     public static final String DEFAULT_SKIN = "asphalt.jpg";
     private final Sprite sprite;

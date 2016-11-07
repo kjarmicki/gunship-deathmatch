@@ -1,9 +1,8 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.util.Points;
@@ -37,27 +36,23 @@ public class BasicWingPart extends GenericPart implements WingPart {
     private final List<PartSlotName> childSlotNames;
     private final PartSlotName slotName;
     private final Variant variant;
-    private final Ship owner;
+    private final Ship ship;
 
-    public static WingPart getLeftVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
-        Variant left = Variant.LEFT;
-        TextureRegion skinRegion = partsAssets.getPart(color, left.skinIndex);
-        return new BasicWingPart(skinRegion, left, ship);
+    public static WingPart getLeftVariant(Ship ship) {
+        return new BasicWingPart(Variant.LEFT, ship);
     }
 
-    public static WingPart getRightVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
-        Variant right = Variant.RIGHT;
-        TextureRegion skinRegion = partsAssets.getPart(color, right.skinIndex);
-        return new BasicWingPart(skinRegion, right, ship);
+    public static WingPart getRightVariant(Ship ship) {
+        return new BasicWingPart(Variant.RIGHT, ship);
     }
 
-    private BasicWingPart(TextureRegion skinRegion, Variant variant, Ship ship) {
-        super(new Polygon(variant.vertices), skinRegion);
+    private BasicWingPart(Variant variant, Ship ship) {
+        super(new Polygon(variant.vertices));
         this.engineSlot = variant.engineSlot;
         this.childSlotNames = variant.childSlotNames;
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.owner = ship;
+        this.ship = ship;
         positionWithinOwner();
     }
 
@@ -72,13 +67,18 @@ public class BasicWingPart extends GenericPart implements WingPart {
     }
 
     @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(ship.getColor(), variant.skinIndex);
+    }
+
+    @Override
     public boolean isCritical() {
         return IS_CRITICAL;
     }
 
     @Override
     public void positionWithinOwner() {
-        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
         Vector2 wingSlot = core.getSlotFor(variant.slotName);
         Vector2 position = variant.computePosition.apply(wingSlot);
         Vector2 origin = core.getOrigin();

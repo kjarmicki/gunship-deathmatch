@@ -1,11 +1,9 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.github.kjarmicki.assets.BulletsAssets;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.Bullet;
@@ -61,33 +59,25 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     public static final Vector2 LEFT_BULLET_OUTPUT = new Vector2(38f, HEIGHT);
     private final PartSlotName slotName;
     private final Vector2 bulletOutput;
-    private final BulletsAssets bulletsAssets;
     private final Variant variant;
-    private final Ship owner;
+    private final Ship ship;
     private Vector2 baseOrigin;
     private long lastShot = 0;
 
-    public static AdvancedPrimaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
-                                                        PartsAssets.SkinColor color, Ship ship) {
-        Variant left = Variant.LEFT;
-        TextureRegion skinRegion = partsAssets.getPart(color, left.skinIndex);
-        return new AdvancedPrimaryWeaponPart(skinRegion, bulletsAssets, left, ship);
+    public static AdvancedPrimaryWeaponPart getLeftVariant(Ship ship) {
+        return new AdvancedPrimaryWeaponPart(Variant.LEFT, ship);
     }
 
-    public static AdvancedPrimaryWeaponPart getRightVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
-                                                         PartsAssets.SkinColor color, Ship ship) {
-        Variant right = Variant.RIGHT;
-        TextureRegion skinRegion = partsAssets.getPart(color, right.skinIndex);
-        return new AdvancedPrimaryWeaponPart(skinRegion, bulletsAssets, right, ship);
+    public static AdvancedPrimaryWeaponPart getRightVariant(Ship ship) {
+        return new AdvancedPrimaryWeaponPart(Variant.RIGHT, ship);
     }
 
-    private AdvancedPrimaryWeaponPart(TextureRegion skinRegion, BulletsAssets bulletsAssets, Variant variant, Ship ship) {
-        super(new Polygon(variant.vertices), skinRegion);
+    private AdvancedPrimaryWeaponPart(Variant variant, Ship ship) {
+        super(new Polygon(variant.vertices));
         this.bulletOutput = variant.bulletOutput;
-        this.bulletsAssets = bulletsAssets;
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.owner = ship;
+        this.ship = ship;
         positionWithinOwner();
     }
 
@@ -95,7 +85,7 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL) {
-            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(OrangeBullet.TEXTURE_VARIANT));
+            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation());
             lastShot = TimeUtils.millis();
             return Optional.of(bullet);
         }
@@ -119,7 +109,7 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
 
     @Override
     public void positionWithinOwner() {
-        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
         Vector2 origin = core.getOrigin();
         Vector2 weaponSlot = core.getSlotFor(slotName);
         Vector2 position = variant.computePosition.apply(weaponSlot);
@@ -151,6 +141,11 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     @Override
     public float getHeight() {
         return HEIGHT;
+    }
+
+    @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(ship.getColor(), variant.skinIndex);
     }
 
     private enum Variant {

@@ -1,4 +1,4 @@
-package com.github.kjarmicki.screen;
+package com.github.kjarmicki.client.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -7,18 +7,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.kjarmicki.assets.BulletsAssets;
-import com.github.kjarmicki.assets.PartsAssets;
-import com.github.kjarmicki.camera.ChaseCamera;
+import com.github.kjarmicki.assets.BulletSkin;
+import com.github.kjarmicki.assets.PartSkin;
+import com.github.kjarmicki.client.assets.BulletsAssets;
+import com.github.kjarmicki.client.assets.PartsAssets;
+import com.github.kjarmicki.client.camera.ChaseCamera;
+import com.github.kjarmicki.client.debugging.Debugger;
+import com.github.kjarmicki.client.rendering.ContainerRenderer;
+import com.github.kjarmicki.client.rendering.Renderer;
+import com.github.kjarmicki.client.rendering.ShipOwnerRenderer;
+import com.github.kjarmicki.container.BulletsContainer;
+import com.github.kjarmicki.container.PowerupsContainer;
 import com.github.kjarmicki.controls.Controls;
-import com.github.kjarmicki.debugging.Debugger;
 import com.github.kjarmicki.entity.DumbEnemy;
 import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.powerup.*;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
-import com.github.kjarmicki.ship.bullets.BulletsContainer;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +45,11 @@ public class ArenaScreen extends ScreenAdapter {
     private final PowerupsContainer powerupsContainer;
     private final PowerupsRespawner powerupsRespawner;
 
+    private final Renderer playerRenderer;
+    private final Renderer enemyRenderer;
+    private final Renderer bulletsContainerRenderer;
+    private final Renderer powerupsContainerRenderer;
+
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
         this.viewport = viewport;
         this.batch = batch;
@@ -46,21 +57,21 @@ public class ArenaScreen extends ScreenAdapter {
 
         partsAssets = new PartsAssets(
                 PartsAssets.DEFAULT_ATLAS,
-                PartsAssets.SkinColor.asStringList(),
+                PartSkin.asStringList(),
                 PartsAssets.DEFAULT_PARTS_COUNT
         );
         bulletsAssets = new BulletsAssets(
                 BulletsAssets.DEFAULT_ATLAS,
-                BulletsAssets.Variant.asMap()
+                BulletSkin.asMap()
         );
 
         bulletsContainer = new BulletsContainer();
 
         powerupsContainer = new PowerupsContainer();
         Map<Vector2, Supplier<Powerup>> respawnablePowerups = new HashMap<>();
-        respawnablePowerups.put(new Vector2(1000, 1000), () -> new BasicSecondaryWeaponPowerup(partsAssets));
-        respawnablePowerups.put(new Vector2(1300, 1300), () -> new AdvancedPrimaryWeaponPowerup(partsAssets));
-        respawnablePowerups.put(new Vector2(1500, 1500), () -> new FastWingPowerup(partsAssets));
+        respawnablePowerups.put(new Vector2(1000, 1000), BasicSecondaryWeaponPowerup::new);
+        respawnablePowerups.put(new Vector2(1300, 1300), AdvancedPrimaryWeaponPowerup::new);
+        respawnablePowerups.put(new Vector2(1500, 1500), FastWingPowerup::new);
         powerupsRespawner = new PowerupsRespawner(respawnablePowerups, powerupsContainer);
 
         chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
@@ -72,14 +83,20 @@ public class ArenaScreen extends ScreenAdapter {
         enemy.setShip(makeNewEnemyShip());
         ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
         chaseCamera.snapAtNextObservable();
+
+        playerRenderer = new ShipOwnerRenderer(player, partsAssets);
+        enemyRenderer = new ShipOwnerRenderer(enemy, partsAssets);
+        bulletsContainerRenderer = new ContainerRenderer<>(bulletsContainer, bulletsAssets);
+        powerupsContainerRenderer = new ContainerRenderer<>(powerupsContainer, partsAssets);
     }
 
     private Ship makeNewEnemyShip() {
-        return new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), enemy, PartsAssets.SkinColor.RED, partsAssets, bulletsAssets, bulletsContainer);
+        // TODO: give player a color and pass it to ship
+        return new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), enemy, PartSkin.ORANGE, bulletsContainer);
     }
 
     private Ship makeNewPlayerShip() {
-        return new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), player, PartsAssets.SkinColor.BLUE, partsAssets, bulletsAssets, bulletsContainer);
+        return new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), player, PartSkin.BLUE, bulletsContainer);
     }
 
     @Override
@@ -112,10 +129,10 @@ public class ArenaScreen extends ScreenAdapter {
 
         batch.begin();
         ground.draw(batch);
-        player.draw(batch);
-        enemy.draw(batch);
-        bulletsContainer.drawBullets(batch);
-        powerupsContainer.drawPowerups(batch);
+        playerRenderer.render(batch);
+        enemyRenderer.render(batch);
+        bulletsContainerRenderer.render(batch);
+        powerupsContainerRenderer.render(batch);
         batch.end();
 
         Debugger.setProjection(viewport.getCamera().combined);

@@ -1,6 +1,5 @@
 package com.github.kjarmicki.entity;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.ship.Ship;
@@ -17,17 +16,9 @@ public class DumbEnemy implements ShipOwner {
         ship.checkPlacementWithinBounds(bounds);
     }
 
-    public void checkCollisionWithOtherShip(Ship other) {
-        ship.checkCollisionWith(other);
-    }
-
     public void update(float delta) {
         shoot(delta);
         ship.update(delta);
-    }
-
-    public void draw(Batch batch) {
-        ship.draw(batch);
     }
 
     private void shoot(float delta) {

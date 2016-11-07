@@ -1,6 +1,5 @@
 package com.github.kjarmicki.ship.bullets;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.basis.GenericVisibleThing;
@@ -12,8 +11,8 @@ public abstract class GenericBullet extends GenericVisibleThing implements Bulle
     protected boolean isDestroyed = false;
     protected boolean isRangeExceeded = false;
 
-    public GenericBullet(Polygon takenArea, TextureRegion skinRegion) {
-        super(takenArea, skinRegion);
+    public GenericBullet(Polygon takenArea) {
+        super(takenArea);
     }
 
     @Override

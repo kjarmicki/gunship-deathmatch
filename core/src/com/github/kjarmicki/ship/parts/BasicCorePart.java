@@ -1,8 +1,9 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.assets.AssetKey;
+import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
 import java.util.HashMap;
@@ -36,9 +37,11 @@ public class BasicCorePart extends GenericPart implements CorePart {
         SLOT_VECTORS.put(LEFT_PRIMARY_WEAPON, new Vector2(23f, 115f));
         SLOT_VECTORS.put(RIGHT_PRIMARY_WEAPON, new Vector2(104f, 115f));
     }
+    private final Ship ship;
 
-    public BasicCorePart(float x, float y, TextureRegion skinRegion) {
-        super(new Polygon(VERTICES), skinRegion);
+    public BasicCorePart(float x, float y, Ship ship) {
+        super(new Polygon(VERTICES));
+        this.ship = ship;
         takenArea.setOrigin(ORIGIN.x, ORIGIN.y);
         takenArea.setPosition(x, y);
     }
@@ -51,6 +54,11 @@ public class BasicCorePart extends GenericPart implements CorePart {
     @Override
     public float getHeight() {
         return HEIGHT;
+    }
+
+    @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
     }
 
     @Override

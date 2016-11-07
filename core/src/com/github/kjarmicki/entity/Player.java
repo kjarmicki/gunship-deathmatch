@@ -1,9 +1,7 @@
 package com.github.kjarmicki.entity;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.camera.Observable;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipOwner;
@@ -25,10 +23,6 @@ public class Player implements ShipOwner, Observable {
 
     public void checkPlacementWithinBounds(Rectangle bounds) {
         ship.checkPlacementWithinBounds(bounds);
-    }
-
-    public void draw(Batch batch) {
-        ship.draw(batch);
     }
 
     public void checkCollisionWithOtherShip(Ship other) {

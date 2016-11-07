@@ -1,9 +1,8 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
@@ -45,25 +44,21 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     public static final boolean IS_CRITICAL = false;
     private final Variant variant;
     private final PartSlotName slotName;
-    private final Ship owner;
+    private final Ship ship;
 
-    public static BasicEnginePart getLeftVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
-        Variant left = Variant.LEFT;
-        TextureRegion skinRegion = partsAssets.getPart(color, DEFAULT_INDEX);
-        return new BasicEnginePart(skinRegion, left, ship);
+    public static BasicEnginePart getLeftVariant(Ship ship) {
+        return new BasicEnginePart(Variant.LEFT, ship);
     }
 
-    public static BasicEnginePart getRightVariant(PartsAssets partsAssets, PartsAssets.SkinColor color, Ship ship) {
-        Variant right = Variant.RIGHT;
-        TextureRegion skinRegion = partsAssets.getPart(color, DEFAULT_INDEX);
-        return new BasicEnginePart(skinRegion, right, ship);
+    public static BasicEnginePart getRightVariant(Ship ship) {
+        return new BasicEnginePart(Variant.RIGHT, ship);
     }
 
-    private BasicEnginePart(TextureRegion skinRegion, Variant variant, Ship ship) {
-        super(new Polygon(VERTICES), skinRegion);
+    private BasicEnginePart(Variant variant, Ship ship) {
+        super(new Polygon(VERTICES));
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.owner = ship;
+        this.ship = ship;
         positionWithinOwner();
     }
 
@@ -78,15 +73,20 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     }
 
     @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
+    }
+
+    @Override
     public boolean isCritical() {
         return IS_CRITICAL;
     }
 
     @Override
     public void positionWithinOwner() {
-        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
         Vector2 origin = core.getOrigin();
-        Part parent = owner.getPartBySlotName(variant.parentSlotName).get();
+        Part parent = ship.getPartBySlotName(variant.parentSlotName).get();
         Vector2 engineSlot = parent.getSlotFor(slotName);
         Vector2 position = variant.computePosition.apply(engineSlot);
         takenArea.setPosition(position.x, position.y);

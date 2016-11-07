@@ -1,11 +1,9 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.github.kjarmicki.assets.BulletsAssets;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.Bullet;
@@ -42,34 +40,25 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     public static final Vector2 BULLET_OUTPUT = new Vector2(25f, HEIGHT);
     public static final int AMMO = 10;
     private final PartSlotName slotName;
-    private final BulletsAssets bulletsAssets;
     private final Variant variant;
-    private final Ship owner;
+    private final Ship ship;
     private Vector2 baseOrigin;
     private long lastShot = 0;
     private int ammo = AMMO;
 
-    public static BasicSecondaryWeaponPart getLeftVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
-                                                        PartsAssets.SkinColor color, Ship ship) {
-        Variant left = Variant.LEFT;
-        TextureRegion skinRegion = partsAssets.getPart(color, DEFAULT_INDEX);
-        return new BasicSecondaryWeaponPart(skinRegion, bulletsAssets, left, ship);
+    public static BasicSecondaryWeaponPart getLeftVariant(Ship ship) {
+        return new BasicSecondaryWeaponPart(Variant.LEFT, ship);
     }
 
-    public static BasicSecondaryWeaponPart getRightVariant(PartsAssets partsAssets, BulletsAssets bulletsAssets,
-                                                         PartsAssets.SkinColor color, Ship ship) {
-        Variant right = Variant.RIGHT;
-        TextureRegion skinRegion = partsAssets.getPart(color, DEFAULT_INDEX);
-        return new BasicSecondaryWeaponPart(skinRegion, bulletsAssets, right, ship);
+    public static BasicSecondaryWeaponPart getRightVariant(Ship ship) {
+        return new BasicSecondaryWeaponPart(Variant.RIGHT, ship);
     }
 
-    private BasicSecondaryWeaponPart(TextureRegion skinRegion, BulletsAssets bulletsAssets, Variant variant, Ship ship) {
-        super(new Polygon(VERTICES), skinRegion);
-
-        this.bulletsAssets = bulletsAssets;
+    private BasicSecondaryWeaponPart(Variant variant, Ship ship) {
+        super(new Polygon(VERTICES));
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.owner = ship;
+        this.ship = ship;
         positionWithinOwner();
     }
 
@@ -84,10 +73,15 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     }
 
     @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
+    }
+
+    @Override
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL && ammo > 0) {
-            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), bulletsAssets.getBullet(OrangeBullet.TEXTURE_VARIANT));
+            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation());
             lastShot = TimeUtils.millis();
             ammo--;
             return Optional.of(bullet);
@@ -112,9 +106,9 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
 
     @Override
     public void positionWithinOwner() {
-        CorePart core = (CorePart)owner.getPartBySlotName(CORE).get();
+        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
         Vector2 origin = core.getOrigin();
-        Part parent = owner.getPartBySlotName(variant.parentSlotName).get();
+        Part parent = ship.getPartBySlotName(variant.parentSlotName).get();
         Vector2 weaponSlot = parent.getSlotFor(slotName);
         Vector2 position = variant.computePosition.apply(weaponSlot);
         takenArea.setPosition(position.x, position.y);

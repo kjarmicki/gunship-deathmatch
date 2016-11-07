@@ -1,12 +1,12 @@
 package com.github.kjarmicki.ship.bullets;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.assets.BulletsAssets;
+import com.github.kjarmicki.assets.AssetKey;
+import com.github.kjarmicki.assets.BulletSkin;
 
 public class BlueBullet extends GenericBullet {
-    public static final BulletsAssets.Variant TEXTURE_VARIANT = BulletsAssets.Variant.BLUE_TAIL;
+    public static final BulletSkin SKIN = BulletSkin.BLUE_TAIL;
     public static final float[] VERTICES = new float[] {
             18, 12,
             1,  84,
@@ -23,8 +23,8 @@ public class BlueBullet extends GenericBullet {
     public static final float IMPACT = 20;
     public static final float RANGE = 500;
 
-    public BlueBullet(Vector2 position, Vector2 origin, float rotation, TextureRegion skinRegion) {
-        super(new Polygon(VERTICES), skinRegion);
+    public BlueBullet(Vector2 position, Vector2 origin, float rotation) {
+        super(new Polygon(VERTICES));
         position.x -= WIDTH / 2;
         position.y -= 30;
         takenArea.setPosition(position.x, position.y);
@@ -41,6 +41,11 @@ public class BlueBullet extends GenericBullet {
     @Override
     public float getHeight() {
         return HEIGHT;
+    }
+
+    @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(SKIN, 0);
     }
 
     @Override

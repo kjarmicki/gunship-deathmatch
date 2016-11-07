@@ -1,31 +1,27 @@
 package com.github.kjarmicki.powerup;
 
 import com.badlogic.gdx.math.Polygon;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.AssetKey;
+import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.parts.FastWingPart;
 import com.github.kjarmicki.util.Points;
 
-import static com.github.kjarmicki.assets.PartsAssets.SkinColor;
-
 public class FastWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = FastWingPart.DEFAULT_LEFT_INDEX;
-    public static final SkinColor DEFAULT_COLOR = SkinColor.GREEN;
+    public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
     public static final float[] VERTICES = Points.scaleVertices(FastWingPart.LEFT_VERTICES, SCALE);
     public static final float WIDTH = FastWingPart.WIDTH * SCALE;
     public static final float HEIGHT = FastWingPart.HEIGHT * SCALE;
 
-    public FastWingPowerup(PartsAssets partsAssets) {
-        super(new Polygon(VERTICES), partsAssets.getPart(DEFAULT_COLOR, DEFAULT_INDEX));
+    public FastWingPowerup() {
+        super(new Polygon(VERTICES));
     }
 
     @Override
     public void apply(Ship ship) {
-        PartsAssets partsAssets = ship.getPartsAssets();
-        SkinColor color = ship.getColor();
-
-        ship.mountPart(FastWingPart.getLeftVariant(partsAssets, color, ship));
-        ship.mountPart(FastWingPart.getRightVariant(partsAssets, color, ship));
+        ship.mountPart(FastWingPart.getLeftVariant(ship));
+        ship.mountPart(FastWingPart.getRightVariant(ship));
         wasCollected = true;
     }
 
@@ -37,5 +33,10 @@ public class FastWingPowerup extends GenericPowerup {
     @Override
     public float getHeight() {
         return HEIGHT;
+    }
+
+    @Override
+    public AssetKey getAssetKey() {
+        return new AssetKey(DEFAULT_COLOR, DEFAULT_INDEX);
     }
 }

@@ -1,6 +1,7 @@
 package com.github.kjarmicki.powerup;
 
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.container.PowerupsContainer;
 
 import java.util.List;
 import java.util.Map;

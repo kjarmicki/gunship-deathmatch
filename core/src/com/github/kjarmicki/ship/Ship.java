@@ -1,14 +1,12 @@
 package com.github.kjarmicki.ship;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.assets.BulletsAssets;
-import com.github.kjarmicki.assets.PartsAssets;
+import com.github.kjarmicki.assets.PartSkin;
+import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.ship.bullets.Bullet;
-import com.github.kjarmicki.ship.bullets.BulletsContainer;
 import com.github.kjarmicki.ship.parts.*;
 import com.github.kjarmicki.util.Points;
 
@@ -26,29 +24,25 @@ public class Ship {
     private final BulletsContainer bulletsContainer;
     private final ShipOwner owner;
     private final CorePart core;
-    private final PartsAssets.SkinColor color;
-    private final PartsAssets partsAssets;
-    private final BulletsAssets bulletsAssets;
+    private final PartSkin color;
     private float rotation;
     private boolean isDestroyed = false;
 
 
-    public Ship(float x, float y, ShipFeatures features, ShipOwner owner, PartsAssets.SkinColor color, PartsAssets partsAssets, BulletsAssets bulletsAssets, BulletsContainer bulletsContainer) {
+    public Ship(float x, float y, ShipFeatures features, ShipOwner owner, PartSkin color, BulletsContainer bulletsContainer) {
         this.features = features;
         this.bulletsContainer = bulletsContainer;
-        this.partsAssets = partsAssets;
-        this.bulletsAssets = bulletsAssets;
         this.color = color;
         this.owner = owner;
-        core = new BasicCorePart(x, y, partsAssets.getPart(color, BasicCorePart.DEFAULT_INDEX));
+        core = new BasicCorePart(x, y, this);
 
-        this.mountPart(new BasicNosePart(partsAssets, color, this));
-        this.mountPart(BasicWingPart.getLeftVariant(partsAssets, color, this));
-        this.mountPart(BasicWingPart.getRightVariant(partsAssets, color, this));
-        this.mountPart(BasicEnginePart.getLeftVariant(partsAssets, color, this));
-        this.mountPart(BasicEnginePart.getRightVariant(partsAssets, color, this));
-        this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(partsAssets, bulletsAssets, color, this));
-        this.mountPart(BasicPrimaryWeaponPart.getRightVariant(partsAssets, bulletsAssets, color, this));
+        this.mountPart(new BasicNosePart(this));
+        this.mountPart(BasicWingPart.getLeftVariant(this));
+        this.mountPart(BasicWingPart.getRightVariant(this));
+        this.mountPart(BasicEnginePart.getLeftVariant(this));
+        this.mountPart(BasicEnginePart.getRightVariant(this));
+        this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(this));
+        this.mountPart(BasicPrimaryWeaponPart.getRightVariant(this));
     }
 
     public void moveForwards(float delta) {
@@ -139,12 +133,6 @@ public class Ship {
         return core.getCenter();
     }
 
-    public void draw(Batch batch) {
-        allParts().stream().forEach(part ->  {
-            part.draw(batch);
-        });
-    }
-
     // check if ship went out of arena bounds
     public void checkPlacementWithinBounds(Rectangle bounds) {
         allParts().stream()
@@ -226,16 +214,8 @@ public class Ship {
         return velocity;
     }
 
-    public PartsAssets.SkinColor getColor() {
+    public PartSkin getColor() {
         return color;
-    }
-
-    public PartsAssets getPartsAssets() {
-        return partsAssets;
-    }
-
-    public BulletsAssets getBulletsAssets() {
-        return bulletsAssets;
     }
 
     public boolean isDestroyed() {
@@ -266,7 +246,7 @@ public class Ship {
         }
     }
 
-    private List<Part> allParts() {
+    public List<Part> allParts() {
         List<Part> parts = new ArrayList<>(core.getAllSubparts().values());
         parts.add(core);
         parts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());

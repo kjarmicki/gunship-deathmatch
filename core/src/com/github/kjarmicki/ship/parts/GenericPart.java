@@ -1,6 +1,5 @@
 package com.github.kjarmicki.ship.parts;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.basis.GenericVisibleThing;
 
@@ -12,8 +11,8 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
     protected float condition = 100f;
     protected final Map<PartSlotName, Part> subparts = new HashMap<>();
 
-    public GenericPart(Polygon takenArea, TextureRegion skinRegion) {
-        super(takenArea, skinRegion);
+    public GenericPart(Polygon takenArea) {
+        super(takenArea);
     }
 
     @Override

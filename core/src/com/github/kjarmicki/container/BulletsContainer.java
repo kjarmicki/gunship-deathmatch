@@ -1,8 +1,8 @@
-package com.github.kjarmicki.ship.bullets;
+package com.github.kjarmicki.container;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.ship.ShipOwner;
+import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
 import java.util.HashMap;
@@ -10,11 +10,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class BulletsContainer {
+import static java.util.stream.Collectors.toList;
+
+public class BulletsContainer implements Container<Bullet> {
     private final Map<Bullet, ShipOwner> bulletsByOwners = new HashMap<>();
 
     public void addBullet(Bullet bullet, ShipOwner owner) {
         bulletsByOwners.put(bullet, owner);
+    }
+
+    @Override
+    public List<Bullet> getContents() {
+        return bulletsByOwners.entrySet()
+                .stream()
+                .map(Map.Entry::getKey)
+                .collect(toList());
     }
 
     public void updateBullets(float delta) {
@@ -23,15 +33,6 @@ public class BulletsContainer {
                 .map(Map.Entry::getKey)
                 .forEach(bullet -> {
                     bullet.update(delta);
-                });
-    }
-
-    public void drawBullets(Batch batch) {
-        bulletsByOwners.entrySet()
-                .stream()
-                .map(Map.Entry::getKey)
-                .forEach(bullet -> {
-                    bullet.draw(batch);
                 });
     }
 
