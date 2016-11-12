@@ -87,7 +87,6 @@ public class ArenaScreen extends ScreenAdapter {
         respawnablePowerups.put(new Vector2(1500, 1500), FastWingPowerup::new);
         powerupsRespawner = new PowerupsRespawner(respawnablePowerups, powerupsContainer);
 
-        chaseCamera = new ChaseCamera(viewport.getCamera(), 9f);
         player = new Player(
                 controls
         );
@@ -96,6 +95,7 @@ public class ArenaScreen extends ScreenAdapter {
         enemy.setShip(makeNewEnemyShip());
         arenaData = new Overlap2dArenaData(WarehouseArena.NAME, new ObjectMapper());
         arena = new WarehouseArena(arenaData.getArenaObjects());
+        chaseCamera = new ChaseCamera(viewport.getCamera(), arena, 9f);
         chaseCamera.snapAtNextObservable();
 
         playerRenderer = new ShipOwnerRenderer(player, partsAssets);

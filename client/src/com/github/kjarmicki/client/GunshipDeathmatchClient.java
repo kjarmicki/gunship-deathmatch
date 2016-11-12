@@ -11,7 +11,9 @@ import com.github.kjarmicki.client.screen.ArenaScreen;
 import com.github.kjarmicki.controls.Controls;
 
 public class GunshipDeathmatchClient extends Game {
-    private final Viewport viewport = new FitViewport(GunshipDeathmatch.WORLD_WIDTH / 3, GunshipDeathmatch.WORLD_HEIGHT / 3);
+    public static final float CAMERA_VIEW_WIDTH = 1000f;
+    public static final float CAMERA_VIEW_HEIGHT = 1000f;
+    private final Viewport viewport = new FitViewport(CAMERA_VIEW_WIDTH, CAMERA_VIEW_HEIGHT);
     private final Controls controls = new Keyboard();
 
     @Override
