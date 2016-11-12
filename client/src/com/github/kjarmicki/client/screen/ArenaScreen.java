@@ -3,16 +3,21 @@ package com.github.kjarmicki.client.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.kjarmicki.arena.Arena;
+import com.github.kjarmicki.arena.WarehouseArena;
+import com.github.kjarmicki.arena.object.BasicTile;
+import com.github.kjarmicki.assets.ArenaSkin;
 import com.github.kjarmicki.assets.BulletSkin;
 import com.github.kjarmicki.assets.PartSkin;
+import com.github.kjarmicki.client.assets.ArenaAssets;
 import com.github.kjarmicki.client.assets.BulletsAssets;
 import com.github.kjarmicki.client.assets.PartsAssets;
 import com.github.kjarmicki.client.camera.ChaseCamera;
 import com.github.kjarmicki.client.debugging.Debugger;
+import com.github.kjarmicki.client.rendering.ArenaRenderer;
 import com.github.kjarmicki.client.rendering.ContainerRenderer;
 import com.github.kjarmicki.client.rendering.Renderer;
 import com.github.kjarmicki.client.rendering.ShipOwnerRenderer;
@@ -20,7 +25,6 @@ import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PowerupsContainer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.entity.DumbEnemy;
-import com.github.kjarmicki.entity.Ground;
 import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.powerup.*;
 import com.github.kjarmicki.ship.Ship;
@@ -36,11 +40,12 @@ public class ArenaScreen extends ScreenAdapter {
     private final Controls controls;
     private final Player player;
     private final DumbEnemy enemy;
-    private final Ground ground;
+    private final Arena arena;
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
+    private final ArenaAssets arenaAssets;
     private final BulletsContainer bulletsContainer;
     private final PowerupsContainer powerupsContainer;
     private final PowerupsRespawner powerupsRespawner;
@@ -49,6 +54,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Renderer enemyRenderer;
     private final Renderer bulletsContainerRenderer;
     private final Renderer powerupsContainerRenderer;
+    private final Renderer arenaRenderer;
 
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
         this.viewport = viewport;
@@ -63,6 +69,10 @@ public class ArenaScreen extends ScreenAdapter {
         bulletsAssets = new BulletsAssets(
                 BulletsAssets.DEFAULT_ATLAS,
                 BulletSkin.asMap()
+        );
+        arenaAssets = new ArenaAssets(
+                ArenaAssets.DEFAULT_ATLAS,
+                ArenaSkin.asMap()
         );
 
         bulletsContainer = new BulletsContainer();
@@ -81,13 +91,14 @@ public class ArenaScreen extends ScreenAdapter {
         player.setShip(makeNewPlayerShip());
         enemy = new DumbEnemy();
         enemy.setShip(makeNewEnemyShip());
-        ground = new Ground(new Texture(Gdx.files.internal(Ground.DEFAULT_SKIN)));
+        arena = new WarehouseArena(Arrays.asList(new BasicTile(1500, 300)));
         chaseCamera.snapAtNextObservable();
 
         playerRenderer = new ShipOwnerRenderer(player, partsAssets);
         enemyRenderer = new ShipOwnerRenderer(enemy, partsAssets);
         bulletsContainerRenderer = new ContainerRenderer<>(bulletsContainer, bulletsAssets);
         powerupsContainerRenderer = new ContainerRenderer<>(powerupsContainer, partsAssets);
+        arenaRenderer = new ArenaRenderer(arena, arenaAssets);
     }
 
     private Ship makeNewEnemyShip() {
@@ -115,20 +126,20 @@ public class ArenaScreen extends ScreenAdapter {
             player.setShip(makeNewPlayerShip());
         }
         bulletsContainer.updateBullets(delta);
-        player.checkPlacementWithinBounds(ground.getBounds());
-        enemy.checkPlacementWithinBounds(ground.getBounds());
+        arena.checkCollisionWithShipOwners(Arrays.asList(player, enemy));
         player.checkCollisionWithOtherShip(enemy.getShip());
         powerupsRespawner.update(delta);
         bulletsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
+        bulletsContainer.checkCollisionWithArenaObjects(arena.getContents());
         powerupsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
-        bulletsContainer.cleanup(ground.getBounds());
+        bulletsContainer.cleanup(arena.getBounds());
         powerupsContainer.cleanup();
         chaseCamera.lookAt(player, delta);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
-        ground.draw(batch);
+        arenaRenderer.render(batch);
         playerRenderer.render(batch);
         enemyRenderer.render(batch);
         bulletsContainerRenderer.render(batch);

@@ -1,6 +1,7 @@
 package com.github.kjarmicki.container;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.github.kjarmicki.arena.object.ArenaObject;
 import com.github.kjarmicki.ship.ShipOwner;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
@@ -47,6 +48,20 @@ public class BulletsContainer implements Container<Bullet> {
                             .forEach(foreignOwner -> {
                                 if (!bullet.isDestroyed() && foreignOwner != currentOwner) {
                                     foreignOwner.getShip().checkCollisionWith(bullet);
+                                }
+                            });
+                });
+    }
+
+    public void checkCollisionWithArenaObjects(List<ArenaObject> objectList) {
+        bulletsByOwners.entrySet()
+                .stream()
+                .map(Map.Entry::getKey)
+                .forEach(bullet -> {
+                    objectList.stream()
+                            .forEach(object -> {
+                                if (!bullet.isDestroyed()) {
+                                    object.checkCollisionWith(bullet);
                                 }
                             });
                 });

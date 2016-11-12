@@ -29,4 +29,13 @@ public class Points {
     public static Vector2 getDirectionVector(float rotation) {
         return new Vector2(-(float)Math.sin(Math.toRadians(rotation)), (float)Math.cos(Math.toRadians(rotation)));
     }
+
+    public static float[] rectangularVertices(float width, float height) {
+        return new float[] {
+                0, 0,
+                0, width,
+                height, width,
+                height, 0
+        };
+    }
 }

@@ -3,7 +3,6 @@ package com.github.kjarmicki.client.assets;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.assets.PartSkin;
 
 import java.util.List;
 import java.util.stream.IntStream;
