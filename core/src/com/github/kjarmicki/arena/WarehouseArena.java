@@ -13,6 +13,7 @@ public class WarehouseArena implements Arena {
     public static final float WIDTH = GunshipDeathmatch.WORLD_WIDTH;
     public static final float HEIGHT = GunshipDeathmatch.WORLD_HEIGHT;
     public static final int BACKGROUND_INDEX = 1;
+    public static final String NAME = "warehouse";
 
     private final List<ArenaObject> arenaObjects;
 
@@ -55,9 +56,7 @@ public class WarehouseArena implements Arena {
                     ship.checkPlacementWithinBounds(getBounds());
                     arenaObjects
                             .stream()
-                            .forEach(object -> {
-                                ship.checkCollisionWith(object);
-                            });
+                            .forEach(ship::checkCollisionWith);
                 });
     }
 }

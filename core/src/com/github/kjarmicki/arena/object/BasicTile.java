@@ -38,4 +38,8 @@ public class BasicTile extends GenericVisibleThing implements ArenaObject {
             bullet.destroy();
         }
     }
+
+    public static String getAssetString() {
+        return new AssetKey(ArenaSkin.TILE, SKIN_INDEX).toString();
+    }
 }

@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kjarmicki.arena.Arena;
 import com.github.kjarmicki.arena.WarehouseArena;
-import com.github.kjarmicki.arena.object.BasicTile;
+import com.github.kjarmicki.arena.data.ArenaData;
+import com.github.kjarmicki.arena.data.Overlap2dArenaData;
 import com.github.kjarmicki.assets.ArenaSkin;
 import com.github.kjarmicki.assets.BulletSkin;
 import com.github.kjarmicki.assets.PartSkin;
@@ -46,6 +48,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
     private final ArenaAssets arenaAssets;
+    private final ArenaData arenaData;
     private final BulletsContainer bulletsContainer;
     private final PowerupsContainer powerupsContainer;
     private final PowerupsRespawner powerupsRespawner;
@@ -91,7 +94,8 @@ public class ArenaScreen extends ScreenAdapter {
         player.setShip(makeNewPlayerShip());
         enemy = new DumbEnemy();
         enemy.setShip(makeNewEnemyShip());
-        arena = new WarehouseArena(Arrays.asList(new BasicTile(1500, 300)));
+        arenaData = new Overlap2dArenaData(WarehouseArena.NAME, new ObjectMapper());
+        arena = new WarehouseArena(arenaData.getArenaObjects());
         chaseCamera.snapAtNextObservable();
 
         playerRenderer = new ShipOwnerRenderer(player, partsAssets);
