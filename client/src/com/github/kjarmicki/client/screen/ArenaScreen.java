@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kjarmicki.arena.Arena;
@@ -28,14 +27,11 @@ import com.github.kjarmicki.container.PowerupsContainer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.entity.DumbEnemy;
 import com.github.kjarmicki.entity.Player;
-import com.github.kjarmicki.powerup.*;
+import com.github.kjarmicki.powerup.PowerupsRespawner;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
@@ -80,13 +76,6 @@ public class ArenaScreen extends ScreenAdapter {
 
         bulletsContainer = new BulletsContainer();
 
-        powerupsContainer = new PowerupsContainer();
-        Map<Vector2, Supplier<Powerup>> respawnablePowerups = new HashMap<>();
-        respawnablePowerups.put(new Vector2(1000, 1000), BasicSecondaryWeaponPowerup::new);
-        respawnablePowerups.put(new Vector2(1300, 1300), AdvancedPrimaryWeaponPowerup::new);
-        respawnablePowerups.put(new Vector2(1500, 1500), FastWingPowerup::new);
-        powerupsRespawner = new PowerupsRespawner(respawnablePowerups, powerupsContainer);
-
         player = new Player(
                 controls
         );
@@ -94,7 +83,9 @@ public class ArenaScreen extends ScreenAdapter {
         enemy = new DumbEnemy();
         enemy.setShip(makeNewEnemyShip());
         arenaData = new Overlap2dArenaData(WarehouseArena.NAME, new ObjectMapper());
-        arena = new WarehouseArena(arenaData.getArenaObjects());
+        arena = new WarehouseArena(arenaData.getTiles());
+        powerupsContainer = new PowerupsContainer();
+        powerupsRespawner = new PowerupsRespawner(arenaData.getRespawnablePowerups(), powerupsContainer);
         chaseCamera = new ChaseCamera(viewport.getCamera(), arena, 9f);
         chaseCamera.snapAtNextObservable();
 

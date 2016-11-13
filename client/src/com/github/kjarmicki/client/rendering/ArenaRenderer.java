@@ -3,13 +3,13 @@ package com.github.kjarmicki.client.rendering;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.kjarmicki.arena.Arena;
-import com.github.kjarmicki.arena.object.ArenaObject;
+import com.github.kjarmicki.arena.tile.ArenaTile;
 import com.github.kjarmicki.client.assets.ArenaAssets;
 
 public class ArenaRenderer implements Renderer {
     private final Arena arena;
     private final ArenaAssets arenaAssets;
-    private final ContainerRenderer<ArenaObject, ArenaAssets> containerRenderer;
+    private final ContainerRenderer<ArenaTile, ArenaAssets> containerRenderer;
 
     public ArenaRenderer(Arena arena, ArenaAssets arenaAssets) {
         this.arena = arena;

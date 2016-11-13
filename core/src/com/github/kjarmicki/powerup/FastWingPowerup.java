@@ -37,6 +37,14 @@ public class FastWingPowerup extends GenericPowerup {
 
     @Override
     public AssetKey getAssetKey() {
+        return assetKey();
+    }
+
+    public static String getAssetString() {
+        return assetKey().toString();
+    }
+
+    private static AssetKey assetKey() {
         return new AssetKey(DEFAULT_COLOR, DEFAULT_INDEX);
     }
 }

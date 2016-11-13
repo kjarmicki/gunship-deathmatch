@@ -2,7 +2,7 @@ package com.github.kjarmicki.arena;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.GunshipDeathmatch;
-import com.github.kjarmicki.arena.object.ArenaObject;
+import com.github.kjarmicki.arena.tile.ArenaTile;
 import com.github.kjarmicki.assets.ArenaSkin;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.ShipOwner;
@@ -15,16 +15,16 @@ public class WarehouseArena implements Arena {
     public static final int BACKGROUND_INDEX = 1;
     public static final String NAME = "warehouse";
 
-    private final List<ArenaObject> arenaObjects;
+    private final List<ArenaTile> arenaTiles;
 
-    public WarehouseArena(List<ArenaObject> arenaObjects) {
-        this.arenaObjects = arenaObjects;
+    public WarehouseArena(List<ArenaTile> arenaTiles) {
+        this.arenaTiles = arenaTiles;
     }
 
 
     @Override
-    public List<ArenaObject> getContents() {
-        return arenaObjects;
+    public List<ArenaTile> getContents() {
+        return arenaTiles;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class WarehouseArena implements Arena {
                 .map(ShipOwner::getShip)
                 .forEach(ship -> {
                     ship.checkPlacementWithinBounds(getBounds());
-                    arenaObjects
+                    arenaTiles
                             .stream()
                             .forEach(ship::checkCollisionWith);
                 });

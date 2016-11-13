@@ -2,7 +2,7 @@ package com.github.kjarmicki.ship;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.arena.object.ArenaObject;
+import com.github.kjarmicki.arena.tile.ArenaTile;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.controls.Controls;
@@ -206,12 +206,12 @@ public class Ship {
                 });
     }
 
-    public void checkCollisionWith(ArenaObject arenaObject) {
+    public void checkCollisionWith(ArenaTile arenaTile) {
         allParts().stream()
-                .filter(myPart -> !myPart.collisionVector(arenaObject).equals(Points.ZERO))
+                .filter(myPart -> !myPart.collisionVector(arenaTile).equals(Points.ZERO))
                 .findFirst()
                 .ifPresent(myPart -> {
-                    Vector2 shift = myPart.collisionVector(arenaObject);
+                    Vector2 shift = myPart.collisionVector(arenaTile);
 
                     // rebound a ship off the object
                     velocity.x = rebound(velocity.x);

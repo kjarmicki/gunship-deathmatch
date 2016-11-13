@@ -1,4 +1,4 @@
-package com.github.kjarmicki.arena.object;
+package com.github.kjarmicki.arena.tile;
 
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.assets.ArenaSkin;
@@ -7,7 +7,7 @@ import com.github.kjarmicki.basis.GenericVisibleThing;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
-public class BasicTile extends GenericVisibleThing implements ArenaObject {
+public class BasicTile extends GenericVisibleThing implements ArenaTile {
     public static final float WIDTH = 128f;
     public static final float HEIGHT = WIDTH;
     public static final int SKIN_INDEX = 1;

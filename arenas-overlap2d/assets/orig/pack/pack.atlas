@@ -4,65 +4,72 @@ size: 2048,256
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+Green (14)
+  rotate: false
+  xy: 2, 2
+  size: 192, 132
+  orig: 192, 132
+  offset: 0, 0
+  index: -1
 corner (1)
   rotate: false
-  xy: 392, 2
+  xy: 586, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 corner (2)
   rotate: false
-  xy: 132, 2
+  xy: 326, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 corner (3)
   rotate: false
-  xy: 782, 2
+  xy: 976, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 corner (4)
   rotate: false
-  xy: 912, 2
+  xy: 1106, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 crate (1)
   rotate: false
-  xy: 262, 2
+  xy: 456, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (1)
   rotate: false
-  xy: 522, 2
+  xy: 716, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (2)
   rotate: false
-  xy: 2, 2
+  xy: 196, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (3)
   rotate: false
-  xy: 652, 2
+  xy: 846, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (4)
   rotate: false
-  xy: 1042, 2
+  xy: 1236, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
