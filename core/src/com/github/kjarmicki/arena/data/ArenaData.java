@@ -11,4 +11,5 @@ import java.util.function.Supplier;
 public interface ArenaData {
     List<ArenaTile> getTiles();
     Map<Vector2, Supplier<Powerup>> getRespawnablePowerups();
+    List<Vector2> getShipsRespawnPoints();
 }

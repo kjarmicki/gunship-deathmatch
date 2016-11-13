@@ -21,15 +21,15 @@ import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.rendering.ArenaRenderer;
 import com.github.kjarmicki.client.rendering.ContainerRenderer;
 import com.github.kjarmicki.client.rendering.Renderer;
-import com.github.kjarmicki.client.rendering.ShipOwnerRenderer;
+import com.github.kjarmicki.client.rendering.ShipOwnersContainerRenderer;
 import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PowerupsContainer;
+import com.github.kjarmicki.container.ShipOwnersContainer;
 import com.github.kjarmicki.controls.Controls;
-import com.github.kjarmicki.entity.DumbEnemy;
-import com.github.kjarmicki.entity.Player;
 import com.github.kjarmicki.powerup.PowerupsRespawner;
-import com.github.kjarmicki.ship.Ship;
-import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.ship.ShipsRespawner;
+import com.github.kjarmicki.shipowner.DumbEnemy;
+import com.github.kjarmicki.shipowner.Player;
 
 import java.util.Arrays;
 
@@ -48,12 +48,13 @@ public class ArenaScreen extends ScreenAdapter {
     private final BulletsContainer bulletsContainer;
     private final PowerupsContainer powerupsContainer;
     private final PowerupsRespawner powerupsRespawner;
+    private final ShipOwnersContainer shipOwnersContainer;
+    private final ShipsRespawner shipsRespawner;
 
-    private final Renderer playerRenderer;
-    private final Renderer enemyRenderer;
     private final Renderer bulletsContainerRenderer;
     private final Renderer powerupsContainerRenderer;
     private final Renderer arenaRenderer;
+    private final Renderer shipOwnersContainerRenderer;
 
     public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
         this.viewport = viewport;
@@ -77,32 +78,24 @@ public class ArenaScreen extends ScreenAdapter {
         bulletsContainer = new BulletsContainer();
 
         player = new Player(
+                PartSkin.BLUE,
                 controls
         );
-        player.setShip(makeNewPlayerShip());
-        enemy = new DumbEnemy();
-        enemy.setShip(makeNewEnemyShip());
+        enemy = new DumbEnemy(PartSkin.ORANGE);
+        shipOwnersContainer = new ShipOwnersContainer(Arrays.asList(player, enemy));
         arenaData = new Overlap2dArenaData(WarehouseArena.NAME, new ObjectMapper());
         arena = new WarehouseArena(arenaData.getTiles());
         powerupsContainer = new PowerupsContainer();
         powerupsRespawner = new PowerupsRespawner(arenaData.getRespawnablePowerups(), powerupsContainer);
+        shipsRespawner = new ShipsRespawner(arenaData.getShipsRespawnPoints(), shipOwnersContainer, bulletsContainer);
+        shipsRespawner.spawnShips();
         chaseCamera = new ChaseCamera(viewport.getCamera(), arena, 9f);
         chaseCamera.snapAtNextObservable();
 
-        playerRenderer = new ShipOwnerRenderer(player, partsAssets);
-        enemyRenderer = new ShipOwnerRenderer(enemy, partsAssets);
+        shipOwnersContainerRenderer = new ShipOwnersContainerRenderer(shipOwnersContainer, partsAssets);
         bulletsContainerRenderer = new ContainerRenderer<>(bulletsContainer, bulletsAssets);
         powerupsContainerRenderer = new ContainerRenderer<>(powerupsContainer, partsAssets);
         arenaRenderer = new ArenaRenderer(arena, arenaAssets);
-    }
-
-    private Ship makeNewEnemyShip() {
-        // TODO: give player a color and pass it to ship
-        return new Ship(DumbEnemy.DEFAULT_X, DumbEnemy.DEFAULT_Y, new ShipFeatures(), enemy, PartSkin.ORANGE, bulletsContainer);
-    }
-
-    private Ship makeNewPlayerShip() {
-        return new Ship(Player.DEFAULT_X, Player.DEFAULT_Y, new ShipFeatures(), player, PartSkin.BLUE, bulletsContainer);
     }
 
     @Override
@@ -111,32 +104,29 @@ public class ArenaScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         viewport.apply();
 
+        // ships related updates
+        shipOwnersContainer.updateOwners(delta);
+        shipsRespawner.update(delta);
+        arena.checkCollisionWithShipOwners(shipOwnersContainer.getContents());
 
-        player.update(delta);
-        enemy.update(delta);
-        if(enemy.getShip().isDestroyed()) {
-            enemy.setShip(makeNewEnemyShip());
-        }
-        if(player.getShip().isDestroyed()) {
-            player.setShip(makeNewPlayerShip());
-        }
+        // bullets related updates
         bulletsContainer.updateBullets(delta);
-        arena.checkCollisionWithShipOwners(Arrays.asList(player, enemy));
-        player.checkCollisionWithOtherShip(enemy.getShip());
-        powerupsRespawner.update(delta);
-        bulletsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
+        bulletsContainer.checkCollisionsWithShipOwners(shipOwnersContainer.getContents());
         bulletsContainer.checkCollisionWithArenaObjects(arena.getContents());
-        powerupsContainer.checkCollisionsWithShipOwners(Arrays.asList(player, enemy));
         bulletsContainer.cleanup(arena.getBounds());
-        powerupsContainer.cleanup();
-        chaseCamera.lookAt(player, delta);
 
+        // powerups related updates
+        powerupsRespawner.update(delta);
+        powerupsContainer.checkCollisionsWithShipOwners(shipOwnersContainer.getContents());
+        powerupsContainer.cleanup();
+
+        chaseCamera.lookAt(player, delta);
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
+        // drawing
         batch.begin();
         arenaRenderer.render(batch);
-        playerRenderer.render(batch);
-        enemyRenderer.render(batch);
+        shipOwnersContainerRenderer.render(batch);
         bulletsContainerRenderer.render(batch);
         powerupsContainerRenderer.render(batch);
         batch.end();

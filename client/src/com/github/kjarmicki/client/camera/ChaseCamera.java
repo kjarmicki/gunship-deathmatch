@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.github.kjarmicki.arena.Arena;
 import com.github.kjarmicki.client.GunshipDeathmatchClient;
-import com.github.kjarmicki.entity.Observable;
+import com.github.kjarmicki.shipowner.Observable;
 
 public class ChaseCamera {
     private final Camera underlying;

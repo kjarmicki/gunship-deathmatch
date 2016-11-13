@@ -1,4 +1,4 @@
-package com.github.kjarmicki.entity;
+package com.github.kjarmicki.shipowner;
 
 import com.badlogic.gdx.math.Vector2;
 

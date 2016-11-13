@@ -48,6 +48,17 @@ public class Overlap2dArenaData implements ArenaData {
                 .collect(toMap(PowerupWrapper::getPosition, PowerupWrapper::getPowerupSupplier));
 
     }
+
+    @Override
+    public List<Vector2> getShipsRespawnPoints() {
+        return data.composite.sImages
+                .stream()
+                .map(sImage -> ArenaObjectFactory.respawnPointFromAssetKey(sImage.imageName, sImage.x, sImage.y))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
+    }
+
     // JSON structure
     static class O2dArenaDataJson {
         public Composite composite;

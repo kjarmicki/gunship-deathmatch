@@ -30,12 +30,12 @@ public class Ship {
     private boolean isDestroyed = false;
 
 
-    public Ship(float x, float y, ShipFeatures features, ShipOwner owner, PartSkin color, BulletsContainer bulletsContainer) {
+    public Ship(Vector2 position, ShipFeatures features, ShipOwner owner, BulletsContainer bulletsContainer) {
         this.features = features;
         this.bulletsContainer = bulletsContainer;
-        this.color = color;
         this.owner = owner;
-        core = new BasicCorePart(x, y, this);
+        this.color = owner.getColor();
+        core = new BasicCorePart(position.x, position.y, this);
 
         this.mountPart(new BasicNosePart(this));
         this.mountPart(BasicWingPart.getLeftVariant(this));
@@ -227,6 +227,13 @@ public class Ship {
                     // translate ship back to the area
                     allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
                 });
+    }
+
+    public boolean laysOnPoint(Vector2 point) {
+        return allParts().stream()
+                .filter(myPart -> myPart.laysOnPoint(point))
+                .findFirst()
+                .isPresent();
     }
 
     public void bump(Vector2 objectVelocity) {
