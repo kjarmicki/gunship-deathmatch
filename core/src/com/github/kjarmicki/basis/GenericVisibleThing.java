@@ -61,8 +61,4 @@ public abstract class GenericVisibleThing implements VisibleThing {
         }
         return Points.ZERO;
     }
-
-    public boolean laysOnPoint(Vector2 point) {
-        return takenArea.contains(point);
-    }
 }

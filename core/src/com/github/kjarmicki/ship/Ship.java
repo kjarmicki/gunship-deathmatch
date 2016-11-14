@@ -229,11 +229,8 @@ public class Ship {
                 });
     }
 
-    public boolean laysOnPoint(Vector2 point) {
-        return allParts().stream()
-                .filter(myPart -> myPart.laysOnPoint(point))
-                .findFirst()
-                .isPresent();
+    public boolean laysWithinRadiusFromPoint(float radius, Vector2 point) {
+        return core.getCenter().dst(point) < radius;
     }
 
     public void bump(Vector2 objectVelocity) {

@@ -13,6 +13,5 @@ public interface VisibleThing {
     float getHeight();
     Vector2 outsideBounds(Rectangle bounds);
     Vector2 collisionVector(VisibleThing otherPart);
-    boolean laysOnPoint(Vector2 point);
     AssetKey getAssetKey();
 }
