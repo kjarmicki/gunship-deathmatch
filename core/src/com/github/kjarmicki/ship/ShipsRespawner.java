@@ -55,7 +55,6 @@ public class ShipsRespawner {
     }
 
     private Vector2 randomRespawnSpot() {
-        System.out.println("random");
         return respawnPoints.get(numberGenerator.nextInt(respawnPoints.size()));
     }
 }

@@ -1,2 +1,2 @@
-include 'desktop', 'android', 'html', 'core', 'client'
+include 'desktop', 'android', 'html', 'core', 'client', 'server'
 

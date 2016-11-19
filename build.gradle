@@ -97,6 +97,7 @@ project(":client") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        compile 'io.socket:socket.io-client:0.8.2'
     }
 
     task packTextures {
@@ -116,6 +117,18 @@ project(":client") {
         }
     }
     project.tasks.compileJava.dependsOn packTextures
+}
+
+project(":server") {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        compile 'com.corundumstudio.socketio:netty-socketio:1.7.12'
+    }
 }
 
 project(":core") {

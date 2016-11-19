@@ -17,6 +17,8 @@ import com.github.kjarmicki.client.assets.ArenaAssets;
 import com.github.kjarmicki.client.assets.BulletsAssets;
 import com.github.kjarmicki.client.assets.PartsAssets;
 import com.github.kjarmicki.client.camera.ChaseCamera;
+import com.github.kjarmicki.client.connection.Connection;
+import com.github.kjarmicki.client.connection.SocketIoConnection;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.rendering.ArenaRenderer;
 import com.github.kjarmicki.client.rendering.ContainerRenderer;
@@ -50,6 +52,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final PowerupsRespawner powerupsRespawner;
     private final ShipOwnersContainer shipOwnersContainer;
     private final ShipsRespawner shipsRespawner;
+    private final Connection connection;
 
     private final Renderer bulletsContainerRenderer;
     private final Renderer powerupsContainerRenderer;
@@ -60,6 +63,7 @@ public class ArenaScreen extends ScreenAdapter {
         this.viewport = viewport;
         this.batch = batch;
         this.controls = controls;
+        this.connection = new SocketIoConnection("http://localhost:3000");
 
         partsAssets = new PartsAssets(
                 PartsAssets.DEFAULT_ATLAS,
