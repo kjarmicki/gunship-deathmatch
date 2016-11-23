@@ -11,7 +11,6 @@ public class GunshipDeathmatchServer extends Game {
     /*
      * TODO base plan for server side logic with one player
      * 1. server starts up the game
-     *      1a. separate game containers from rendering into game class, make client still working
      * 2. server sets up connections and events
      * 3. client connects to server
      * 4. server responds with client spawn point

@@ -26,13 +26,7 @@ public class ShipsRespawner {
     public void update(float delta) {
         shipOwnersContainer.getContents()
                 .stream()
-                .filter(shipOwner -> shipOwner.getShip().isDestroyed())
-                .forEach(shipOwner -> shipOwner.setShip(new Ship(findNextFreeRespawnSpot(shipOwner), new ShipFeatures(), shipOwner, bulletsContainer)));
-    }
-
-    public void spawnShips() {
-        shipOwnersContainer.getContents()
-                .stream()
+                .filter(shipOwner -> shipOwner.getShip() == null || shipOwner.getShip().isDestroyed())
                 .forEach(shipOwner -> shipOwner.setShip(new Ship(findNextFreeRespawnSpot(shipOwner), new ShipFeatures(), shipOwner, bulletsContainer)));
     }
 

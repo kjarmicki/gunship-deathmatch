@@ -28,6 +28,7 @@ import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PowerupsContainer;
 import com.github.kjarmicki.container.ShipOwnersContainer;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.powerup.PowerupsRespawner;
 import com.github.kjarmicki.ship.ShipsRespawner;
 import com.github.kjarmicki.shipowner.DumbEnemy;
@@ -40,26 +41,21 @@ public class ArenaScreen extends ScreenAdapter {
     private final Controls controls;
     private final Player player;
     private final DumbEnemy enemy;
-    private final Arena arena;
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
+    private final Connection connection;
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
     private final ArenaAssets arenaAssets;
-    private final ArenaData arenaData;
-    private final BulletsContainer bulletsContainer;
-    private final PowerupsContainer powerupsContainer;
-    private final PowerupsRespawner powerupsRespawner;
-    private final ShipOwnersContainer shipOwnersContainer;
-    private final ShipsRespawner shipsRespawner;
-    private final Connection connection;
+    private final Game game;
 
     private final Renderer bulletsContainerRenderer;
     private final Renderer powerupsContainerRenderer;
     private final Renderer arenaRenderer;
     private final Renderer shipOwnersContainerRenderer;
 
-    public ArenaScreen(Viewport viewport, Batch batch, Controls controls) {
+    public ArenaScreen(Game game, Viewport viewport, Batch batch, Controls controls) {
+        this.game = game;
         this.viewport = viewport;
         this.batch = batch;
         this.controls = controls;
@@ -79,51 +75,33 @@ public class ArenaScreen extends ScreenAdapter {
                 ArenaSkin.asMap()
         );
 
-        bulletsContainer = new BulletsContainer();
-
         player = new Player(
                 PartSkin.BLUE,
                 controls
         );
         enemy = new DumbEnemy(PartSkin.ORANGE);
-        shipOwnersContainer = new ShipOwnersContainer(Arrays.asList(player, enemy));
-        arenaData = new Overlap2dArenaData(WarehouseArena.NAME, new ObjectMapper());
-        arena = new WarehouseArena(arenaData.getTiles());
-        powerupsContainer = new PowerupsContainer();
-        powerupsRespawner = new PowerupsRespawner(arenaData.getRespawnablePowerups(), powerupsContainer);
-        shipsRespawner = new ShipsRespawner(arenaData.getShipsRespawnPoints(), shipOwnersContainer, bulletsContainer);
-        shipsRespawner.spawnShips();
-        chaseCamera = new ChaseCamera(viewport.getCamera(), arena, 9f);
+        chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();
 
-        shipOwnersContainerRenderer = new ShipOwnersContainerRenderer(shipOwnersContainer, partsAssets);
-        bulletsContainerRenderer = new ContainerRenderer<>(bulletsContainer, bulletsAssets);
-        powerupsContainerRenderer = new ContainerRenderer<>(powerupsContainer, partsAssets);
-        arenaRenderer = new ArenaRenderer(arena, arenaAssets);
+        shipOwnersContainerRenderer = new ShipOwnersContainerRenderer(game.getShipOwnersContainer(), partsAssets);
+        bulletsContainerRenderer = new ContainerRenderer<>(game.getBulletsContainer(), bulletsAssets);
+        powerupsContainerRenderer = new ContainerRenderer<>(game.getPowerupsContainer(), partsAssets);
+        arenaRenderer = new ArenaRenderer(game.getArena(), arenaAssets);
+
+        // TODO: this will come from the server
+        game.getShipOwnersContainer().add(player);
+        game.getShipOwnersContainer().add(enemy);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // game logic update
+        game.update(delta);
+
         viewport.apply();
-
-        // ships related updates
-        shipOwnersContainer.updateOwners(delta);
-        shipsRespawner.update(delta);
-        arena.checkCollisionWithShipOwners(shipOwnersContainer.getContents());
-
-        // bullets related updates
-        bulletsContainer.updateBullets(delta);
-        bulletsContainer.checkCollisionsWithShipOwners(shipOwnersContainer.getContents());
-        bulletsContainer.checkCollisionWithArenaObjects(arena.getContents());
-        bulletsContainer.cleanup(arena.getBounds());
-
-        // powerups related updates
-        powerupsRespawner.update(delta);
-        powerupsContainer.checkCollisionsWithShipOwners(shipOwnersContainer.getContents());
-        powerupsContainer.cleanup();
-
         chaseCamera.lookAt(player, delta);
         batch.setProjectionMatrix(viewport.getCamera().combined);
 

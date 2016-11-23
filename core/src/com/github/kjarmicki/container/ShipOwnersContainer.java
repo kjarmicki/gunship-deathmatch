@@ -2,6 +2,7 @@ package com.github.kjarmicki.container;
 
 import com.github.kjarmicki.ship.ShipOwner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShipOwnersContainer implements Container<ShipOwner> {
@@ -9,6 +10,18 @@ public class ShipOwnersContainer implements Container<ShipOwner> {
 
     public ShipOwnersContainer(List<ShipOwner> shipOwners) {
         this.shipOwners = shipOwners;
+    }
+
+    public ShipOwnersContainer() {
+        this(new ArrayList<>());
+    }
+
+    public void add(ShipOwner shipOwner) {
+        this.shipOwners.add(shipOwner);
+    }
+
+    public void remove(ShipOwner shipOwner) {
+        this.shipOwners.remove(shipOwner);
     }
 
     public void updateOwners(float delta) {
