@@ -1,9 +1,10 @@
 package com.github.kjarmicki.server;
 
+import com.badlogic.gdx.Game;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
 
-public class GunshipDeathmatchServer {
+public class GunshipDeathmatchServer extends Game {
     public static final String host = "localhost";
     public static final int port = 3000;
 
@@ -11,7 +12,6 @@ public class GunshipDeathmatchServer {
      * TODO base plan for server side logic with one player
      * 1. server starts up the game
      *      1a. separate game containers from rendering into game class, make client still working
-     *      2a. lookup headless libgdx
      * 2. server sets up connections and events
      * 3. client connects to server
      * 4. server responds with client spawn point
@@ -19,7 +19,8 @@ public class GunshipDeathmatchServer {
      * 6. ...client side prediction, server reconciliation, entity interpolation
      */
 
-    public static void main(String[] args) {
+    @Override
+    public void create() {
         Configuration config = new Configuration();
         config.setHostname(host);
         config.setPort(port);
@@ -32,5 +33,9 @@ public class GunshipDeathmatchServer {
 
         server.start();
         System.out.println("Game server started at http://" + host + ":" + port);
+    }
+
+    @Override
+    public void render() {
     }
 }
