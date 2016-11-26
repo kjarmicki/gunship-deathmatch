@@ -20,7 +20,7 @@ public class ServerScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        gameServer.whenPlayerJoined(player -> {
+        gameServer.onPlayerJoined(player -> {
             // create a new ship for joined player
             PlayersContainer playersContainer = game.getPlayersContainer();
             ShipsRespawner shipsRespawner = game.getShipsRespawner();

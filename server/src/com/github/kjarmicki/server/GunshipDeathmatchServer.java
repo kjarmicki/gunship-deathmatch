@@ -10,9 +10,8 @@ public class GunshipDeathmatchServer extends com.badlogic.gdx.Game {
 
     /*
      * TODO
-     * 1. server responds with client spawn point
-     * 2. client moves through the world and sends input updates
-     * 3. ...client side prediction, server reconciliation, entity interpolation
+     * 1. client moves through the world and sends input updates
+     * 2. ...client side prediction, server reconciliation, entity interpolation
      */
 
     @Override

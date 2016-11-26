@@ -13,7 +13,6 @@ public class GunshipDeathmatchClient extends com.badlogic.gdx.Game {
     public static final float CAMERA_VIEW_WIDTH = 1000f;
     public static final float CAMERA_VIEW_HEIGHT = 1000f;
     private final Viewport viewport = new FitViewport(CAMERA_VIEW_WIDTH, CAMERA_VIEW_HEIGHT);
-    private final Controls controls = new Keyboard();
 
     @Override
     public void create() {
@@ -21,8 +20,7 @@ public class GunshipDeathmatchClient extends com.badlogic.gdx.Game {
         setScreen(new ArenaScreen(
                 new Game(),
                 viewport,
-                new SpriteBatch(),
-                controls
+                new SpriteBatch()
         ));
     }
 }

@@ -15,12 +15,15 @@ import com.github.kjarmicki.client.assets.PartsAssets;
 import com.github.kjarmicki.client.camera.ChaseCamera;
 import com.github.kjarmicki.client.connection.Connection;
 import com.github.kjarmicki.client.connection.SocketIoConnection;
+import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.rendering.ArenaRenderer;
 import com.github.kjarmicki.client.rendering.ContainerRenderer;
 import com.github.kjarmicki.client.rendering.PlayersContainerRenderer;
 import com.github.kjarmicki.client.rendering.Renderer;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.controls.RemoteControls;
+import com.github.kjarmicki.dto.ControlsMapper;
 import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.ControlledPlayer;
 import com.github.kjarmicki.ship.Ship;
@@ -28,7 +31,8 @@ import com.github.kjarmicki.ship.ShipFeatures;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
-    private final Controls controls;
+    private final RemoteControls remoteControls;
+    private final Controls keyboard;
     private final ControlledPlayer controlledPlayer;
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
@@ -43,11 +47,12 @@ public class ArenaScreen extends ScreenAdapter {
     private final Renderer arenaRenderer;
     private final Renderer shipOwnersContainerRenderer;
 
-    public ArenaScreen(Game game, Viewport viewport, Batch batch, Controls controls) {
+    public ArenaScreen(Game game, Viewport viewport, Batch batch) {
         this.game = game;
         this.viewport = viewport;
         this.batch = batch;
-        this.controls = controls;
+        this.remoteControls = new RemoteControls();
+        this.keyboard = new Keyboard();
         this.connection = new SocketIoConnection("http://localhost:3000");
 
         partsAssets = new PartsAssets(
@@ -66,7 +71,7 @@ public class ArenaScreen extends ScreenAdapter {
 
         controlledPlayer = new ControlledPlayer(
                 PartSkin.BLUE,
-                controls
+                remoteControls
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();
@@ -76,11 +81,15 @@ public class ArenaScreen extends ScreenAdapter {
         powerupsContainerRenderer = new ContainerRenderer<>(game.getPowerupsContainer(), partsAssets);
         arenaRenderer = new ArenaRenderer(game.getArena(), arenaAssets);
 
+        // connection management
         connection.connect(controlledPlayer);
-        connection.whenConnected(shipDto -> {
+        connection.onConnected(shipDto -> {
             controlledPlayer.setShip(new Ship(new Vector2(shipDto.getX(), shipDto.getY()),
                     new ShipFeatures(), controlledPlayer, game.getBulletsContainer()));
             game.getPlayersContainer().add(controlledPlayer);
+        });
+        connection.onControlsReceived(controlsDto -> {
+            ControlsMapper.setByDto(remoteControls, controlsDto);
         });
     }
 
@@ -91,6 +100,9 @@ public class ArenaScreen extends ScreenAdapter {
 
         // wait while connecting
         if(!connection.isConnected()) return;
+
+        // send state
+        connection.sendControls(ControlsMapper.mapToDto(keyboard));
 
         // game logic update
         game.update(delta);

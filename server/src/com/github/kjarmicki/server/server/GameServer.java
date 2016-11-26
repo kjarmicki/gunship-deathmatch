@@ -6,5 +6,5 @@ import java.util.function.Consumer;
 
 public interface GameServer {
     void start();
-    void whenPlayerJoined(Consumer<Player> eventHandler);
+    void onPlayerJoined(Consumer<Player> eventHandler);
 }

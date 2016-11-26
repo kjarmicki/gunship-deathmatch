@@ -6,7 +6,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ExceptionListenerAdapter;
 import com.github.kjarmicki.connection.Event;
-import com.github.kjarmicki.controls.RemoteControl;
+import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.PlayerDto;
 import com.github.kjarmicki.dto.PlayerMapper;
 import com.github.kjarmicki.dto.ShipMapper;
@@ -56,9 +56,16 @@ public class SocketIoGameServer implements GameServer {
     private void setupEvents() {
         server.addEventListener(Event.INTRODUCE_PLAYER, String.class, (client, json, ackSender) -> {
             PlayerDto playerDto = PlayerDto.fromJsonString(json);
-            Player newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControl());
+            Player newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
             playerJoinedHandler.accept(newPlayer);
             client.sendEvent(Event.PLAYER_INTRODUCED, ShipMapper.mapToDto(newPlayer.getShip()).toJsonString());
+        });
+
+        server.addEventListener(Event.SEND_CONTROLS, String.class, (client, json, ackSender) -> {
+            // TODO: need some uuid to match client with player object
+            // client.getSessionId() ?
+
+            System.out.println(json);
         });
     }
 
@@ -70,7 +77,7 @@ public class SocketIoGameServer implements GameServer {
     }
 
     @Override
-    public void whenPlayerJoined(Consumer<Player> eventHandler) {
+    public void onPlayerJoined(Consumer<Player> eventHandler) {
         playerJoinedHandler = eventHandler;
     }
 }

@@ -1,9 +1,7 @@
 package com.github.kjarmicki.client.connection;
 
 import com.github.kjarmicki.connection.Event;
-import com.github.kjarmicki.dto.PlayerMapper;
-import com.github.kjarmicki.dto.ShipDto;
-import com.github.kjarmicki.dto.ShipMapper;
+import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.player.Player;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -34,16 +32,29 @@ public class SocketIoConnection implements Connection {
             });
             socket.on(Event.PLAYER_INTRODUCED, response -> {
                 String shipDtoJson = (String)response[0];
-                state = ConnectionState.CONNECTED;
                 playerConnectedHandler.accept(ShipDto.fromJsonString(shipDtoJson));
+                state = ConnectionState.CONNECTED;
             });
             socket.connect();
         }
     }
 
     @Override
-    public void whenConnected(Consumer<ShipDto> action) {
+    public void onConnected(Consumer<ShipDto> action) {
         playerConnectedHandler = action;
+    }
+
+    @Override
+    public void onControlsReceived(Consumer<ControlsDto> action) {
+        socket.on(Event.CONTROLS_RECEIVED, response -> {
+            String controlsDtoJson = (String)response[0];
+            action.accept(ControlsDto.fromJsonString(controlsDtoJson));
+        });
+    }
+
+    @Override
+    public void sendControls(ControlsDto controlsDto) {
+        socket.emit(Event.SEND_CONTROLS, controlsDto.toJsonString());
     }
 
     @Override
