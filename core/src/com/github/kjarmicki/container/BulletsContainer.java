@@ -2,7 +2,7 @@ package com.github.kjarmicki.container;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.arena.tile.ArenaTile;
-import com.github.kjarmicki.ship.ShipOwner;
+import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
@@ -14,22 +14,22 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 public class BulletsContainer implements Container<Bullet> {
-    private final Map<Bullet, ShipOwner> bulletsByOwners = new HashMap<>();
+    private final Map<Bullet, Player> bulletsByPlayers = new HashMap<>();
 
-    public void addBullet(Bullet bullet, ShipOwner owner) {
-        bulletsByOwners.put(bullet, owner);
+    public void addBullet(Bullet bullet, Player owner) {
+        bulletsByPlayers.put(bullet, owner);
     }
 
     @Override
     public List<Bullet> getContents() {
-        return bulletsByOwners.entrySet()
+        return bulletsByPlayers.entrySet()
                 .stream()
                 .map(Map.Entry::getKey)
                 .collect(toList());
     }
 
     public void updateBullets(float delta) {
-        bulletsByOwners.entrySet()
+        bulletsByPlayers.entrySet()
                 .stream()
                 .map(Map.Entry::getKey)
                 .forEach(bullet -> {
@@ -37,24 +37,24 @@ public class BulletsContainer implements Container<Bullet> {
                 });
     }
 
-    public void checkCollisionsWithShipOwners(List<ShipOwner> ownerList) {
-        bulletsByOwners.entrySet()
+    public void checkCollisionsWithPlayers(List<Player> ownerList) {
+        bulletsByPlayers.entrySet()
                 .stream()
                 .forEach(entry -> {
                     Bullet bullet = entry.getKey();
-                    ShipOwner currentOwner = entry.getValue();
+                    Player currentPlayer = entry.getValue();
 
                     ownerList.stream()
-                            .forEach(foreignOwner -> {
-                                if (!bullet.isDestroyed() && foreignOwner != currentOwner) {
-                                    foreignOwner.getShip().checkCollisionWith(bullet);
+                            .forEach(foreignPlayer -> {
+                                if (!bullet.isDestroyed() && foreignPlayer != currentPlayer) {
+                                    foreignPlayer.getShip().checkCollisionWith(bullet);
                                 }
                             });
                 });
     }
 
     public void checkCollisionWithArenaObjects(List<ArenaTile> objectList) {
-        bulletsByOwners.entrySet()
+        bulletsByPlayers.entrySet()
                 .stream()
                 .map(Map.Entry::getKey)
                 .forEach(bullet -> {
@@ -74,17 +74,17 @@ public class BulletsContainer implements Container<Bullet> {
 
     private void removeDestroyedAndOutOfRange() {
         // TODO: support for a nice kaboom animation here
-        Map<Bullet, ShipOwner> filtered = bulletsByOwners.entrySet()
+        Map<Bullet, Player> filtered = bulletsByPlayers.entrySet()
                 .stream()
                 .filter(entry -> !entry.getKey().isDestroyed())
                 .filter(entry -> !entry.getKey().isRangeExceeded())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        bulletsByOwners.clear();
-        bulletsByOwners.putAll(filtered);
+        bulletsByPlayers.clear();
+        bulletsByPlayers.putAll(filtered);
     }
 
     private void destroyOutOfBounds(Rectangle bounds) {
-            bulletsByOwners.entrySet()
+            bulletsByPlayers.entrySet()
                     .stream()
                     .map(Map.Entry::getKey)
                     .forEach(bullet -> {

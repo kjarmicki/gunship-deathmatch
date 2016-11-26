@@ -2,7 +2,8 @@ package com.github.kjarmicki.ship;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.container.BulletsContainer;
-import com.github.kjarmicki.container.ShipOwnersContainer;
+import com.github.kjarmicki.container.PlayersContainer;
+import com.github.kjarmicki.player.Player;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,36 +12,36 @@ import java.util.Random;
 
 public class ShipsRespawner {
     public static final float MINIMAL_RESPAWN_DISTANCE = 700f;
-    private final ShipOwnersContainer shipOwnersContainer;
+    private final PlayersContainer playersContainer;
     private final BulletsContainer bulletsContainer;
     private final List<Vector2> respawnPoints;
     private final Random numberGenerator;
 
-    public ShipsRespawner(List<Vector2> respawnPoints, ShipOwnersContainer shipOwnersContainer, BulletsContainer bulletsContainer) {
+    public ShipsRespawner(List<Vector2> respawnPoints, PlayersContainer playersContainer, BulletsContainer bulletsContainer) {
         this.respawnPoints = respawnPoints;
-        this.shipOwnersContainer = shipOwnersContainer;
+        this.playersContainer = playersContainer;
         this.bulletsContainer = bulletsContainer;
         numberGenerator = new Random();
     }
 
     public void update(float delta) {
-        shipOwnersContainer.getContents()
+        playersContainer.getContents()
                 .stream()
-                .filter(shipOwner -> shipOwner.getShip() == null || shipOwner.getShip().isDestroyed())
-                .forEach(shipOwner -> shipOwner.setShip(new Ship(findNextFreeRespawnSpot(shipOwner), new ShipFeatures(), shipOwner, bulletsContainer)));
+                .filter(player -> player.getShip() == null || player.getShip().isDestroyed())
+                .forEach(player -> player.setShip(new Ship(findNextFreeRespawnSpot(player), new ShipFeatures(), player, bulletsContainer)));
     }
 
-    private Vector2 findNextFreeRespawnSpot(ShipOwner beingRespawned) {
+    private Vector2 findNextFreeRespawnSpot(Player beingRespawned) {
         // shuffle respawn points first to randomize spawn places
         Collections.shuffle(respawnPoints);
         return respawnPoints
                 .stream()
-                .filter(respawnPoint -> shipOwnersContainer.getContents()
+                .filter(respawnPoint -> playersContainer.getContents()
                                 .stream()
-                                .filter(shipOwner -> !shipOwner.equals(beingRespawned))
-                                .filter(shipOwner -> Optional.ofNullable(shipOwner.getShip()).isPresent())
+                                .filter(player -> !player.equals(beingRespawned))
+                                .filter(player -> Optional.ofNullable(player.getShip()).isPresent())
                                 // find reasonable distance from other ships
-                                .filter(shipOwner -> !shipOwner.getShip().laysWithinRadiusFromPoint(MINIMAL_RESPAWN_DISTANCE, respawnPoint))
+                                .filter(player -> !player.getShip().laysWithinRadiusFromPoint(MINIMAL_RESPAWN_DISTANCE, respawnPoint))
                                 .findAny()
                                 .isPresent()
                 )

@@ -6,6 +6,7 @@ import com.github.kjarmicki.arena.tile.ArenaTile;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.parts.*;
@@ -23,14 +24,14 @@ public class Ship {
     private final Vector2 velocity = new Vector2();
     private final ShipFeatures features;
     private final BulletsContainer bulletsContainer;
-    private final ShipOwner owner;
+    private final Player owner;
     private final CorePart core;
     private final PartSkin color;
     private float rotation;
     private boolean isDestroyed = false;
 
 
-    public Ship(Vector2 position, ShipFeatures features, ShipOwner owner, BulletsContainer bulletsContainer) {
+    public Ship(Vector2 position, ShipFeatures features, Player owner, BulletsContainer bulletsContainer) {
         this.features = features;
         this.bulletsContainer = bulletsContainer;
         this.owner = owner;

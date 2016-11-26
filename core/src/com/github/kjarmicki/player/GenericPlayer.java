@@ -1,15 +1,14 @@
-package com.github.kjarmicki.shipowner;
+package com.github.kjarmicki.player;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.ship.Ship;
-import com.github.kjarmicki.ship.ShipOwner;
 
-abstract class GenericShipOwner implements ShipOwner {
+abstract class GenericPlayer implements Player {
     protected final PartSkin color;
     protected  Ship ship;
 
-    GenericShipOwner(PartSkin color) {
+    GenericPlayer(PartSkin color) {
         this.color = color;
     }
 

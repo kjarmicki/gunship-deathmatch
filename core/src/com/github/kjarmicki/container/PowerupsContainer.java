@@ -1,8 +1,8 @@
 package com.github.kjarmicki.container;
 
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.powerup.Powerup;
-import com.github.kjarmicki.ship.ShipOwner;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,14 +27,14 @@ public class PowerupsContainer implements Container<Powerup> {
                 .collect(toList());
     }
 
-    public void checkCollisionsWithShipOwners(List<ShipOwner> ownerList) {
+    public void checkCollisionsWithPlayers(List<Player> players) {
         powerupsByPosition.entrySet()
                 .stream()
                 .forEach(entry -> {
                     Powerup powerup = entry.getValue();
 
-                    ownerList.stream()
-                            .map(ShipOwner::getShip)
+                    players.stream()
+                            .map(Player::getShip)
                             .forEach(ship -> {
                                 if (!powerup.wasCollected()) {
                                     ship.checkCollisionWith(powerup);

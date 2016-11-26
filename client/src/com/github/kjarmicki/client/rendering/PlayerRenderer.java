@@ -2,20 +2,20 @@ package com.github.kjarmicki.client.rendering;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.github.kjarmicki.client.assets.PartsAssets;
-import com.github.kjarmicki.ship.ShipOwner;
+import com.github.kjarmicki.player.Player;
 
-public class ShipOwnerRenderer implements Renderer {
-    private final ShipOwner shipOwner;
+public class PlayerRenderer implements Renderer {
+    private final Player player;
     private final PartsAssets partsAssets;
 
-    public ShipOwnerRenderer(ShipOwner shipOwner, PartsAssets partsAssets) {
-        this.shipOwner = shipOwner;
+    public PlayerRenderer(Player player, PartsAssets partsAssets) {
+        this.player = player;
         this.partsAssets = partsAssets;
     }
 
     @Override
     public void render(Batch batch) {
-        shipOwner.getShip().allParts()
+        player.getShip().allParts()
                 .stream()
                 .forEach(part -> {
                     // TODO: cache renderers for performance

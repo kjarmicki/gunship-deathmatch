@@ -5,7 +5,7 @@ import com.github.kjarmicki.GunshipDeathmatch;
 import com.github.kjarmicki.arena.tile.ArenaTile;
 import com.github.kjarmicki.assets.ArenaSkin;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.ship.ShipOwner;
+import com.github.kjarmicki.player.Player;
 
 import java.util.List;
 
@@ -48,10 +48,10 @@ public class WarehouseArena implements Arena {
     }
 
     @Override
-    public void checkCollisionWithShipOwners(List<ShipOwner> shipOwners) {
-        shipOwners
+    public void checkCollisionWithPlayers(List<Player> players) {
+        players
                 .stream()
-                .map(ShipOwner::getShip)
+                .map(Player::getShip)
                 .forEach(ship -> {
                     ship.checkPlacementWithinBounds(getBounds());
                     arenaTiles

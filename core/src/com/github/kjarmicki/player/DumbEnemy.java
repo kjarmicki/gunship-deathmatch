@@ -1,9 +1,9 @@
-package com.github.kjarmicki.shipowner;
+package com.github.kjarmicki.player;
 
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.assets.PartSkin;
 
-public class DumbEnemy extends GenericShipOwner {
+public class DumbEnemy extends GenericPlayer {
     public static final long SHOOTING_INTERVAL = 1000;
     private long lastShot = TimeUtils.millis() - SHOOTING_INTERVAL;
 

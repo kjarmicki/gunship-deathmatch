@@ -1,13 +1,13 @@
-package com.github.kjarmicki.shipowner;
+package com.github.kjarmicki.player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.controls.Controls;
 
-public class Player extends GenericShipOwner implements Observable {
+public class ControlledPlayer extends GenericPlayer implements Observable {
     private final Controls controls;
 
-    public Player(PartSkin color, Controls controls) {
+    public ControlledPlayer(PartSkin color, Controls controls) {
         super(color);
         this.controls = controls;
     }
