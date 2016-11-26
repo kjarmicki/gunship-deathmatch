@@ -77,6 +77,11 @@ public class BasicCorePart extends GenericPart implements CorePart {
     }
 
     @Override
+    public Vector2 getPosition() {
+        return withPosition(new Vector2(takenArea.getX(), takenArea.getY()));
+    }
+
+    @Override
     public boolean isCritical() {
         return IS_CRITICAL;
     }

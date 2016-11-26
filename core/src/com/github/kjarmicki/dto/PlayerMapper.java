@@ -10,7 +10,7 @@ public class PlayerMapper {
         return new PlayerDto(player.getColor().name());
     }
 
-    public static Player mapToRemotePlayer(PlayerDto dto, Controls controls) {
+    public static Player mapFromDto(PlayerDto dto, Controls controls) {
         return new ControlledPlayer(PartSkin.valueOf(dto.getPartSkin()), controls);
     }
 }

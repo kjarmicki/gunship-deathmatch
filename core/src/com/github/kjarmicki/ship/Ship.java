@@ -243,6 +243,10 @@ public class Ship {
         return velocity;
     }
 
+    public Vector2 getPosition() {
+        return core.getPosition();
+    }
+
     public PartSkin getColor() {
         return color;
     }

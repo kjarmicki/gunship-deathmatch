@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.kjarmicki.assets.ArenaSkin;
 import com.github.kjarmicki.assets.BulletSkin;
@@ -22,6 +23,8 @@ import com.github.kjarmicki.client.rendering.Renderer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.ControlledPlayer;
+import com.github.kjarmicki.ship.Ship;
+import com.github.kjarmicki.ship.ShipFeatures;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
@@ -74,7 +77,9 @@ public class ArenaScreen extends ScreenAdapter {
         arenaRenderer = new ArenaRenderer(game.getArena(), arenaAssets);
 
         connection.connect(controlledPlayer);
-        connection.whenConnected(() -> {
+        connection.whenConnected(shipDto -> {
+            controlledPlayer.setShip(new Ship(new Vector2(shipDto.getX(), shipDto.getY()),
+                    new ShipFeatures(), controlledPlayer, game.getBulletsContainer()));
             game.getPlayersContainer().add(controlledPlayer);
         });
     }

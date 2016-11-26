@@ -31,7 +31,7 @@ public class ShipsRespawner {
                 .forEach(player -> player.setShip(new Ship(findNextFreeRespawnSpot(player), new ShipFeatures(), player, bulletsContainer)));
     }
 
-    private Vector2 findNextFreeRespawnSpot(Player beingRespawned) {
+    public Vector2 findNextFreeRespawnSpot(Player beingRespawned) {
         // shuffle respawn points first to randomize spawn places
         Collections.shuffle(respawnPoints);
         return respawnPoints

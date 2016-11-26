@@ -9,6 +9,7 @@ import com.github.kjarmicki.connection.Event;
 import com.github.kjarmicki.controls.RemoteControl;
 import com.github.kjarmicki.dto.PlayerDto;
 import com.github.kjarmicki.dto.PlayerMapper;
+import com.github.kjarmicki.dto.ShipMapper;
 import com.github.kjarmicki.player.Player;
 
 import java.util.List;
@@ -55,9 +56,9 @@ public class SocketIoGameServer implements GameServer {
     private void setupEvents() {
         server.addEventListener(Event.INTRODUCE_PLAYER, String.class, (client, json, ackSender) -> {
             PlayerDto playerDto = PlayerDto.fromJsonString(json);
-            Player newPlayer = PlayerMapper.mapToRemotePlayer(playerDto, new RemoteControl());
+            Player newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControl());
             playerJoinedHandler.accept(newPlayer);
-            client.sendEvent(Event.PLAYER_INTRODUCED, newPlayer.getShip());
+            client.sendEvent(Event.PLAYER_INTRODUCED, ShipMapper.mapToDto(newPlayer.getShip()).toJsonString());
         });
     }
 

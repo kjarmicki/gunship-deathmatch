@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 public class PlayerDto {
-    private final String partSkin;
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final String partSkin;
 
     @JsonCreator
     public PlayerDto(@JsonProperty("partSkin") String partSkin) {
