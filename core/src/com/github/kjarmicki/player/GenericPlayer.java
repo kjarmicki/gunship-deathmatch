@@ -12,14 +12,6 @@ abstract class GenericPlayer implements Player {
         this.color = color;
     }
 
-    public void checkPlacementWithinBounds(Rectangle bounds) {
-        ship.checkPlacementWithinBounds(bounds);
-    }
-
-    public void checkCollisionWithOtherShip(Ship other) {
-        ship.checkCollisionWith(other);
-    }
-
     @Override
     public void setShip(Ship ship) {
         this.ship = ship;

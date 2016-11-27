@@ -7,5 +7,6 @@ public interface Player {
     void setShip(Ship ship);
     void update(float delta);
     PartSkin getColor();
+
     Ship getShip();
 }

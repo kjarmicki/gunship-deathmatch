@@ -25,7 +25,7 @@ import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.ControlsMapper;
 import com.github.kjarmicki.game.Game;
-import com.github.kjarmicki.player.ControlledPlayer;
+import com.github.kjarmicki.player.RemotelyControlledPlayer;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
@@ -33,7 +33,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
     private final RemoteControls remoteControls;
     private final Controls keyboard;
-    private final ControlledPlayer controlledPlayer;
+    private final RemotelyControlledPlayer remotelyControlledPlayer;
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
     private final Connection connection;
@@ -69,7 +69,7 @@ public class ArenaScreen extends ScreenAdapter {
                 ArenaSkin.asMap()
         );
 
-        controlledPlayer = new ControlledPlayer(
+        remotelyControlledPlayer = new RemotelyControlledPlayer(
                 PartSkin.BLUE,
                 remoteControls
         );
@@ -82,11 +82,11 @@ public class ArenaScreen extends ScreenAdapter {
         arenaRenderer = new ArenaRenderer(game.getArena(), arenaAssets);
 
         // connection management
-        connection.connect(controlledPlayer);
+        connection.connect(remotelyControlledPlayer);
         connection.onConnected(shipDto -> {
-            controlledPlayer.setShip(new Ship(new Vector2(shipDto.getX(), shipDto.getY()),
-                    new ShipFeatures(), controlledPlayer, game.getBulletsContainer()));
-            game.getPlayersContainer().add(controlledPlayer);
+            remotelyControlledPlayer.setShip(new Ship(new Vector2(shipDto.getX(), shipDto.getY()),
+                    new ShipFeatures(), remotelyControlledPlayer, game.getBulletsContainer()));
+            game.getPlayersContainer().add(remotelyControlledPlayer);
         });
         connection.onControlsReceived(controlsDto -> {
             ControlsMapper.setByDto(remoteControls, controlsDto);
@@ -108,7 +108,7 @@ public class ArenaScreen extends ScreenAdapter {
         game.update(delta);
 
         viewport.apply();
-        chaseCamera.lookAt(controlledPlayer, delta);
+        chaseCamera.lookAt(remotelyControlledPlayer, delta);
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         // drawing

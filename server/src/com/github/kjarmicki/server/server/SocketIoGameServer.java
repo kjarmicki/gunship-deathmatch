@@ -7,18 +7,23 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ExceptionListenerAdapter;
 import com.github.kjarmicki.connection.Event;
 import com.github.kjarmicki.controls.RemoteControls;
-import com.github.kjarmicki.dto.PlayerDto;
-import com.github.kjarmicki.dto.PlayerMapper;
-import com.github.kjarmicki.dto.ShipMapper;
-import com.github.kjarmicki.player.Player;
+import com.github.kjarmicki.dto.*;
+import com.github.kjarmicki.player.RemotelyControlledPlayer;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class SocketIoGameServer implements GameServer {
     private final SocketIOServer server;
+    private final Map<UUID, RemotelyControlledPlayer> playersByUuid;
 
-    private Consumer<Player> playerJoinedHandler;
+    private Consumer<RemotelyControlledPlayer> playerJoinedHandler;
+    private BiConsumer<RemotelyControlledPlayer, ControlsDto> playerSentControlsHandler;
 
     public SocketIoGameServer(String host, int port) {
         Configuration config = new Configuration();
@@ -50,22 +55,23 @@ public class SocketIoGameServer implements GameServer {
         });
 
         server = new SocketIOServer(config);
+        playersByUuid = new HashMap<>();
         setupEvents();
     }
 
     private void setupEvents() {
         server.addEventListener(Event.INTRODUCE_PLAYER, String.class, (client, json, ackSender) -> {
             PlayerDto playerDto = PlayerDto.fromJsonString(json);
-            Player newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
+            RemotelyControlledPlayer newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
+            playersByUuid.put(client.getSessionId(), newPlayer);
             playerJoinedHandler.accept(newPlayer);
             client.sendEvent(Event.PLAYER_INTRODUCED, ShipMapper.mapToDto(newPlayer.getShip()).toJsonString());
         });
 
         server.addEventListener(Event.SEND_CONTROLS, String.class, (client, json, ackSender) -> {
-            // TODO: need some uuid to match client with player object
-            // client.getSessionId() ?
-
-            System.out.println(json);
+            RemotelyControlledPlayer sender = playersByUuid.get(client.getSessionId());
+            ControlsDto dto = ControlsDto.fromJsonString(json);
+            playerSentControlsHandler.accept(sender, dto);
         });
     }
 
@@ -77,7 +83,17 @@ public class SocketIoGameServer implements GameServer {
     }
 
     @Override
-    public void onPlayerJoined(Consumer<Player> eventHandler) {
+    public void onPlayerJoined(Consumer<RemotelyControlledPlayer> eventHandler) {
         playerJoinedHandler = eventHandler;
+    }
+
+    @Override
+    public void onPlayerSentControls(BiConsumer<RemotelyControlledPlayer, ControlsDto> eventHandler) {
+        playerSentControlsHandler = eventHandler;
+    }
+
+    @Override
+    public void broadcast(Supplier<Dto> dataSupplier) {
+        server.getBroadcastOperations().sendEvent(Event.STATE_BROADCAST, dataSupplier.get().toJsonString());
     }
 }

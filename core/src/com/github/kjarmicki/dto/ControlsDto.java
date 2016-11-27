@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public class ControlsDto {
+public class ControlsDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final boolean up;
     private final boolean down;

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 // TODO: needs way more properties to properly sync client and server states
-public class ShipDto {
+public class ShipDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final float x;
     private final float y;

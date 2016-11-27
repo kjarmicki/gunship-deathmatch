@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public class PlayerDto {
+public class PlayerDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final String partSkin;
 

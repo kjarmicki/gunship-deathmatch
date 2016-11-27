@@ -50,6 +50,14 @@ public class SocketIoConnection implements Connection {
             String controlsDtoJson = (String)response[0];
             action.accept(ControlsDto.fromJsonString(controlsDtoJson));
         });
+
+        // TODO: state is temporarily equivalent to only controls being sent, this will change
+        socket.on(Event.STATE_BROADCAST, response -> {
+            String controlsDtoJson = (String)response[0];
+            if(!"".equals(controlsDtoJson)) {
+                action.accept(ControlsDto.fromJsonString(controlsDtoJson));
+            }
+        });
     }
 
     @Override
