@@ -12,6 +12,7 @@ import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.parts.*;
 import com.github.kjarmicki.util.Points;
 
+import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +23,14 @@ import static java.util.stream.Collectors.toList;
 
 public class Ship {
     private final Vector2 velocity = new Vector2();
+    private final Vector2 position = new Vector2();
     private final ShipFeatures features;
     private final BulletsContainer bulletsContainer;
     private final Player owner;
     private final CorePart core;
     private final PartSkin color;
     private float rotation;
+    private float totalRotation;
     private boolean isDestroyed = false;
 
 
@@ -36,6 +39,7 @@ public class Ship {
         this.bulletsContainer = bulletsContainer;
         this.owner = owner;
         this.color = owner.getColor();
+        this.position.set(position);
         core = new BasicCorePart(position.x, position.y, this);
 
         this.mountPart(new BasicNosePart(this));
@@ -48,13 +52,13 @@ public class Ship {
     }
 
     public void moveForwards(float delta) {
-        Vector2 direction = Points.getDirectionVector(getRotation());
+        Vector2 direction = Points.getDirectionVector(getTotalRotation());
         velocity.x += delta * features.getAcceleration() * direction.x;
         velocity.y += delta * features.getAcceleration() * direction.y;
     }
 
     public void moveBackwards(float delta) {
-        Vector2 direction = Points.getDirectionVector(getRotation());
+        Vector2 direction = Points.getDirectionVector(getTotalRotation());
         velocity.x -= delta * features.getAcceleration() * direction.x;
         velocity.y -= delta * features.getAcceleration() * direction.y;
     }
@@ -119,6 +123,8 @@ public class Ship {
         float x = delta * velocity.x;
         float y = delta * velocity.y;
         Vector2 movement = new Vector2(x, y);
+        position.add(movement);
+        totalRotation += rotation;
 
         allParts().stream().forEach(part -> {
             part.moveBy(movement);
@@ -239,12 +245,37 @@ public class Ship {
         velocity.y += objectVelocity.y;
     }
 
+
+    public void setTotalRotation(float totalRotation) {
+        this.totalRotation = totalRotation;
+    }
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
+
+    public void setVelocity(Vector2 velocity) {
+        this.velocity.set(velocity);
+    }
+
+    public void setPosition(Vector2 position) {
+        this.position.set(position);
+    }
+
     public Vector2 getVelocity() {
         return velocity;
     }
 
     public Vector2 getPosition() {
-        return core.getPosition();
+        return position;
+    }
+
+    public float getTotalRotation() {
+        return totalRotation;
+    }
+
+    public float getRotation() {
+        return rotation;
     }
 
     public PartSkin getColor() {
@@ -297,10 +328,6 @@ public class Ship {
                 .filter(part -> part instanceof WeaponPart)
                 .map(part -> (WeaponPart)part)
                 .collect(toList());
-    }
-
-    private float getRotation() {
-        return core.getTakenArea().getRotation();
     }
 
     private float rebound(float value) {

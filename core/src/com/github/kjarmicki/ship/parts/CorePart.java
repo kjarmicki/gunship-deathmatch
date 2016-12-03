@@ -12,6 +12,7 @@ public interface CorePart extends Part {
     Vector2 getOrigin();
     Vector2 getCenter();
     Vector2 getPosition();
+    void setPosition(Vector2 position);
     default List<PartSlotName> getChildSlotNames() {
         return Arrays.asList(NOSE, LEFT_WING, RIGHT_WING, LEFT_PRIMARY_WEAPON, RIGHT_PRIMARY_WEAPON);
     }

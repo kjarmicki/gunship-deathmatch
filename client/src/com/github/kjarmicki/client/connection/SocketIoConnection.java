@@ -45,17 +45,12 @@ public class SocketIoConnection implements Connection {
     }
 
     @Override
-    public void onControlsReceived(Consumer<ControlsDto> action) {
-        socket.on(Event.CONTROLS_RECEIVED, response -> {
-            String controlsDtoJson = (String)response[0];
-            action.accept(ControlsDto.fromJsonString(controlsDtoJson));
-        });
-
-        // TODO: state is temporarily equivalent to only controls being sent, this will change
+    public void onStateReceived(Consumer<ShipDto> action) {
+        // TODO: state is temporarily set for one ship only, this will change
         socket.on(Event.STATE_BROADCAST, response -> {
-            String controlsDtoJson = (String)response[0];
-            if(!"".equals(controlsDtoJson)) {
-                action.accept(ControlsDto.fromJsonString(controlsDtoJson));
+            String shipDtoJson = (String)response[0];
+            if(!"".equals(shipDtoJson)) {
+                action.accept(ShipDto.fromJsonString(shipDtoJson));
             }
         });
     }

@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 public interface GameServer {
     void start();
     void onPlayerJoined(Consumer<RemotelyControlledPlayer> eventHandler);
+    void onPlayerLeft(Consumer<RemotelyControlledPlayer> eventHandler);
     void onPlayerSentControls(BiConsumer<RemotelyControlledPlayer, ControlsDto> eventHandler);
     void broadcast(Supplier<Dto> dataSupplier);
 }

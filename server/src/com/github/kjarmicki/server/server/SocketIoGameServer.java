@@ -24,6 +24,7 @@ public class SocketIoGameServer implements GameServer {
 
     private Consumer<RemotelyControlledPlayer> playerJoinedHandler;
     private BiConsumer<RemotelyControlledPlayer, ControlsDto> playerSentControlsHandler;
+    private Consumer<RemotelyControlledPlayer> playerLeftHandler;
 
     public SocketIoGameServer(String host, int port) {
         Configuration config = new Configuration();
@@ -73,6 +74,10 @@ public class SocketIoGameServer implements GameServer {
             ControlsDto dto = ControlsDto.fromJsonString(json);
             playerSentControlsHandler.accept(sender, dto);
         });
+
+        server.addDisconnectListener(client -> {
+            playersByUuid.remove(client.getSessionId());
+        });
     }
 
     @Override
@@ -85,6 +90,11 @@ public class SocketIoGameServer implements GameServer {
     @Override
     public void onPlayerJoined(Consumer<RemotelyControlledPlayer> eventHandler) {
         playerJoinedHandler = eventHandler;
+    }
+
+    @Override
+    public void onPlayerLeft(Consumer<RemotelyControlledPlayer> eventHandler) {
+        playerLeftHandler = eventHandler;
     }
 
     @Override

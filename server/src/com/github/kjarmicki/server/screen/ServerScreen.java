@@ -6,6 +6,7 @@ import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.ControlsMapper;
 import com.github.kjarmicki.dto.Dto;
+import com.github.kjarmicki.dto.ShipMapper;
 import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.player.RemotelyControlledPlayer;
@@ -28,15 +29,17 @@ public class ServerScreen extends ScreenAdapter {
     @Override
     public void show() {
         gameServer.onPlayerJoined(player -> {
-            // create a new ship for joined player
             PlayersContainer playersContainer = game.getPlayersContainer();
             ShipsRespawner shipsRespawner = game.getShipsRespawner();
             Vector2 spawnPosition = shipsRespawner.findNextFreeRespawnSpot(player);
             player.setShip(new Ship(spawnPosition, new ShipFeatures(), player, game.getBulletsContainer()));
             playersContainer.add(player);
         });
+        gameServer.onPlayerLeft(player -> {
+            PlayersContainer playersContainer = game.getPlayersContainer();
+            playersContainer.remove(player);
+        });
         gameServer.onPlayerSentControls((player, controlsDto) -> {
-            // update player controls
             RemoteControls controls = player.getRemoteControls();
             ControlsMapper.setByDto(controls, controlsDto);
         });
@@ -48,16 +51,18 @@ public class ServerScreen extends ScreenAdapter {
         game.update(delta);
         gameServer.broadcast(() -> {
             List<Player> players = game.getPlayersContainer().getContents();
-            if(players.size()  == 1) { // TODO: just a POC, handle more players
-                RemotelyControlledPlayer player = (RemotelyControlledPlayer)players.get(0);
-                return ControlsMapper.mapToDto(player.getRemoteControls());
+            if(players.size() == 1) { // TODO: just a POC, handle more players
+                Ship ship = players.get(0).getShip();
+                return ShipMapper.mapToDto(ship);
             }
-            return new Dto() {
-                @Override
-                public String toJsonString() {
-                    return "";
-                }
-            };
+            return BLANK_DTO;
         });
     }
+
+    private static final Dto BLANK_DTO = new Dto() {
+        @Override
+        public String toJsonString() {
+            return "";
+        }
+    };
 }

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public interface Connection {
     void connect(Player player);
     void onConnected(Consumer<ShipDto> action);
-    void onControlsReceived(Consumer<ControlsDto> action);
+    void onStateReceived(Consumer<ShipDto> action);
     void sendControls(ControlsDto controlsDto);
     boolean isConnected();
 }

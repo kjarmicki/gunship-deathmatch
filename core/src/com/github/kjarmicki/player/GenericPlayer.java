@@ -1,6 +1,5 @@
 package com.github.kjarmicki.player;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.ship.Ship;
 

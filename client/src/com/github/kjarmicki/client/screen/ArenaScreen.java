@@ -24,6 +24,7 @@ import com.github.kjarmicki.client.rendering.Renderer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.ControlsMapper;
+import com.github.kjarmicki.dto.ShipMapper;
 import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.RemotelyControlledPlayer;
 import com.github.kjarmicki.ship.Ship;
@@ -84,12 +85,12 @@ public class ArenaScreen extends ScreenAdapter {
         // connection management
         connection.connect(remotelyControlledPlayer);
         connection.onConnected(shipDto -> {
-            remotelyControlledPlayer.setShip(new Ship(new Vector2(shipDto.getX(), shipDto.getY()),
+            remotelyControlledPlayer.setShip(new Ship(new Vector2(shipDto.getPositionX(), shipDto.getPositionY()),
                     new ShipFeatures(), remotelyControlledPlayer, game.getBulletsContainer()));
             game.getPlayersContainer().add(remotelyControlledPlayer);
         });
-        connection.onControlsReceived(controlsDto -> {
-            ControlsMapper.setByDto(remoteControls, controlsDto);
+        connection.onStateReceived(shipDto -> {
+            ShipMapper.setByDto(remotelyControlledPlayer.getShip(), shipDto);
         });
     }
 

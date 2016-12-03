@@ -10,21 +10,48 @@ import java.io.IOException;
 // TODO: needs way more properties to properly sync client and server states
 public class ShipDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private final float x;
-    private final float y;
+    private final float velocityX;
+    private final float velocityY;
+    private final float positionX;
+    private final float positionY;
+    private final float rotation;
+    private final float totalRotation;
 
     @JsonCreator
-    public ShipDto(@JsonProperty("x") float x, @JsonProperty("y") float y) {
-        this.x = x;
-        this.y = y;
+    public ShipDto(@JsonProperty("velocityX") float velocityX, @JsonProperty("velocityY") float velocityY,
+                   @JsonProperty("positionX") float positionX, @JsonProperty("positionY") float positionY,
+                   @JsonProperty("rotation") float rotation, @JsonProperty("totalRotation") float totalRotation) {
+
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.rotation = rotation;
+        this.totalRotation = totalRotation;
     }
 
-    public float getX() {
-        return x;
+    public float getVelocityX() {
+        return velocityX;
     }
 
-    public float getY() {
-        return y;
+    public float getVelocityY() {
+        return velocityY;
+    }
+
+    public float getPositionX() {
+        return positionX;
+    }
+
+    public float getPositionY() {
+        return positionY;
+    }
+
+    public float getRotation() {
+        return rotation;
+    }
+
+    public float getTotalRotation() {
+        return totalRotation;
     }
 
     public static ShipDto fromJsonString(String json) {
