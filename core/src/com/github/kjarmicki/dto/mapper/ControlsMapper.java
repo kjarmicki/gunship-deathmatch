@@ -1,7 +1,8 @@
-package com.github.kjarmicki.dto;
+package com.github.kjarmicki.dto.mapper;
 
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.controls.RemoteControls;
+import com.github.kjarmicki.dto.ControlsDto;
 
 public class ControlsMapper {
     public static ControlsDto mapToDto(Controls controls) {

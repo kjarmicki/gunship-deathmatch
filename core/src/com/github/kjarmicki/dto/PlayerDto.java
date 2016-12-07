@@ -10,14 +10,20 @@ import java.io.IOException;
 public class PlayerDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final String partSkin;
+    private final String uuid;
 
     @JsonCreator
-    public PlayerDto(@JsonProperty("partSkin") String partSkin) {
+    public PlayerDto(@JsonProperty("partSkin") String partSkin, @JsonProperty("uuid") String uuid) {
         this.partSkin = partSkin;
+        this.uuid = uuid;
     }
 
     public String getPartSkin() {
         return partSkin;
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public static PlayerDto fromJsonString(String json) {

@@ -4,18 +4,22 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.RemoteControls;
-import com.github.kjarmicki.dto.ControlsMapper;
+import com.github.kjarmicki.dto.PlayerWithShipDto;
+import com.github.kjarmicki.dto.PlayersWithShipDto;
+import com.github.kjarmicki.dto.mapper.ControlsMapper;
 import com.github.kjarmicki.dto.Dto;
-import com.github.kjarmicki.dto.ShipMapper;
+import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
+import com.github.kjarmicki.dto.mapper.ShipMapper;
 import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.Player;
-import com.github.kjarmicki.player.RemotelyControlledPlayer;
 import com.github.kjarmicki.server.server.GameServer;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.ShipsRespawner;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class ServerScreen extends ScreenAdapter {
     private final Game game;
@@ -51,11 +55,11 @@ public class ServerScreen extends ScreenAdapter {
         game.update(delta);
         gameServer.broadcast(() -> {
             List<Player> players = game.getPlayersContainer().getContents();
-            if(players.size() == 1) { // TODO: just a POC, handle more players
-                Ship ship = players.get(0).getShip();
-                return ShipMapper.mapToDto(ship);
-            }
-            return BLANK_DTO;
+            if(players.size() == 0) return BLANK_DTO;
+            return new PlayersWithShipDto(players
+                    .stream()
+                    .map(PlayerWithShipDtoMapper::mapToDto)
+                    .collect(toList()));
         });
     }
 

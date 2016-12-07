@@ -1,6 +1,7 @@
-package com.github.kjarmicki.dto;
+package com.github.kjarmicki.dto.mapper;
 
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.dto.ShipDto;
 import com.github.kjarmicki.ship.Ship;
 
 public class ShipMapper {

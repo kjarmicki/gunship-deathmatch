@@ -4,6 +4,8 @@ import com.github.kjarmicki.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class PlayersContainer implements Container<Player> {
     private final List<Player> players;
@@ -17,11 +19,18 @@ public class PlayersContainer implements Container<Player> {
     }
 
     public void add(Player player) {
-        this.players.add(player);
+        players.add(player);
     }
 
     public void remove(Player player) {
-        this.players.remove(player);
+        players.remove(player);
+    }
+
+    public Optional<Player> getByUuid(UUID uuid) {
+        return players.stream()
+                .filter(player -> player.getUuid().isPresent())
+                .filter(player -> uuid.equals(player.getUuid().get()))
+                .findFirst();
     }
 
     public void update(float delta) {
