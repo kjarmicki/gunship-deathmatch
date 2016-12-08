@@ -65,11 +65,12 @@ public class SocketIoGameServer implements GameServer {
     private void setupEvents() {
         server.addEventListener(Event.INTRODUCE_PLAYER, String.class, (client, json, ackSender) -> {
             RemotelyControlledPlayer newPlayer = initNewPlayerFromJsonString(json, client);
+            List<Player> remainingPlayers = new ArrayList<>(connectedPlayers);
             playerJoinedHandler.accept(newPlayer);
-
-            PlayersWithShipDto response = constructResponse(newPlayer);
-            client.sendEvent(Event.PLAYER_INTRODUCED, response.toJsonString());
             connectedPlayers.add(newPlayer);
+
+            PlayersWithShipDto response = constructResponse(newPlayer, remainingPlayers);
+            client.sendEvent(Event.PLAYER_INTRODUCED, response.toJsonString());
         });
 
         server.addEventListener(Event.SEND_CONTROLS, String.class, (client, json, ackSender) -> {
@@ -94,8 +95,8 @@ public class SocketIoGameServer implements GameServer {
         return newPlayer;
     }
 
-    private PlayersWithShipDto constructResponse(Player newPlayer) {
-        PlayersWithShipDto response = new PlayersWithShipDto(connectedPlayers
+    private PlayersWithShipDto constructResponse(Player newPlayer, List<Player> remainingPlayers) {
+        PlayersWithShipDto response = new PlayersWithShipDto(remainingPlayers
                 .stream()
                 .map(PlayerWithShipDtoMapper::mapToDto)
                 .collect(toList()));
