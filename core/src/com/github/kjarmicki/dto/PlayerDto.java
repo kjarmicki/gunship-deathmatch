@@ -11,11 +11,16 @@ public class PlayerDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final String partSkin;
     private final String uuid;
+    private boolean justIntroduced;
 
     @JsonCreator
-    public PlayerDto(@JsonProperty("partSkin") String partSkin, @JsonProperty("uuid") String uuid) {
+    public PlayerDto(
+            @JsonProperty("partSkin") String partSkin,
+            @JsonProperty("uuid") String uuid,
+            @JsonProperty("justIntroduced") boolean justIntroduced) {
         this.partSkin = partSkin;
         this.uuid = uuid;
+        this.justIntroduced = justIntroduced;
     }
 
     public String getPartSkin() {
@@ -24,6 +29,14 @@ public class PlayerDto implements Dto {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public boolean isJustIntroduced() {
+        return justIntroduced;
+    }
+
+    public void isJustIntroduced(boolean value) {
+        justIntroduced = value;
     }
 
     public static PlayerDto fromJsonString(String json) {

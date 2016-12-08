@@ -14,7 +14,7 @@ public class PlayerMapper {
     public static PlayerDto mapToDto(Player player) {
         String uuid = player.getUuid()
                 .map(UUID::toString).orElseGet(() -> "");
-        return new PlayerDto(player.getColor().name(), uuid);
+        return new PlayerDto(player.getColor().name(), uuid, false);
     }
 
     public static RemotelyControlledPlayer mapFromDto(PlayerDto dto, RemoteControls controls) {

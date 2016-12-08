@@ -24,16 +24,24 @@ import com.github.kjarmicki.client.rendering.Renderer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.controls.RemoteControls;
+import com.github.kjarmicki.dto.PlayerDto;
+import com.github.kjarmicki.dto.PlayerWithShipDto;
+import com.github.kjarmicki.dto.PlayersWithShipDto;
 import com.github.kjarmicki.dto.ShipDto;
 import com.github.kjarmicki.dto.mapper.ControlsMapper;
+import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
 import com.github.kjarmicki.dto.mapper.ShipMapper;
 import com.github.kjarmicki.game.Game;
+import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.player.RemotelyControlledPlayer;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
+import java.util.List;
 import java.util.UUID;
+
+import static java.util.stream.Collectors.toList;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
@@ -90,12 +98,12 @@ public class ArenaScreen extends ScreenAdapter {
         // connection management
         connection.connect(remotelyControlledPlayer);
 
-        connection.onConnected(playerWithShipDto -> {
-            ShipDto shipDto = playerWithShipDto.getShip();
-            remotelyControlledPlayer.setShip(new Ship(new Vector2(shipDto.getPositionX(), shipDto.getPositionY()),
-                    new ShipFeatures(), remotelyControlledPlayer, game.getBulletsContainer()));
-            remotelyControlledPlayer.setUuid(playerWithShipDto.getPlayer().getUuid());
+        connection.onConnected(playersWithShipDto -> {
+            PlayerWithShipDto introducedDto = findIntroducedDto(playersWithShipDto);
+            initPlayer(remotelyControlledPlayer, introducedDto);
+            List<RemotelyControlledPlayer> remainingPlayers = initRemainingPlayers(playersWithShipDto);
             game.getPlayersContainer().add(remotelyControlledPlayer);
+            remainingPlayers.stream().forEach(player -> game.getPlayersContainer().add(player));
         });
 
         connection.onStateReceived(playersWithShipDto -> {
@@ -143,5 +151,33 @@ public class ArenaScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+    }
+
+    private PlayerWithShipDto findIntroducedDto(PlayersWithShipDto all) {
+        return all.getPlayers()
+                .stream()
+                .filter(playerWithShipDto -> playerWithShipDto.getPlayer().isJustIntroduced())
+                .findFirst()
+                .get();
+    }
+
+    private void initPlayer(Player player, PlayerWithShipDto introducedDto) {
+        ShipDto shipDto = introducedDto.getShip();
+        player.setShip(new Ship(new Vector2(shipDto.getPositionX(), shipDto.getPositionY()),
+                new ShipFeatures(), player, game.getBulletsContainer()));
+        player.setUuid(introducedDto.getPlayer().getUuid());
+    }
+
+    private List<RemotelyControlledPlayer> initRemainingPlayers(PlayersWithShipDto all) {
+        return all.getPlayers()
+                .stream()
+                .filter(playerWithShipDto -> !playerWithShipDto.getPlayer().isJustIntroduced())
+                .map(playerWithShipDto -> {
+                    PlayerDto playerDto = playerWithShipDto.getPlayer();
+                    RemotelyControlledPlayer nextPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
+                    initPlayer(nextPlayer, playerWithShipDto);
+                    return nextPlayer;
+                })
+                .collect(toList());
     }
 }

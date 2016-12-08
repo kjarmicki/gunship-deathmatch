@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class SocketIoConnection implements Connection {
     private final Socket socket;
     private ConnectionState state = ConnectionState.NOT_CONNECTED;
-    private Consumer<PlayerWithShipDto> playerConnectedHandler;
+    private Consumer<PlayersWithShipDto> playerConnectedHandler;
 
     public SocketIoConnection(String url) {
         try {
@@ -32,8 +32,8 @@ public class SocketIoConnection implements Connection {
                 socket.emit(Event.INTRODUCE_PLAYER, PlayerMapper.mapToDto(player).toJsonString());
             });
             socket.on(Event.PLAYER_INTRODUCED, response -> {
-                String playerWithShipDtoJson = (String)response[0];
-                playerConnectedHandler.accept(PlayerWithShipDto.fromJsonString(playerWithShipDtoJson));
+                String playersWithShipDtoJson = (String)response[0];
+                playerConnectedHandler.accept(PlayersWithShipDto.fromJsonString(playersWithShipDtoJson));
                 state = ConnectionState.CONNECTED;
             });
             socket.connect();
@@ -41,7 +41,7 @@ public class SocketIoConnection implements Connection {
     }
 
     @Override
-    public void onConnected(Consumer<PlayerWithShipDto> action) {
+    public void onConnected(Consumer<PlayersWithShipDto> action) {
         playerConnectedHandler = action;
     }
 

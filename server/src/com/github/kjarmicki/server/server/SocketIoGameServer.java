@@ -10,7 +10,7 @@ import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
-import com.github.kjarmicki.dto.mapper.ShipMapper;
+import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.player.RemotelyControlledPlayer;
 
 import java.util.*;
@@ -64,12 +64,12 @@ public class SocketIoGameServer implements GameServer {
 
     private void setupEvents() {
         server.addEventListener(Event.INTRODUCE_PLAYER, String.class, (client, json, ackSender) -> {
-            PlayerDto playerDto = PlayerDto.fromJsonString(json);
-            RemotelyControlledPlayer newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
-            newPlayer.setUuid(client.getSessionId());
-            connectedPlayers.add(newPlayer);
+            RemotelyControlledPlayer newPlayer = initNewPlayerFromJsonString(json, client);
             playerJoinedHandler.accept(newPlayer);
-            client.sendEvent(Event.PLAYER_INTRODUCED, PlayerWithShipDtoMapper.mapToDto(newPlayer).toJsonString());
+
+            PlayersWithShipDto response = constructResponse(newPlayer);
+            client.sendEvent(Event.PLAYER_INTRODUCED, response.toJsonString());
+            connectedPlayers.add(newPlayer);
         });
 
         server.addEventListener(Event.SEND_CONTROLS, String.class, (client, json, ackSender) -> {
@@ -85,6 +85,24 @@ public class SocketIoGameServer implements GameServer {
                         client.getSessionId().equals(player.getUuid().orElse(null))
                 )
         );
+    }
+
+    private RemotelyControlledPlayer initNewPlayerFromJsonString(String json, SocketIOClient client) {
+        PlayerDto playerDto = PlayerDto.fromJsonString(json);
+        RemotelyControlledPlayer newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
+        newPlayer.setUuid(client.getSessionId());
+        return newPlayer;
+    }
+
+    private PlayersWithShipDto constructResponse(Player newPlayer) {
+        PlayersWithShipDto response = new PlayersWithShipDto(connectedPlayers
+                .stream()
+                .map(PlayerWithShipDtoMapper::mapToDto)
+                .collect(toList()));
+        PlayerWithShipDto newPlayerDto = PlayerWithShipDtoMapper.mapToDto(newPlayer);
+        newPlayerDto.getPlayer().isJustIntroduced(true);
+        response.getPlayers().add(newPlayerDto);
+        return response;
     }
 
     @Override
