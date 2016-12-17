@@ -1,18 +1,22 @@
 package com.github.kjarmicki.player;
 
+import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartSkin;
+import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.ship.Ship;
 
 import java.util.Optional;
 import java.util.UUID;
 
-abstract class GenericPlayer implements Player {
-    protected final PartSkin color;
-    protected  Ship ship;
-    protected UUID uuid;
+public class GenericPlayer implements Player {
+    private final PartSkin color;
+    private final RemoteControls remoteControls;
+    private  Ship ship;
+    private UUID uuid;
 
-    GenericPlayer(PartSkin color) {
+    public GenericPlayer(PartSkin color) {
         this.color = color;
+        this.remoteControls = new RemoteControls();
     }
 
     @Override
@@ -31,6 +35,12 @@ abstract class GenericPlayer implements Player {
     }
 
     @Override
+    public void update(float delta) {
+        ship.control(remoteControls, delta);
+        ship.update(delta);
+    }
+
+    @Override
     public void setShip(Ship ship) {
         this.ship = ship;
     }
@@ -43,5 +53,15 @@ abstract class GenericPlayer implements Player {
     @Override
     public PartSkin getColor() {
         return color;
+    }
+
+    @Override
+    public Vector2 getCenterOfPosition() {
+        return ship.getCenter();
+    }
+
+    @Override
+    public RemoteControls getRemoteControls() {
+        return remoteControls;
     }
 }

@@ -11,7 +11,7 @@ import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
 import com.github.kjarmicki.player.Player;
-import com.github.kjarmicki.player.RemotelyControlledPlayer;
+import com.github.kjarmicki.player.Player;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
@@ -24,11 +24,11 @@ import static java.util.stream.Collectors.toList;
 
 public class SocketIoGameServer implements GameServer {
     private final SocketIOServer server;
-    private final List<RemotelyControlledPlayer> connectedPlayers;
+    private final List<Player> connectedPlayers;
 
-    private Consumer<RemotelyControlledPlayer> playerJoinedHandler;
-    private BiConsumer<RemotelyControlledPlayer, ControlsDto> playerSentControlsHandler;
-    private Consumer<RemotelyControlledPlayer> playerLeftHandler;
+    private Consumer<Player> playerJoinedHandler;
+    private BiConsumer<Player, ControlsDto> playerSentControlsHandler;
+    private Consumer<Player> playerLeftHandler;
 
     public SocketIoGameServer(String host, int port) {
         Configuration config = new Configuration();
@@ -76,7 +76,7 @@ public class SocketIoGameServer implements GameServer {
 
     private void setupEvents() {
         server.addEventListener(Event.INTRODUCE_PLAYER, String.class, (client, json, ackSender) -> {
-            RemotelyControlledPlayer newPlayer = initNewPlayerFromJsonString(json, client);
+            Player newPlayer = initNewPlayerFromJsonString(json, client);
             List<Player> remainingPlayers = new ArrayList<>(connectedPlayers);
             playerJoinedHandler.accept(newPlayer);
             connectedPlayers.add(newPlayer);
@@ -93,7 +93,7 @@ public class SocketIoGameServer implements GameServer {
         });
 
         server.addEventListener(Event.SEND_CONTROLS, String.class, (client, json, ackSender) -> {
-            RemotelyControlledPlayer sender = connectedPlayers.stream()
+            Player sender = connectedPlayers.stream()
                     .filter(player -> client.getSessionId().equals(player.getUuid().get()))
                     .findFirst()
                     .get();
@@ -108,9 +108,9 @@ public class SocketIoGameServer implements GameServer {
         );
     }
 
-    private RemotelyControlledPlayer initNewPlayerFromJsonString(String json, SocketIOClient client) {
+    private Player initNewPlayerFromJsonString(String json, SocketIOClient client) {
         PlayerDto playerDto = PlayerDto.fromJsonString(json);
-        RemotelyControlledPlayer newPlayer = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
+        Player newPlayer = PlayerMapper.mapFromDto(playerDto);
         newPlayer.setUuid(client.getSessionId());
         return newPlayer;
     }
@@ -138,17 +138,17 @@ public class SocketIoGameServer implements GameServer {
     }
 
     @Override
-    public void onPlayerJoined(Consumer<RemotelyControlledPlayer> eventHandler) {
+    public void onPlayerJoined(Consumer<Player> eventHandler) {
         playerJoinedHandler = eventHandler;
     }
 
     @Override
-    public void onPlayerLeft(Consumer<RemotelyControlledPlayer> eventHandler) {
+    public void onPlayerLeft(Consumer<Player> eventHandler) {
         playerLeftHandler = eventHandler;
     }
 
     @Override
-    public void onPlayerSentControls(BiConsumer<RemotelyControlledPlayer, ControlsDto> eventHandler) {
+    public void onPlayerSentControls(BiConsumer<Player, ControlsDto> eventHandler) {
         playerSentControlsHandler = eventHandler;
     }
 

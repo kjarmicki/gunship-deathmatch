@@ -4,7 +4,7 @@ import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.PlayerDto;
-import com.github.kjarmicki.player.RemotelyControlledPlayer;
+import com.github.kjarmicki.player.GenericPlayer;
 import com.github.kjarmicki.player.Player;
 
 import java.util.Optional;
@@ -17,9 +17,9 @@ public class PlayerMapper {
         return new PlayerDto(player.getColor().name(), uuid, false);
     }
 
-    public static RemotelyControlledPlayer mapFromDto(PlayerDto dto, RemoteControls controls) {
-        RemotelyControlledPlayer player =
-                new RemotelyControlledPlayer(PartSkin.valueOf(dto.getPartSkin()), controls);
+    public static Player mapFromDto(PlayerDto dto) {
+        Player player =
+                new GenericPlayer(PartSkin.valueOf(dto.getPartSkin()));
         if(!"".equals(dto.getUuid())) {
             player.setUuid(dto.getUuid());
         }
