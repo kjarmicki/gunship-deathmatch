@@ -15,6 +15,7 @@ public class SocketIoConnection implements Connection {
     private final Socket socket;
     private ConnectionState state = ConnectionState.NOT_CONNECTED;
     private Consumer<PlayersWithShipDto> playerConnectedHandler;
+    private Consumer<PlayerWithShipDto> somebodyElseConnectedHandler;
 
     public SocketIoConnection(String url) {
         try {
@@ -31,7 +32,7 @@ public class SocketIoConnection implements Connection {
             socket.on(Socket.EVENT_CONNECT, response -> {
                 socket.emit(Event.INTRODUCE_PLAYER, PlayerMapper.mapToDto(player).toJsonString());
             });
-            socket.on(Event.PLAYER_INTRODUCED, response -> {
+            socket.on(Event.THIS_PLAYER_INTRODUCED, response -> {
                 String playersWithShipDtoJson = (String)response[0];
                 playerConnectedHandler.accept(PlayersWithShipDto.fromJsonString(playersWithShipDtoJson));
                 state = ConnectionState.CONNECTED;
@@ -43,6 +44,14 @@ public class SocketIoConnection implements Connection {
     @Override
     public void onConnected(Consumer<PlayersWithShipDto> action) {
         playerConnectedHandler = action;
+    }
+
+    @Override
+    public void onSomebodyElseConnected(Consumer<PlayerWithShipDto> action) {
+        socket.on(Event.OTHER_PLAYER_INTRODUCED, response -> {
+            String playerWithShipDtoJson = (String)response[0];
+            action.accept(PlayerWithShipDto.fromJsonString(playerWithShipDtoJson));
+        });
     }
 
     @Override

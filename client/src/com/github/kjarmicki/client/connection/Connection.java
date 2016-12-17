@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 public interface Connection {
     void connect(Player player);
     void onConnected(Consumer<PlayersWithShipDto> action);
+    void onSomebodyElseConnected(Consumer<PlayerWithShipDto> action);
     void onStateReceived(Consumer<PlayersWithShipDto> action);
     void sendControls(ControlsDto controlsDto);
     boolean isConnected();

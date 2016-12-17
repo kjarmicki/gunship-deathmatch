@@ -116,6 +116,10 @@ public class ArenaScreen extends ScreenAdapter {
                             .ifPresent(player ->
                                     PlayerWithShipDtoMapper.setByDto(player, playerWithShipDto)));
         });
+
+        connection.onSomebodyElseConnected(playerWithShipDto -> {
+            game.getPlayersContainer().add(PlayerWithShipDtoMapper.mapFromDto(playerWithShipDto));
+        });
     }
 
     @Override

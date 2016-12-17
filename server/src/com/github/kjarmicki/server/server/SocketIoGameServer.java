@@ -16,7 +16,6 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ThreadFactory;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -82,14 +81,22 @@ public class SocketIoGameServer implements GameServer {
             playerJoinedHandler.accept(newPlayer);
             connectedPlayers.add(newPlayer);
 
-            PlayersWithShipDto response = constructResponse(newPlayer, remainingPlayers);
-            client.sendEvent(Event.PLAYER_INTRODUCED, response.toJsonString());
+            // notify player about initial game state
+            PlayersWithShipDto responseForNewPlayer = introductionResponseForNewPlayer(newPlayer, remainingPlayers);
+            client.sendEvent(Event.THIS_PLAYER_INTRODUCED, responseForNewPlayer.toJsonString());
+
+            // notify remaining players that someone joined
+            PlayerWithShipDto responseForOtherPlayers = introductionResponseForOtherPlayers(newPlayer);
+            remainingPlayers.stream().forEach(remainingPlayer ->
+                    server.getClient(remainingPlayer.getUuid().get())
+                            .sendEvent(Event.OTHER_PLAYER_INTRODUCED, responseForOtherPlayers.toJsonString()));
         });
 
         server.addEventListener(Event.SEND_CONTROLS, String.class, (client, json, ackSender) -> {
             RemotelyControlledPlayer sender = connectedPlayers.stream()
                     .filter(player -> client.getSessionId().equals(player.getUuid().get()))
-                    .collect(toList()).get(0);
+                    .findFirst()
+                    .get();
             ControlsDto dto = ControlsDto.fromJsonString(json);
             playerSentControlsHandler.accept(sender, dto);
         });
@@ -108,7 +115,7 @@ public class SocketIoGameServer implements GameServer {
         return newPlayer;
     }
 
-    private PlayersWithShipDto constructResponse(Player newPlayer, List<Player> remainingPlayers) {
+    private PlayersWithShipDto introductionResponseForNewPlayer(Player newPlayer, List<Player> remainingPlayers) {
         PlayersWithShipDto response = new PlayersWithShipDto(remainingPlayers
                 .stream()
                 .map(PlayerWithShipDtoMapper::mapToDto)
@@ -117,6 +124,10 @@ public class SocketIoGameServer implements GameServer {
         newPlayerDto.getPlayer().isJustIntroduced(true);
         response.getPlayers().add(newPlayerDto);
         return response;
+    }
+
+    private PlayerWithShipDto introductionResponseForOtherPlayers(Player newPlayer) {
+        return PlayerWithShipDtoMapper.mapToDto(newPlayer);
     }
 
     @Override
