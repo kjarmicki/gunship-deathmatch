@@ -1,11 +1,12 @@
 package com.github.kjarmicki.container;
 
 import com.github.kjarmicki.player.Player;
+import com.github.kjarmicki.ship.Ship;
+import com.github.kjarmicki.util.Sets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import static java.util.AbstractMap.SimpleEntry;
+
+import java.util.*;
 
 public class PlayersContainer implements Container<Player> {
     private final List<Player> players;
@@ -41,10 +42,14 @@ public class PlayersContainer implements Container<Player> {
     }
 
     private void checkCollisionsBetweenShips() {
-        // TODO: broken for more than 2 players, check combinations
-        for(int i = 1; i < players.size(); i++) {
-            players.get(i).getShip().checkCollisionWith(players.get(i - 1).getShip());
-        }
+        List<List<Player>> combinations = Sets.combinations(players, 2);
+        combinations
+                .stream()
+                .forEach(pair -> {
+                    Ship first = pair.get(0).getShip();
+                    Ship second = pair.get(1).getShip();
+                    first.checkCollisionWith(second);
+                });
     }
 
     @Override
