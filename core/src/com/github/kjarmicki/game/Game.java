@@ -26,13 +26,13 @@ public class Game {
         playersContainer = new PlayersContainer();
         powerupsContainer = new PowerupsContainer();
         powerupsRespawner = new PowerupsRespawner(arenaData.getRespawnablePowerups(), powerupsContainer);
-        shipsRespawner = new ShipsRespawner(arenaData.getShipsRespawnPoints(), playersContainer, bulletsContainer);
+        shipsRespawner = new ShipsRespawner(arenaData.getShipsRespawnPoints(), playersContainer);
     }
 
     public void update(float delta) {
         // ships related updates
         shipsRespawner.update(delta);
-        playersContainer.update(delta);
+        playersContainer.update(bulletsContainer, delta);
         arena.checkCollisionWithPlayers(playersContainer.getContents());
 
         // bullets related updates

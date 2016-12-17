@@ -23,7 +23,6 @@ import com.github.kjarmicki.client.rendering.PlayersContainerRenderer;
 import com.github.kjarmicki.client.rendering.Renderer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.Controls;
-import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.PlayerDto;
 import com.github.kjarmicki.dto.PlayerWithShipDto;
 import com.github.kjarmicki.dto.PlayersWithShipDto;
@@ -44,7 +43,6 @@ import static java.util.stream.Collectors.toList;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
-    private final RemoteControls remoteControls;
     private final Controls keyboard;
     private final Player localPlayer;
     private final Viewport viewport;
@@ -64,7 +62,6 @@ public class ArenaScreen extends ScreenAdapter {
         this.game = game;
         this.viewport = viewport;
         this.batch = batch;
-        this.remoteControls = new RemoteControls();
         this.keyboard = new Keyboard();
         this.connection = new SocketIoConnection("http://localhost:3000");
 
@@ -166,7 +163,7 @@ public class ArenaScreen extends ScreenAdapter {
     private void initPlayer(Player player, PlayerWithShipDto introducedDto) {
         ShipDto shipDto = introducedDto.getShip();
         player.setShip(new Ship(new Vector2(shipDto.getPositionX(), shipDto.getPositionY()),
-                new ShipFeatures(), player, game.getBulletsContainer()));
+                new ShipFeatures(), player));
         player.setUuid(introducedDto.getPlayer().getUuid());
     }
 

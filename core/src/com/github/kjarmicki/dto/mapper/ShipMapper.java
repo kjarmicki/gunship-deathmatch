@@ -2,7 +2,9 @@ package com.github.kjarmicki.dto.mapper;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.dto.ShipDto;
+import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.Ship;
+import com.github.kjarmicki.ship.ShipFeatures;
 
 public class ShipMapper {
     public static ShipDto mapToDto(Ship ship) {
@@ -18,5 +20,9 @@ public class ShipMapper {
         ship.setPosition(new Vector2(dto.getPositionX(), dto.getPositionY()));
         ship.setRotation(dto.getRotation());
         ship.setTotalRotation(dto.getTotalRotation());
+    }
+
+    public static Ship mapFromDto(ShipDto dto, Player owner) {
+        return new Ship(new Vector2(dto.getPositionX(), dto.getPositionY()), new ShipFeatures(), owner);
     }
 }

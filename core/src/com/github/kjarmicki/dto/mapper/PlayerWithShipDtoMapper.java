@@ -1,6 +1,5 @@
 package com.github.kjarmicki.dto.mapper;
 
-import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.PlayerDto;
 import com.github.kjarmicki.dto.PlayerWithShipDto;
 import com.github.kjarmicki.dto.ShipDto;
@@ -20,8 +19,11 @@ public class PlayerWithShipDtoMapper {
 
     public static Player mapFromDto(PlayerWithShipDto dto) {
         PlayerDto playerDto = dto.getPlayer();
-        Player fromDto = PlayerMapper.mapFromDto(playerDto, new RemoteControls());
-        setByDto(fromDto, dto);
-        return fromDto;
+        ShipDto shipDto = dto.getShip();
+        Player player = PlayerMapper.mapFromDto(playerDto);
+        Ship ship = ShipMapper.mapFromDto(shipDto, player);
+        player.setShip(ship);
+        setByDto(player, dto);
+        return player;
     }
 }

@@ -25,18 +25,16 @@ public class Ship {
     private final Vector2 velocity = new Vector2();
     private final Vector2 position = new Vector2();
     private final ShipFeatures features;
-    private final BulletsContainer bulletsContainer;
-    private final Player owner;
     private final CorePart core;
     private final PartSkin color;
+    private Player owner;
     private float rotation;
     private float totalRotation;
     private boolean isDestroyed = false;
 
 
-    public Ship(Vector2 position, ShipFeatures features, Player owner, BulletsContainer bulletsContainer) {
+    public Ship(Vector2 position, ShipFeatures features, Player owner) {
         this.features = features;
-        this.bulletsContainer = bulletsContainer;
         this.owner = owner;
         this.color = owner.getColor();
         this.position.set(position);
@@ -71,7 +69,7 @@ public class Ship {
         rotation -= delta * features.getRotation();
     }
 
-    public void startShooting(float delta) {
+    public void startShooting(BulletsContainer bulletsContainer, float delta) {
         weapons().stream().forEach(weaponPart -> {
             Optional<Bullet> bullet = weaponPart.startShooting(delta);
             bullet.ifPresent(b -> bulletsContainer.addBullet(b, owner));
@@ -94,7 +92,7 @@ public class Ship {
                 .findFirst();
     }
 
-    public void control(Controls controls, float delta) {
+    public void control(Controls controls, BulletsContainer bulletsContainer, float delta) {
         if(!isDestroyed) {
             if(controls.up()) moveForwards(delta);
             if(controls.down()) moveBackwards(delta);
@@ -102,7 +100,7 @@ public class Ship {
             if(controls.right()) rotateRight(delta);
 
             if(controls.shoot())
-                startShooting(delta);
+                startShooting(bulletsContainer, delta);
             else
                 stopShooting(delta);
         }

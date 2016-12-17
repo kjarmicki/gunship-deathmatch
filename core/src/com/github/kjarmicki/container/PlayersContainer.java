@@ -33,10 +33,10 @@ public class PlayersContainer implements Container<Player> {
                 .findFirst();
     }
 
-    public void update(float delta) {
+    public void update(BulletsContainer bulletsContainer, float delta) {
         players
                 .stream()
-                .forEach(player -> player.update(delta));
+                .forEach(player -> player.update(bulletsContainer, delta));
         checkCollisionsBetweenShips();
     }
 

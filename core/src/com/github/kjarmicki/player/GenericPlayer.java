@@ -2,6 +2,7 @@ package com.github.kjarmicki.player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartSkin;
+import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.ship.Ship;
 
@@ -35,8 +36,8 @@ public class GenericPlayer implements Player {
     }
 
     @Override
-    public void update(float delta) {
-        ship.control(remoteControls, delta);
+    public void update(BulletsContainer bulletsContainer, float delta) {
+        ship.control(remoteControls, bulletsContainer, delta);
         ship.update(delta);
     }
 

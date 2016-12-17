@@ -1,6 +1,7 @@
 package com.github.kjarmicki.player;
 
 import com.github.kjarmicki.assets.PartSkin;
+import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.ship.Ship;
 
@@ -12,7 +13,7 @@ public interface Player extends Observable {
     void setUuid(UUID uuid);
     void setUuid(String uuid);
     Optional<UUID> getUuid();
-    void update(float delta);
+    void update(BulletsContainer bulletsContainer, float delta);
     PartSkin getColor();
     RemoteControls getRemoteControls();
 

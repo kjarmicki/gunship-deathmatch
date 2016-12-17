@@ -13,14 +13,12 @@ import java.util.Random;
 public class ShipsRespawner {
     public static final float MINIMAL_RESPAWN_DISTANCE = 700f;
     private final PlayersContainer playersContainer;
-    private final BulletsContainer bulletsContainer;
     private final List<Vector2> respawnPoints;
     private final Random numberGenerator;
 
-    public ShipsRespawner(List<Vector2> respawnPoints, PlayersContainer playersContainer, BulletsContainer bulletsContainer) {
+    public ShipsRespawner(List<Vector2> respawnPoints, PlayersContainer playersContainer) {
         this.respawnPoints = respawnPoints;
         this.playersContainer = playersContainer;
-        this.bulletsContainer = bulletsContainer;
         numberGenerator = new Random();
     }
 
@@ -28,7 +26,7 @@ public class ShipsRespawner {
         playersContainer.getContents()
                 .stream()
                 .filter(player -> player.getShip() == null || player.getShip().isDestroyed())
-                .forEach(player -> player.setShip(new Ship(findNextFreeRespawnSpot(player), new ShipFeatures(), player, bulletsContainer)));
+                .forEach(player -> player.setShip(new Ship(findNextFreeRespawnSpot(player), new ShipFeatures(), player)));
     }
 
     public Vector2 findNextFreeRespawnSpot(Player beingRespawned) {
