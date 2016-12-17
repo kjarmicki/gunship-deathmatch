@@ -12,8 +12,11 @@ import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.player.RemotelyControlledPlayer;
+import io.netty.channel.ChannelHandlerContext;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -54,6 +57,16 @@ public class SocketIoGameServer implements GameServer {
             @Override
             public void onConnectException(Exception e, SocketIOClient client) {
                 throw new RuntimeException(e);
+            }
+
+            @Override
+            public boolean exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+                // connection error, log and move along
+                if(cause instanceof IOException) {
+                    System.err.println(cause.getMessage());
+                    return true;
+                }
+                return false;
             }
         });
 
