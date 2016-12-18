@@ -162,7 +162,7 @@ public class ArenaScreen extends ScreenAdapter {
 
     private void initPlayer(Player player, PlayerWithShipDto introducedDto) {
         ShipDto shipDto = introducedDto.getShip();
-        player.setShip(new Ship(new Vector2(shipDto.getPositionX(), shipDto.getPositionY()),
+        player.setShip(new Ship(new Vector2(shipDto.getPositionX(), shipDto.getPositionY()), shipDto.getTotalRotation(),
                 new ShipFeatures(), player));
         player.setUuid(introducedDto.getPlayer().getUuid());
     }

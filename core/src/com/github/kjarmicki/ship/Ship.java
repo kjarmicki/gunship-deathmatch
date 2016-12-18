@@ -22,6 +22,7 @@ import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
 import static java.util.stream.Collectors.toList;
 
 public class Ship {
+    public static final float STARTING_ROTATION = 0f;
     private final Vector2 velocity = new Vector2();
     private final Vector2 position = new Vector2();
     private final ShipFeatures features;
@@ -33,7 +34,7 @@ public class Ship {
     private boolean isDestroyed = false;
 
 
-    public Ship(Vector2 position, ShipFeatures features, Player owner) {
+    public Ship(Vector2 position, float totalRotation, ShipFeatures features, Player owner) {
         this.features = features;
         this.owner = owner;
         this.color = owner.getColor();
@@ -47,6 +48,9 @@ public class Ship {
         this.mountPart(BasicEnginePart.getRightVariant(this));
         this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(this));
         this.mountPart(BasicPrimaryWeaponPart.getRightVariant(this));
+
+        this.totalRotation = totalRotation;
+        allParts().stream().forEach(part -> part.rotate(totalRotation));
     }
 
     public void moveForwards(float delta) {

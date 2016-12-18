@@ -23,6 +23,6 @@ public class ShipMapper {
     }
 
     public static Ship mapFromDto(ShipDto dto, Player owner) {
-        return new Ship(new Vector2(dto.getPositionX(), dto.getPositionY()), new ShipFeatures(), owner);
+        return new Ship(new Vector2(dto.getPositionX(), dto.getPositionY()), dto.getTotalRotation(), new ShipFeatures(), owner);
     }
 }
