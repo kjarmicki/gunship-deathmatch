@@ -5,9 +5,12 @@ import com.github.kjarmicki.basis.VisibleThing;
 import com.github.kjarmicki.client.assets.Assets;
 import com.github.kjarmicki.container.Container;
 
+import java.util.WeakHashMap;
+
 public class ContainerRenderer<T extends VisibleThing, AssetProvider extends Assets> implements Renderer {
     private final Container<T> container;
     private final AssetProvider assets;
+    private final WeakHashMap<T, DefaultRenderer<T, AssetProvider>> rendererCache = new WeakHashMap<>();
 
     public ContainerRenderer(Container<T> container, AssetProvider assets) {
         this.container = container;
@@ -19,10 +22,9 @@ public class ContainerRenderer<T extends VisibleThing, AssetProvider extends Ass
     public void render(Batch batch) {
         container.getContents()
                 .stream()
-                .forEach(content -> {
-                    // TODO: cache renderers for performance
-                    Renderer renderer = new DefaultRenderer<>(content, assets);
-                    renderer.render(batch);
-                });
+                .forEach(content ->
+                    rendererCache.computeIfAbsent(content, key -> new DefaultRenderer<>(content, assets))
+                        .render(batch)
+                );
     }
 }
