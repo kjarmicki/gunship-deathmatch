@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
 import static java.util.stream.Collectors.toList;
@@ -50,7 +51,7 @@ public class Ship {
         this.mountPart(BasicPrimaryWeaponPart.getRightVariant(this));
 
         this.totalRotation = totalRotation;
-        allParts().stream().forEach(part -> part.rotate(totalRotation));
+        forEachPart(part -> part.rotate(totalRotation));
     }
 
     public void moveForwards(float delta) {
@@ -116,6 +117,9 @@ public class Ship {
     }
 
     public void applyMovement(float delta) {
+        // TODO: probably not a place for it?
+        reconcileState();
+
         velocity.clamp(0, features.getMaxSpeed());
 
         velocity.x -= delta * features.getDrag() * velocity.x;
@@ -128,15 +132,20 @@ public class Ship {
         position.add(movement);
         totalRotation += rotation;
 
-        allParts().stream().forEach(part -> {
+        forEachPart(part -> {
             part.moveBy(movement);
             part.rotate(rotation);
         });
     }
 
+    public void reconcileState() {
+        core.setPosition(position);
+        forEachPart(Part::positionWithinOwner);
+    }
+
     public void updateFeatures() {
         features.reset();
-        allParts().stream().forEach(part -> part.updateFeatures(features));
+        forEachPart(part -> part.updateFeatures(features));
     }
 
     public Vector2 getCenter() {
@@ -317,6 +326,10 @@ public class Ship {
         parts.add(core);
         parts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());
         return parts;
+    }
+
+    public void forEachPart(Consumer<Part> action) {
+        allParts().stream().forEach(action);
     }
 
     private Optional<Part> findPartWithSlotAvailableFor(Part otherPart) {
