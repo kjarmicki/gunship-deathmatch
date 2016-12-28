@@ -5,8 +5,8 @@ import com.github.kjarmicki.server.screen.ServerScreen;
 import com.github.kjarmicki.server.server.SocketIoGameServer;
 
 public class GunshipDeathmatchServer extends com.badlogic.gdx.Game {
-    public static final String host = "localhost";
-    public static final int port = 3000;
+    public static final String HOST = "localhost";
+    public static final int PORT = 3000;
 
     /*
      * TODO
@@ -18,7 +18,7 @@ public class GunshipDeathmatchServer extends com.badlogic.gdx.Game {
     public void create() {
         setScreen(new ServerScreen(
                 new Game(),
-                new SocketIoGameServer(host, port)
+                new SocketIoGameServer(HOST, PORT)
         ));
     }
 }

@@ -3,10 +3,8 @@ package com.github.kjarmicki.client;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.screen.ArenaScreen;
-import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.game.Game;
 
 public class GunshipDeathmatchClient extends com.badlogic.gdx.Game {
