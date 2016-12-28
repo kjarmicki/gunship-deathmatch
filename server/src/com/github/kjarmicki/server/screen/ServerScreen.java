@@ -4,14 +4,12 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.RemoteControls;
-import com.github.kjarmicki.dto.PlayerWithShipDto;
 import com.github.kjarmicki.dto.PlayersWithShipDto;
 import com.github.kjarmicki.dto.mapper.ControlsMapper;
 import com.github.kjarmicki.dto.Dto;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
-import com.github.kjarmicki.dto.mapper.ShipMapper;
-import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.Player;
+import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.server.GameServer;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
@@ -22,10 +20,10 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class ServerScreen extends ScreenAdapter {
-    private final Game game;
+    private final RemoteGame game;
     private final GameServer gameServer;
 
-    public ServerScreen(Game game, GameServer gameServer) {
+    public ServerScreen(RemoteGame game, GameServer gameServer) {
         this.game = game;
         this.gameServer = gameServer;
     }

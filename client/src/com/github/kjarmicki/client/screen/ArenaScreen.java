@@ -17,6 +17,7 @@ import com.github.kjarmicki.client.connection.Connection;
 import com.github.kjarmicki.client.connection.SocketIoConnection;
 import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
+import com.github.kjarmicki.client.game.LocalGame;
 import com.github.kjarmicki.client.rendering.ArenaRenderer;
 import com.github.kjarmicki.client.rendering.ContainerRenderer;
 import com.github.kjarmicki.client.rendering.PlayersContainerRenderer;
@@ -30,7 +31,6 @@ import com.github.kjarmicki.dto.ShipDto;
 import com.github.kjarmicki.dto.mapper.ControlsMapper;
 import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
-import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.GenericPlayer;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.Ship;
@@ -51,14 +51,14 @@ public class ArenaScreen extends ScreenAdapter {
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
     private final ArenaAssets arenaAssets;
-    private final Game game;
+    private final LocalGame game;
 
     private final Renderer bulletsContainerRenderer;
     private final Renderer powerupsContainerRenderer;
     private final Renderer arenaRenderer;
     private final Renderer shipOwnersContainerRenderer;
 
-    public ArenaScreen(Game game, Viewport viewport, Batch batch) {
+    public ArenaScreen(LocalGame game, Viewport viewport, Batch batch) {
         this.game = game;
         this.viewport = viewport;
         this.batch = batch;

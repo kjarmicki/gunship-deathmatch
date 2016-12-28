@@ -1,6 +1,6 @@
 package com.github.kjarmicki.server;
 
-import com.github.kjarmicki.game.Game;
+import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.screen.ServerScreen;
 import com.github.kjarmicki.server.server.SocketIoGameServer;
 
@@ -17,7 +17,7 @@ public class GunshipDeathmatchServer extends com.badlogic.gdx.Game {
     @Override
     public void create() {
         setScreen(new ServerScreen(
-                new Game(),
+                new RemoteGame(),
                 new SocketIoGameServer(HOST, PORT)
         ));
     }

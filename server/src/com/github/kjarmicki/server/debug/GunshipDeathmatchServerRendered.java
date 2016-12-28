@@ -3,7 +3,7 @@ package com.github.kjarmicki.server.debug;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.kjarmicki.game.Game;
+import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.screen.ServerScreen;
 import com.github.kjarmicki.server.server.SocketIoGameServer;
 
@@ -16,7 +16,7 @@ public class GunshipDeathmatchServerRendered extends com.badlogic.gdx.Game {
 
     @Override
     public void create() {
-        Game game = new Game();
+        RemoteGame game = new RemoteGame();
         ServerScreen serverScreen = new ServerScreen(
                 game,
                 new SocketIoGameServer(HOST, PORT)

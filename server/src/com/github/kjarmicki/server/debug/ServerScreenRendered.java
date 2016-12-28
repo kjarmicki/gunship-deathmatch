@@ -16,15 +16,15 @@ import com.github.kjarmicki.client.rendering.ArenaRenderer;
 import com.github.kjarmicki.client.rendering.ContainerRenderer;
 import com.github.kjarmicki.client.rendering.PlayersContainerRenderer;
 import com.github.kjarmicki.client.rendering.Renderer;
-import com.github.kjarmicki.game.Game;
 import com.github.kjarmicki.player.Player;
+import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.screen.ServerScreen;
 
 import java.util.List;
 
 public class ServerScreenRendered extends ScreenAdapter {
     private final ServerScreen serverScreen;
-    private final Game game;
+    private final RemoteGame game;
     private final Viewport viewport;
     private final Batch batch;
     private final ChaseCamera chaseCamera;
@@ -34,7 +34,7 @@ public class ServerScreenRendered extends ScreenAdapter {
     private final Renderer arenaRenderer;
     private final Renderer shipOwnersContainerRenderer;
 
-    public ServerScreenRendered(ServerScreen serverScreen, Game game, Viewport viewport, Batch batch) {
+    public ServerScreenRendered(ServerScreen serverScreen, RemoteGame game, Viewport viewport, Batch batch) {
         this.serverScreen = serverScreen;
         this.game = game;
         this.viewport = viewport;

@@ -1,4 +1,4 @@
-package com.github.kjarmicki.game;
+package com.github.kjarmicki.client.game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kjarmicki.arena.Arena;
@@ -11,7 +11,7 @@ import com.github.kjarmicki.container.PowerupsContainer;
 import com.github.kjarmicki.powerup.PowerupsRespawner;
 import com.github.kjarmicki.ship.ShipsRespawner;
 
-public class Game {
+public class LocalGame {
     private final Arena arena;
     private final BulletsContainer bulletsContainer;
     private final PowerupsContainer powerupsContainer;
@@ -19,7 +19,7 @@ public class Game {
     private final PlayersContainer playersContainer;
     private final ShipsRespawner shipsRespawner;
 
-    public Game() {
+    public LocalGame() {
         ArenaData arenaData = new Overlap2dArenaData(WarehouseArena.NAME, new ObjectMapper());
         arena = new WarehouseArena(arenaData.getTiles());
         bulletsContainer = new BulletsContainer();
