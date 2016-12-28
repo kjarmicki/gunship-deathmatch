@@ -4,9 +4,10 @@ import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.util.Sets;
 
-import static java.util.AbstractMap.SimpleEntry;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class PlayersContainer implements Container<Player> {
     private final List<Player> players;

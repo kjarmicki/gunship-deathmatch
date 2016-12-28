@@ -12,7 +12,6 @@ import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.parts.*;
 import com.github.kjarmicki.util.Points;
 
-import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -37,6 +37,7 @@ import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
@@ -80,7 +81,8 @@ public class ArenaScreen extends ScreenAdapter {
         );
 
         localPlayer = new GenericPlayer(
-                PartSkin.BLUE
+                PartSkin.BLUE,
+                Optional.of(keyboard)
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();

@@ -1,8 +1,6 @@
 package com.github.kjarmicki.dto.mapper;
 
 import com.github.kjarmicki.assets.PartSkin;
-import com.github.kjarmicki.controls.Controls;
-import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.PlayerDto;
 import com.github.kjarmicki.player.GenericPlayer;
 import com.github.kjarmicki.player.Player;
@@ -19,7 +17,7 @@ public class PlayerMapper {
 
     public static Player mapFromDto(PlayerDto dto) {
         Player player =
-                new GenericPlayer(PartSkin.valueOf(dto.getPartSkin()));
+                new GenericPlayer(PartSkin.valueOf(dto.getPartSkin()), Optional.empty());
         if(!"".equals(dto.getUuid())) {
             player.setUuid(dto.getUuid());
         }

@@ -3,6 +3,7 @@ package com.github.kjarmicki.player;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.container.BulletsContainer;
+import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.ship.Ship;
 
@@ -12,12 +13,14 @@ import java.util.UUID;
 public class GenericPlayer implements Player {
     private final PartSkin color;
     private final RemoteControls remoteControls;
+    private final Optional<Controls> localControls;
     private  Ship ship;
     private UUID uuid;
 
-    public GenericPlayer(PartSkin color) {
+    public GenericPlayer(PartSkin color, Optional<Controls> localControls) {
         this.color = color;
         this.remoteControls = new RemoteControls();
+        this.localControls = localControls;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class GenericPlayer implements Player {
 
     @Override
     public void update(BulletsContainer bulletsContainer, float delta) {
-        ship.control(remoteControls, delta); // TODO: control ship only client-side, reconcile on the server
+        ship.control(localControls.orElse(remoteControls), delta);
         ship.update(bulletsContainer, delta);
     }
 

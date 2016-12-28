@@ -1,7 +1,6 @@
 package com.github.kjarmicki.ship;
 
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.player.Player;
 
