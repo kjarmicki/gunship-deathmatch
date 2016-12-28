@@ -17,7 +17,8 @@ public class PlayerDto implements Dto {
     public PlayerDto(
             @JsonProperty("partSkin") String partSkin,
             @JsonProperty("uuid") String uuid,
-            @JsonProperty("justIntroduced") boolean justIntroduced) {
+            @JsonProperty("justIntroduced") boolean justIntroduced
+    ) {
         this.partSkin = partSkin;
         this.uuid = uuid;
         this.justIntroduced = justIntroduced;

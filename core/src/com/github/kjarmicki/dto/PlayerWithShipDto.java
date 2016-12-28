@@ -13,7 +13,10 @@ public class PlayerWithShipDto implements Dto {
     private ShipDto ship;
 
     @JsonCreator
-    public PlayerWithShipDto(@JsonProperty("player") PlayerDto player, @JsonProperty("ship") ShipDto ship) {
+    public PlayerWithShipDto(
+            @JsonProperty("player") PlayerDto player,
+            @JsonProperty("ship") ShipDto ship
+    ) {
         this.player = player;
         this.ship = ship;
     }

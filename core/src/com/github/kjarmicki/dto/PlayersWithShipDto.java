@@ -8,13 +8,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-public class PlayersWithShipDto implements Dto {
+public class PlayersWithShipDto implements TimestampedDto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final List<PlayerWithShipDto> players;
+    private final long timestamp;
 
     @JsonCreator
-    public PlayersWithShipDto(@JsonProperty("players") List<PlayerWithShipDto> players) {
+    public PlayersWithShipDto(
+            @JsonProperty("players") List<PlayerWithShipDto> players,
+            @JsonProperty("timestamp") long timestamp
+        ) {
         this.players = players;
+        this.timestamp = timestamp;
     }
 
     public List<PlayerWithShipDto> getPlayers() {
@@ -36,5 +41,10 @@ public class PlayersWithShipDto implements Dto {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error while converting players with ship dto to json", e);
         }
+    }
+
+    @Override
+    public long getTimestamp() {
+        return timestamp;
     }
 }

@@ -3,7 +3,6 @@ package com.github.kjarmicki.server;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.github.kjarmicki.client.GunshipDeathmatchClient;
 import com.github.kjarmicki.server.debug.GunshipDeathmatchServerRendered;
 import com.github.kjarmicki.util.Env;
 

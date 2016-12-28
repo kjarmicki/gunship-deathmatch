@@ -7,13 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-public class ControlsDto implements Dto {
+public class ControlsDto implements TimestampedDto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final boolean up;
     private final boolean down;
     private final boolean left;
     private final boolean right;
     private final boolean shoot;
+    private final long timestamp;
 
     @JsonCreator
     public ControlsDto(
@@ -21,12 +22,15 @@ public class ControlsDto implements Dto {
             @JsonProperty("down") boolean down,
             @JsonProperty("left") boolean left,
             @JsonProperty("right") boolean right,
-            @JsonProperty("shoot") boolean shoot) {
+            @JsonProperty("shoot") boolean shoot,
+            @JsonProperty("timestamp") long timestamp
+    ) {
         this.up = up;
         this.down = down;
         this.left = left;
         this.right = right;
         this.shoot = shoot;
+        this.timestamp = timestamp;
     }
 
     @JsonProperty
@@ -68,5 +72,10 @@ public class ControlsDto implements Dto {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error while converting controls dto to json", e);
         }
+    }
+
+    @Override
+    public long getTimestamp() {
+        return timestamp;
     }
 }

@@ -28,6 +28,7 @@ import com.github.kjarmicki.dto.PlayerDto;
 import com.github.kjarmicki.dto.PlayerWithShipDto;
 import com.github.kjarmicki.dto.PlayersWithShipDto;
 import com.github.kjarmicki.dto.ShipDto;
+import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
 import com.github.kjarmicki.dto.mapper.ControlsMapper;
 import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
@@ -64,7 +65,7 @@ public class ArenaScreen extends ScreenAdapter {
         this.viewport = viewport;
         this.batch = batch;
         this.keyboard = new Keyboard();
-        this.connection = new SocketIoConnection("http://localhost:3000");
+        this.connection = new SocketIoConnection("http://localhost:3000", new DtoTimeConsistency());
 
         partsAssets = new PartsAssets(
                 PartsAssets.DEFAULT_ATLAS,
