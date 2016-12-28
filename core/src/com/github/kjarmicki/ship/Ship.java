@@ -32,6 +32,7 @@ public class Ship {
     private Player owner;
     private float rotation;
     private float totalRotation;
+    private boolean shouldBeShooting = false;
     private boolean isDestroyed = false;
 
 
@@ -74,6 +75,14 @@ public class Ship {
         rotation -= delta * features.getRotation();
     }
 
+    public void shouldBeShooting(boolean itShould) {
+        this.shouldBeShooting = itShould;
+    }
+
+    public boolean shouldBeShooting() {
+        return shouldBeShooting;
+    }
+
     public void startShooting(BulletsContainer bulletsContainer, float delta) {
         weapons().stream().forEach(weaponPart -> {
             Optional<Bullet> bullet = weaponPart.startShooting(delta);
@@ -97,23 +106,26 @@ public class Ship {
                 .findFirst();
     }
 
-    public void control(Controls controls, BulletsContainer bulletsContainer, float delta) {
+    public void control(Controls controls, float delta) {
         if(!isDestroyed) {
             if(controls.up()) moveForwards(delta);
             if(controls.down()) moveBackwards(delta);
             if(controls.left()) rotateLeft(delta);
             if(controls.right()) rotateRight(delta);
 
-            if(controls.shoot())
-                startShooting(bulletsContainer, delta);
-            else
-                stopShooting(delta);
+            shouldBeShooting = controls.shoot();
         }
     }
 
-    public void update(float delta) {
+    public void update(BulletsContainer bulletsContainer, float delta) {
         applyMovement(delta);
+        applyShooting(bulletsContainer, delta);
         updateFeatures();
+    }
+
+    public void applyShooting(BulletsContainer bulletsContainer, float delta) {
+        if(shouldBeShooting) startShooting(bulletsContainer, delta);
+        else stopShooting(delta);
     }
 
     public void applyMovement(float delta) {

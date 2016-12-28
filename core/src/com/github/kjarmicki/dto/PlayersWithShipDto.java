@@ -23,7 +23,7 @@ public class PlayersWithShipDto implements Dto {
 
     public static PlayersWithShipDto fromJsonString(String json) {
         try {
-            return objectMapper.readValue(json, PlayersWithShipDto.class);
+           return objectMapper.readValue(json, PlayersWithShipDto.class);
         } catch (IOException e) {
             throw new RuntimeException("Error while creating players with ship dto from json", e);
         }

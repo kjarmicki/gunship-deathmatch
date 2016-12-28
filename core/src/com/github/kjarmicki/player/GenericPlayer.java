@@ -37,8 +37,8 @@ public class GenericPlayer implements Player {
 
     @Override
     public void update(BulletsContainer bulletsContainer, float delta) {
-        ship.control(remoteControls, bulletsContainer, delta);
-        ship.update(delta);
+        ship.control(remoteControls, delta); // TODO: control ship only client-side, reconcile on the server
+        ship.update(bulletsContainer, delta);
     }
 
     @Override

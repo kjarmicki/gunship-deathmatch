@@ -16,11 +16,14 @@ public class ShipDto implements Dto {
     private final float positionY;
     private final float rotation;
     private final float totalRotation;
+    private final boolean shooting;
 
     @JsonCreator
     public ShipDto(@JsonProperty("velocityX") float velocityX, @JsonProperty("velocityY") float velocityY,
                    @JsonProperty("positionX") float positionX, @JsonProperty("positionY") float positionY,
-                   @JsonProperty("rotation") float rotation, @JsonProperty("totalRotation") float totalRotation) {
+                   @JsonProperty("rotation") float rotation, @JsonProperty("totalRotation") float totalRotation,
+                   @JsonProperty("shooting") boolean shooting
+                   ) {
 
         this.velocityX = velocityX;
         this.velocityY = velocityY;
@@ -28,6 +31,7 @@ public class ShipDto implements Dto {
         this.positionY = positionY;
         this.rotation = rotation;
         this.totalRotation = totalRotation;
+        this.shooting = shooting;
     }
 
     public float getVelocityX() {
@@ -52,6 +56,10 @@ public class ShipDto implements Dto {
 
     public float getTotalRotation() {
         return totalRotation;
+    }
+
+    public boolean isShooting() {
+        return shooting;
     }
 
     public static ShipDto fromJsonString(String json) {

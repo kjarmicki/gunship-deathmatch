@@ -12,7 +12,7 @@ public class ShipMapper {
         Vector2 position = ship.getPosition();
         float rotation = ship.getRotation();
         float totalRotation = ship.getTotalRotation();
-        return new ShipDto(velocity.x, velocity.y, position.x, position.y, rotation, totalRotation);
+        return new ShipDto(velocity.x, velocity.y, position.x, position.y, rotation, totalRotation, ship.shouldBeShooting());
     }
 
     public static void setByDto(Ship ship, ShipDto dto) {
@@ -20,6 +20,7 @@ public class ShipMapper {
         ship.setPosition(new Vector2(dto.getPositionX(), dto.getPositionY()));
         ship.setRotation(dto.getRotation());
         ship.setTotalRotation(dto.getTotalRotation());
+        ship.shouldBeShooting(dto.isShooting());
     }
 
     public static Ship mapFromDto(ShipDto dto, Player owner) {
