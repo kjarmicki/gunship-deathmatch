@@ -1,0 +1,12 @@
+1. weapons/parts to implement:
+- ArmoredWing (blue 16)
+- SlickNose (blue 24)
+- PlasmaGun (blue 40)
+-> as powerups too
+
+2. create HUD:
+- health (by part)
+- ranking
+- available weapons
+
+3. proper multiplayer
