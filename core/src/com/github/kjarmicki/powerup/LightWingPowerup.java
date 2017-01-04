@@ -10,9 +10,9 @@ import com.github.kjarmicki.util.Points;
 public class LightWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = LightWingPart.DEFAULT_LEFT_INDEX;
     public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
-    public static final float[] VERTICES = Points.scaleVertices(LightWingPart.LEFT_VERTICES, SCALE);
-    public static final float WIDTH = LightWingPart.WIDTH * SCALE;
-    public static final float HEIGHT = LightWingPart.HEIGHT * SCALE;
+    public static final float[] VERTICES = SCALE.apply(LightWingPart.LEFT_VERTICES);
+    public static final float WIDTH = SCALE.apply(LightWingPart.WIDTH);
+    public static final float HEIGHT = SCALE.apply(LightWingPart.HEIGHT);
 
     public LightWingPowerup() {
         super(new Polygon(VERTICES));

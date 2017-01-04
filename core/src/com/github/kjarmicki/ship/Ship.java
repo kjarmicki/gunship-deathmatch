@@ -43,12 +43,16 @@ public class Ship {
         core = new BasicCorePart(position.x, position.y, this);
 
         this.mountPart(new BasicNosePart(this));
-        this.mountPart(BasicWingPart.getLeftVariant(this));
-        this.mountPart(BasicWingPart.getRightVariant(this));
+//        this.mountPart(BasicWingPart.getLeftVariant(this));
+//        this.mountPart(BasicWingPart.getRightVariant(this));
+        this.mountPart(LightWingPart.getLeftVariant(this));
+        this.mountPart(LightWingPart.getRightVariant(this));
         this.mountPart(BasicEnginePart.getLeftVariant(this));
         this.mountPart(BasicEnginePart.getRightVariant(this));
         this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(this));
         this.mountPart(BasicPrimaryWeaponPart.getRightVariant(this));
+        this.mountPart(BasicSecondaryWeaponPart.getLeftVariant(this));
+        this.mountPart(BasicSecondaryWeaponPart.getRightVariant(this));
 
         this.totalRotation = totalRotation;
         forEachPart(part -> part.rotate(totalRotation));

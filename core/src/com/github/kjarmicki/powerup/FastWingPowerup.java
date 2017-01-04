@@ -10,9 +10,9 @@ import com.github.kjarmicki.util.Points;
 public class FastWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = FastWingPart.DEFAULT_LEFT_INDEX;
     public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
-    public static final float[] VERTICES = Points.scaleVertices(FastWingPart.LEFT_VERTICES, SCALE);
-    public static final float WIDTH = FastWingPart.WIDTH * SCALE;
-    public static final float HEIGHT = FastWingPart.HEIGHT * SCALE;
+    public static final float[] VERTICES = SCALE.apply(FastWingPart.LEFT_VERTICES);
+    public static final float WIDTH = SCALE.apply(FastWingPart.WIDTH);
+    public static final float HEIGHT = SCALE.apply(FastWingPart.HEIGHT);
 
     public FastWingPowerup() {
         super(new Polygon(VERTICES));

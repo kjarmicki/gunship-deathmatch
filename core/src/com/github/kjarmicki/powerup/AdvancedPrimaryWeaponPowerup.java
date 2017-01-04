@@ -10,9 +10,9 @@ import com.github.kjarmicki.util.Points;
 public class AdvancedPrimaryWeaponPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = AdvancedPrimaryWeaponPart.DEFAULT_LEFT_INDEX;
     public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
-    public static final float[] VERTICES = Points.scaleVertices(AdvancedPrimaryWeaponPart.LEFT_VERTICES, SCALE);
-    public static final float WIDTH = AdvancedPrimaryWeaponPart.WIDTH * SCALE;
-    public static final float HEIGHT = AdvancedPrimaryWeaponPart.HEIGHT * SCALE;
+    public static final float[] VERTICES = SCALE.apply(AdvancedPrimaryWeaponPart.LEFT_VERTICES);
+    public static final float WIDTH = SCALE.apply(AdvancedPrimaryWeaponPart.WIDTH);
+    public static final float HEIGHT = SCALE.apply(AdvancedPrimaryWeaponPart.HEIGHT);
 
     public AdvancedPrimaryWeaponPowerup() {
         super(new Polygon(VERTICES));

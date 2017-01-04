@@ -6,6 +6,7 @@ import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.util.Points;
+import com.github.kjarmicki.util.Scale;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.function.Function;
 import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
 public class LightWingPart extends GenericPart implements WingPart {
-    private static final float SCALE = 0.8f;
+    private static final Scale SCALE = new Scale(0.9f);
     public static final int DEFAULT_LEFT_INDEX = 16;
     public static final int DEFAULT_RIGHT_INDEX = 17;
-    public static final float[] LEFT_VERTICES = Points.scaleVertices(new float[] {
+    public static final float[] LEFT_VERTICES = SCALE.apply(new float[] {
             268,    0,
             171,    9,
             164,    22,
@@ -31,13 +32,13 @@ public class LightWingPart extends GenericPart implements WingPart {
             202,    113,
             250,    112,
             266,    98,
-    }, SCALE);
-    public static final float WIDTH = 278f * SCALE;
-    public static final float HEIGHT = 115f * SCALE;
+    });
+    public static final float WIDTH = SCALE.apply(278f);
+    public static final float HEIGHT = SCALE.apply(115f);
     public static final int Z_INDEX = 1;
-    public static final boolean IS_CRITICAL = true;
-    public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(222 * SCALE, 47 * SCALE);
-    public static final Vector2 LEFT_SECONDARY_WEAPON_SLOT = new Vector2(172 * SCALE, 59 * SCALE);
+    public static final boolean IS_CRITICAL = false;
+    public static final Vector2 LEFT_ENGINE_SLOT = SCALE.apply(new Vector2(140, 0));
+    public static final Vector2 LEFT_SECONDARY_WEAPON_SLOT = SCALE.apply(new Vector2(180, 59));
     private final Vector2 engineSlot;
     private final List<PartSlotName> childSlotNames;
     private final PartSlotName slotName;
@@ -134,7 +135,7 @@ public class LightWingPart extends GenericPart implements WingPart {
                 LEFT_SECONDARY_WEAPON_SLOT,
                 Arrays.asList(LEFT_ENGINE, LEFT_SECONDARY_WEAPON),
                 LEFT_WING,
-                wingSlot -> new Vector2(wingSlot.x - WIDTH, wingSlot.y - HEIGHT / 2)
+                wingSlot -> new Vector2(wingSlot.x - WIDTH + 30, wingSlot.y - HEIGHT / 2)
         ),
         RIGHT(
                 DEFAULT_RIGHT_INDEX,
@@ -143,7 +144,7 @@ public class LightWingPart extends GenericPart implements WingPart {
                 Points.makeRightVector(LEFT_SECONDARY_WEAPON_SLOT, WIDTH),
                 Arrays.asList(RIGHT_ENGINE, RIGHT_SECONDARY_WEAPON),
                 RIGHT_WING,
-                wingSlot -> new Vector2(wingSlot.x, wingSlot.y - HEIGHT / 2)
+                wingSlot -> new Vector2(wingSlot.x - 30, wingSlot.y - HEIGHT / 2)
         );
 
         int skinIndex;
