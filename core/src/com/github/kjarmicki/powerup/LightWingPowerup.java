@@ -4,24 +4,24 @@ import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.ship.Ship;
-import com.github.kjarmicki.ship.parts.ArmoredWingPart;
+import com.github.kjarmicki.ship.parts.LightWingPart;
 import com.github.kjarmicki.util.Points;
 
-public class ArmoredWingPowerup extends GenericPowerup {
-    public static final int DEFAULT_INDEX = ArmoredWingPart.DEFAULT_LEFT_INDEX;
+public class LightWingPowerup extends GenericPowerup {
+    public static final int DEFAULT_INDEX = LightWingPart.DEFAULT_LEFT_INDEX;
     public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
-    public static final float[] VERTICES = Points.scaleVertices(ArmoredWingPart.LEFT_VERTICES, SCALE);
-    public static final float WIDTH = ArmoredWingPart.WIDTH * SCALE;
-    public static final float HEIGHT = ArmoredWingPart.HEIGHT * SCALE;
+    public static final float[] VERTICES = Points.scaleVertices(LightWingPart.LEFT_VERTICES, SCALE);
+    public static final float WIDTH = LightWingPart.WIDTH * SCALE;
+    public static final float HEIGHT = LightWingPart.HEIGHT * SCALE;
 
-    public ArmoredWingPowerup() {
+    public LightWingPowerup() {
         super(new Polygon(VERTICES));
     }
 
     @Override
     public void apply(Ship ship) {
-        ship.mountPart(ArmoredWingPart.getLeftVariant(ship));
-        ship.mountPart(ArmoredWingPart.getRightVariant(ship));
+        ship.mountPart(LightWingPart.getLeftVariant(ship));
+        ship.mountPart(LightWingPart.getRightVariant(ship));
         wasCollected = true;
     }
 

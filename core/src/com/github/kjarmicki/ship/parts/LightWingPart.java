@@ -13,10 +13,11 @@ import java.util.function.Function;
 
 import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
-public class ArmoredWingPart extends GenericPart implements WingPart {
+public class LightWingPart extends GenericPart implements WingPart {
+    private static final float SCALE = 0.8f;
     public static final int DEFAULT_LEFT_INDEX = 16;
     public static final int DEFAULT_RIGHT_INDEX = 17;
-    public static final float[] LEFT_VERTICES = new float[] {
+    public static final float[] LEFT_VERTICES = Points.scaleVertices(new float[] {
             268,    0,
             171,    9,
             164,    22,
@@ -30,13 +31,13 @@ public class ArmoredWingPart extends GenericPart implements WingPart {
             202,    113,
             250,    112,
             266,    98,
-    };
-    public static final float WIDTH = 278f;
-    public static final float HEIGHT = 115f;
+    }, SCALE);
+    public static final float WIDTH = 278f * SCALE;
+    public static final float HEIGHT = 115f * SCALE;
     public static final int Z_INDEX = 1;
     public static final boolean IS_CRITICAL = true;
-    public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(222, 47);
-    public static final Vector2 LEFT_SECONDARY_WEAPON_SLOT = new Vector2(172, 59);
+    public static final Vector2 LEFT_ENGINE_SLOT = new Vector2(222 * SCALE, 47 * SCALE);
+    public static final Vector2 LEFT_SECONDARY_WEAPON_SLOT = new Vector2(172 * SCALE, 59 * SCALE);
     private final Vector2 engineSlot;
     private final List<PartSlotName> childSlotNames;
     private final PartSlotName slotName;
@@ -44,14 +45,14 @@ public class ArmoredWingPart extends GenericPart implements WingPart {
     private final Ship ship;
 
     public static WingPart getLeftVariant(Ship ship) {
-        return new ArmoredWingPart(Variant.LEFT, ship);
+        return new LightWingPart(Variant.LEFT, ship);
     }
 
     public static WingPart getRightVariant(Ship ship) {
-        return new ArmoredWingPart(Variant.RIGHT, ship);
+        return new LightWingPart(Variant.RIGHT, ship);
     }
 
-    private ArmoredWingPart(Variant variant, Ship ship) {
+    private LightWingPart(Variant variant, Ship ship) {
         super(new Polygon(variant.vertices));
         this.engineSlot = variant.engineSlot;
         this.childSlotNames = variant.childSlotNames;
