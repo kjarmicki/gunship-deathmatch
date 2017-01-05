@@ -8,6 +8,7 @@ import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.bullets.OrangeBullet;
+import com.github.kjarmicki.util.Scale;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -15,8 +16,9 @@ import java.util.function.Function;
 import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
 public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart {
+    private static final Scale SCALE = new Scale(0.8f);
     public static final int DEFAULT_INDEX = 42;
-    public static final float[] VERTICES = new float[] {
+    public static final float[] VERTICES = SCALE.apply(new float[] {
             15,		212,
             11,		203,
             11,		139,
@@ -31,13 +33,13 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
             41,		139,
             41,		203,
             34,		212
-    };
-    public static final float WIDTH = 50f;
-    public static final float HEIGHT = 212f;
+    });
+    public static final float WIDTH = SCALE.apply(50f);
+    public static final float HEIGHT = SCALE.apply(212f);
     public static final int Z_INDEX = 0;
     public static final long SHOT_INTERVAL = 450;
     public static final boolean IS_CRITICAL = false;
-    public static final Vector2 BULLET_OUTPUT = new Vector2(25f, HEIGHT);
+    public static final Vector2 BULLET_OUTPUT = SCALE.apply(new Vector2(25f, 212f));
     public static final int AMMO = 10;
     private final PartSlotName slotName;
     private final Variant variant;
