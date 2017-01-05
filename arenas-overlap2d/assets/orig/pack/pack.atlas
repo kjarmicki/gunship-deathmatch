@@ -6,84 +6,91 @@ filter: Linear,Linear
 repeat: none
 Blue (29)
   rotate: false
-  xy: 1452, 102
+  xy: 686, 38
   size: 127, 149
   orig: 127, 149
   offset: 0, 0
   index: -1
 Green (14)
   rotate: false
-  xy: 2, 2
+  xy: 492, 55
   size: 192, 132
   orig: 192, 132
   offset: 0, 0
   index: -1
 Green (16)
   rotate: false
-  xy: 2, 136
+  xy: 212, 72
   size: 278, 115
   orig: 278, 115
   offset: 0, 0
   index: -1
+Green (22)
+  rotate: false
+  xy: 2, 2
+  size: 208, 185
+  orig: 208, 185
+  offset: 0, 0
+  index: -1
 corner (1)
   rotate: false
-  xy: 932, 123
+  xy: 1465, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 corner (2)
   rotate: false
-  xy: 1322, 123
+  xy: 1855, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 corner (3)
   rotate: false
-  xy: 1062, 123
+  xy: 1595, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 corner (4)
   rotate: false
-  xy: 282, 123
+  xy: 815, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 crate (1)
   rotate: false
-  xy: 542, 123
+  xy: 1075, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (1)
   rotate: false
-  xy: 802, 123
+  xy: 1335, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (2)
   rotate: false
-  xy: 672, 123
+  xy: 1205, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (3)
   rotate: false
-  xy: 412, 123
+  xy: 945, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 tile (4)
   rotate: false
-  xy: 1192, 123
+  xy: 1725, 59
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
