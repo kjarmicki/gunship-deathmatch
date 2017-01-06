@@ -42,22 +42,42 @@ public class LightWingPart extends GenericPart implements WingPart {
     private final Vector2 engineSlot;
     private final List<PartSlotName> childSlotNames;
     private final PartSlotName slotName;
-    private final Variant variant;
+    private final WingVariant variant;
     private final Ship ship;
 
+    private static final WingVariant LEFT_VARIANT = new WingVariant(
+            DEFAULT_LEFT_INDEX,
+            LEFT_VERTICES,
+            LEFT_ENGINE_SLOT,
+            LEFT_SECONDARY_WEAPON_SLOT,
+            Arrays.asList(LEFT_ENGINE, LEFT_SECONDARY_WEAPON),
+            LEFT_WING,
+            wingSlot -> new Vector2(wingSlot.x - WIDTH + 30, wingSlot.y - HEIGHT / 2)
+    );
+
+    private static final WingVariant RIGHT_VARIANT = new WingVariant(
+            DEFAULT_RIGHT_INDEX,
+            Points.makeRightVertices(LEFT_VERTICES, WIDTH),
+            Points.makeRightVector(LEFT_ENGINE_SLOT, WIDTH),
+            Points.makeRightVector(LEFT_SECONDARY_WEAPON_SLOT, WIDTH),
+            Arrays.asList(RIGHT_ENGINE, RIGHT_SECONDARY_WEAPON),
+            RIGHT_WING,
+            wingSlot -> new Vector2(wingSlot.x - 30, wingSlot.y - HEIGHT / 2)
+    );
+
     public static WingPart getLeftVariant(Ship ship) {
-        return new LightWingPart(Variant.LEFT, ship);
+        return new LightWingPart(LEFT_VARIANT, ship);
     }
 
     public static WingPart getRightVariant(Ship ship) {
-        return new LightWingPart(Variant.RIGHT, ship);
+        return new LightWingPart(RIGHT_VARIANT, ship);
     }
 
-    private LightWingPart(Variant variant, Ship ship) {
-        super(new Polygon(variant.vertices));
-        this.engineSlot = variant.engineSlot;
-        this.childSlotNames = variant.childSlotNames;
-        this.slotName = variant.slotName;
+    private LightWingPart(WingVariant variant, Ship ship) {
+        super(new Polygon(variant.getVertices()));
+        this.engineSlot = variant.getEngineSlot();
+        this.childSlotNames = variant.getChildSlotNames();
+        this.slotName = variant.getSlotName();
         this.variant = variant;
         this.ship = ship;
         positionWithinOwner();
@@ -75,7 +95,7 @@ public class LightWingPart extends GenericPart implements WingPart {
 
     @Override
     public AssetKey getAssetKey() {
-        return new AssetKey(ship.getColor(), variant.skinIndex);
+        return new AssetKey(ship.getColor(), variant.getSkinIndex());
     }
 
     @Override
@@ -86,8 +106,8 @@ public class LightWingPart extends GenericPart implements WingPart {
     @Override
     public void positionWithinOwner() {
         CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
-        Vector2 wingSlot = core.getSlotFor(variant.slotName);
-        Vector2 position = variant.computePosition.apply(wingSlot);
+        Vector2 wingSlot = core.getSlotFor(variant.getSlotName());
+        Vector2 position = variant.computePosition().apply(wingSlot);
         Vector2 origin = core.getOrigin();
         takenArea.setPosition(position.x, position.y);
         takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
@@ -105,10 +125,10 @@ public class LightWingPart extends GenericPart implements WingPart {
 
     @Override
     public Vector2 getSlotFor(PartSlotName part) {
-        if(part == LEFT_ENGINE) return withPosition(Variant.LEFT.engineSlot);
-        if(part == RIGHT_ENGINE) return withPosition(Variant.RIGHT.engineSlot);
-        if(part == LEFT_SECONDARY_WEAPON) return withPosition(Variant.LEFT.secondaryWeaponSlot);
-        if(part == RIGHT_SECONDARY_WEAPON) return withPosition(Variant.RIGHT.secondaryWeaponSlot);
+        if(part == LEFT_ENGINE) return withPosition(LEFT_VARIANT.getEngineSlot());
+        if(part == RIGHT_ENGINE) return withPosition(RIGHT_VARIANT.getEngineSlot());
+        if(part == LEFT_SECONDARY_WEAPON) return withPosition(LEFT_VARIANT.getSecondaryWeaponSlot());
+        if(part == RIGHT_SECONDARY_WEAPON) return withPosition(RIGHT_VARIANT.getSecondaryWeaponSlot());
         return null;
     }
 
@@ -125,45 +145,5 @@ public class LightWingPart extends GenericPart implements WingPart {
     @Override
     public Vector2 getEngineSlot() {
         return withPosition(engineSlot);
-    }
-
-    private enum Variant {
-        LEFT(
-                DEFAULT_LEFT_INDEX,
-                LEFT_VERTICES,
-                LEFT_ENGINE_SLOT,
-                LEFT_SECONDARY_WEAPON_SLOT,
-                Arrays.asList(LEFT_ENGINE, LEFT_SECONDARY_WEAPON),
-                LEFT_WING,
-                wingSlot -> new Vector2(wingSlot.x - WIDTH + 30, wingSlot.y - HEIGHT / 2)
-        ),
-        RIGHT(
-                DEFAULT_RIGHT_INDEX,
-                Points.makeRightVertices(LEFT_VERTICES, WIDTH),
-                Points.makeRightVector(LEFT_ENGINE_SLOT, WIDTH),
-                Points.makeRightVector(LEFT_SECONDARY_WEAPON_SLOT, WIDTH),
-                Arrays.asList(RIGHT_ENGINE, RIGHT_SECONDARY_WEAPON),
-                RIGHT_WING,
-                wingSlot -> new Vector2(wingSlot.x - 30, wingSlot.y - HEIGHT / 2)
-        );
-
-        int skinIndex;
-        float[] vertices;
-        Vector2 engineSlot;
-        Vector2 secondaryWeaponSlot;
-        List<PartSlotName> childSlotNames;
-        PartSlotName slotName;
-        Function<Vector2, Vector2> computePosition;
-
-        Variant(int skinIndex, float[] vertices, Vector2 engineSlot, Vector2 secondaryWeaponSlot, List<PartSlotName> childSlotNames,
-                PartSlotName slotName, Function<Vector2, Vector2> computePosition) {
-            this.skinIndex = skinIndex;
-            this.vertices = vertices;
-            this.engineSlot = engineSlot;
-            this.secondaryWeaponSlot = secondaryWeaponSlot;
-            this.childSlotNames = childSlotNames;
-            this.slotName = slotName;
-            this.computePosition = computePosition;
-        }
     }
 }
