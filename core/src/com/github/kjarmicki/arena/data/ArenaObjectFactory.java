@@ -5,6 +5,7 @@ import com.github.kjarmicki.arena.tile.ArenaTile;
 import com.github.kjarmicki.arena.tile.BasicTile;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.PartSkin;
+import com.github.kjarmicki.powerup.AdvancedNosePowerup;
 import com.github.kjarmicki.powerup.ArmoredWingPowerup;
 import com.github.kjarmicki.powerup.LightWingPowerup;
 import com.github.kjarmicki.powerup.FastWingPowerup;
@@ -28,6 +29,7 @@ public class ArenaObjectFactory {
         ARENA_POWERUPS_BY_ASSET_KEY.put(FastWingPowerup.getAssetString(), (x, y) -> new PowerupWrapper(new Vector2(x, y), FastWingPowerup::new));
         ARENA_POWERUPS_BY_ASSET_KEY.put(LightWingPowerup.getAssetString(), (x, y) -> new PowerupWrapper(new Vector2(x, y), LightWingPowerup::new));
         ARENA_POWERUPS_BY_ASSET_KEY.put(ArmoredWingPowerup.getAssetString(), (x, y) -> new PowerupWrapper(new Vector2(x, y), ArmoredWingPowerup::new));
+        ARENA_POWERUPS_BY_ASSET_KEY.put(AdvancedNosePowerup.getAssetString(), (x, y) -> new PowerupWrapper(new Vector2(x, y), AdvancedNosePowerup::new));
     }
     public static Optional<ArenaTile> tileFromAssetKey(String assetKey, float x, float y) {
         return Optional.ofNullable(ARENA_TILES_BY_ASSET_KEY.get(assetKey))
