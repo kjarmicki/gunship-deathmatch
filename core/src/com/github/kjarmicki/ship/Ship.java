@@ -12,22 +12,18 @@ import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.parts.*;
 import com.github.kjarmicki.util.Points;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
-import static java.util.stream.Collectors.toList;
 
 public class Ship {
     public static final float STARTING_ROTATION = 0f;
     private final Vector2 velocity = new Vector2();
     private final Vector2 position = new Vector2();
     private final ShipFeatures features;
-    private final CorePart core;
     private final PartSkin color;
+    private final ShipStructure structure;
     private Player owner;
     private float rotation;
     private float totalRotation;
@@ -40,17 +36,17 @@ public class Ship {
         this.owner = owner;
         this.color = owner.getColor();
         this.position.set(position);
-        core = new BasicCorePart(position.x, position.y, this);
 
-        this.mountPart(new BasicNosePart(this));
-        this.mountPart(ArmoredWingPart.getLeftVariant(this));
-        this.mountPart(ArmoredWingPart.getRightVariant(this));
-        this.mountPart(BasicEnginePart.getLeftVariant(this));
-        this.mountPart(BasicEnginePart.getRightVariant(this));
-        this.mountPart(BasicPrimaryWeaponPart.getLeftVariant(this));
-        this.mountPart(BasicPrimaryWeaponPart.getRightVariant(this));
-        this.mountPart(BasicSecondaryWeaponPart.getLeftVariant(this));
-        this.mountPart(BasicSecondaryWeaponPart.getRightVariant(this));
+        structure = new ShipStructure(new BasicCorePart(position.x, position.y, this));
+        structure.mountPart(new BasicNosePart(this));
+        structure.mountPart(ArmoredWingPart.getLeftVariant(this));
+        structure.mountPart(ArmoredWingPart.getRightVariant(this));
+        structure.mountPart(BasicEnginePart.getLeftVariant(this));
+        structure.mountPart(BasicEnginePart.getRightVariant(this));
+        structure.mountPart(BasicPrimaryWeaponPart.getLeftVariant(this));
+        structure.mountPart(BasicPrimaryWeaponPart.getRightVariant(this));
+        structure.mountPart(BasicSecondaryWeaponPart.getLeftVariant(this));
+        structure.mountPart(BasicSecondaryWeaponPart.getRightVariant(this));
 
         this.totalRotation = totalRotation;
         forEachPart(part -> part.rotate(totalRotation));
@@ -96,15 +92,11 @@ public class Ship {
     }
 
     public void mountPart(Part part) {
-        findPartWithSlotAvailableFor(part).ifPresent(parentPart -> parentPart.mountSubpart(part));
+        this.structure.mountPart(part);
     }
 
     public Optional<Part> getPartBySlotName(PartSlotName name) {
-        if(name == CORE) return Optional.of(core);
-        return allParts()
-                .stream()
-                .filter(part -> part.getSlotName().equals(name))
-                .findFirst();
+        return structure.getPartBySlotName(name);
     }
 
     public void control(Controls controls, float delta) {
@@ -152,7 +144,7 @@ public class Ship {
     }
 
     public void reconcileState() {
-        core.setPosition(position);
+        structure.getCore().setPosition(position);
         forEachPart(Part::positionWithinOwner);
     }
 
@@ -162,7 +154,7 @@ public class Ship {
     }
 
     public Vector2 getCenter() {
-        return core.getCenter();
+        return structure.getCore().getCenter();
     }
 
     // check if ship went out of arena bounds
@@ -261,7 +253,7 @@ public class Ship {
     }
 
     public boolean laysWithinRadiusFromPoint(float radius, Vector2 point) {
-        return core.getCenter().dst(point) < radius;
+        return structure.getCore().getCenter().dst(point) < radius;
     }
 
     public void bump(Vector2 objectVelocity) {
@@ -314,48 +306,19 @@ public class Ship {
         if(part.isCritical()) {
             isDestroyed = true;
         }
-        removePart(part, core);
-    }
-
-    private void removePart(Part lookedFor, Part parent) {
-        Map<PartSlotName, Part> subparts = parent.getDirectSubparts();
-
-        // search part at current level
-        for(Map.Entry<PartSlotName, Part> entry: subparts.entrySet()) {
-            if(entry.getValue().equals(lookedFor)) {
-                subparts.remove(entry.getKey());
-                return;
-            }
-        }
-
-        // dig into subparts to find a part
-        for(Map.Entry<PartSlotName, Part> entry: subparts.entrySet()) {
-            removePart(lookedFor, entry.getValue());
-        }
+        structure.removePart(part);
     }
 
     public List<Part> allParts() {
-        List<Part> parts = new ArrayList<>(core.getAllSubparts().values());
-        parts.add(core);
-        parts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());
-        return parts;
+        return structure.allParts();
     }
 
     public void forEachPart(Consumer<Part> action) {
         allParts().stream().forEach(action);
     }
 
-    private Optional<Part> findPartWithSlotAvailableFor(Part otherPart) {
-        return allParts().stream()
-                .filter(part -> part.getChildSlotNames().contains(otherPart.getSlotName()))
-                .findFirst();
-    }
-
     private List<WeaponPart> weapons() {
-        return allParts().stream()
-                .filter(part -> part instanceof WeaponPart)
-                .map(part -> (WeaponPart)part)
-                .collect(toList());
+        return structure.weapons();
     }
 
     private float rebound(float value) {
