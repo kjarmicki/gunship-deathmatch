@@ -6,7 +6,7 @@ import com.github.kjarmicki.arena.Arena;
 import com.github.kjarmicki.arena.tile.ArenaTile;
 import com.github.kjarmicki.client.assets.ArenaAssets;
 
-public class ArenaRenderer implements Renderer {
+public class ArenaRenderer implements Renderer<Batch> {
     private final Arena arena;
     private final ArenaAssets arenaAssets;
     private final ContainerRenderer<ArenaTile, ArenaAssets> containerRenderer;

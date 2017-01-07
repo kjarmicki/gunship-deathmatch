@@ -5,7 +5,6 @@ import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.parts.LightWingPart;
-import com.github.kjarmicki.util.Points;
 
 public class LightWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = LightWingPart.DEFAULT_LEFT_INDEX;
@@ -20,8 +19,8 @@ public class LightWingPowerup extends GenericPowerup {
 
     @Override
     public void apply(Ship ship) {
-        ship.mountPart(LightWingPart.getLeftVariant(ship));
-        ship.mountPart(LightWingPart.getRightVariant(ship));
+        ship.mountIntoStructure(LightWingPart.getLeftVariant(ship));
+        ship.mountIntoStructure(LightWingPart.getRightVariant(ship));
         wasCollected = true;
     }
 

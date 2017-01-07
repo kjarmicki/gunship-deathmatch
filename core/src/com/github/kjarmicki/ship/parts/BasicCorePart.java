@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.ship.ShipStructure;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +68,13 @@ public class BasicCorePart extends GenericPart implements CorePart {
     }
 
     @Override
+    public Part duplicateWithoutOwner() {
+        BasicCorePart duplicate = new BasicCorePart(0, 0, null);
+        duplicate.condition = this.condition;
+        return duplicate;
+    }
+
+    @Override
     public Vector2 getOrigin() {
         return withPosition(ORIGIN);
     }
@@ -92,7 +100,7 @@ public class BasicCorePart extends GenericPart implements CorePart {
     }
 
     @Override
-    public void positionWithinOwner() {
+    public void positionWithinStructure(ShipStructure structure) {
         // core part, no need to reposition
     }
 

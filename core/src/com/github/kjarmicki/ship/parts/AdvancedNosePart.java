@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.ship.ShipStructure;
 
 import static com.github.kjarmicki.ship.parts.PartSlotName.CORE;
 import static com.github.kjarmicki.ship.parts.PartSlotName.NOSE;
@@ -58,7 +59,6 @@ public class AdvancedNosePart extends GenericPart implements NosePart {
     public AdvancedNosePart(Ship ship) {
         super(new Polygon(VERTICES));
         this.ship = ship;
-        positionWithinOwner();
     }
 
     @Override
@@ -82,8 +82,8 @@ public class AdvancedNosePart extends GenericPart implements NosePart {
     }
 
     @Override
-    public void positionWithinOwner() {
-        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
+    public void positionWithinStructure(ShipStructure structure) {
+        CorePart core = (CorePart) structure.getPartBySlotName(CORE).get();
         Vector2 noseSlot = core.getSlotFor(NOSE);
         Vector2 origin = core.getOrigin();
         Vector2 position = computeSlotPlacement(noseSlot);
@@ -99,6 +99,13 @@ public class AdvancedNosePart extends GenericPart implements NosePart {
     @Override
     public void updateFeatures(ShipFeatures features) {
         features.adjustAcceleration(1);
+    }
+
+    @Override
+    public Part duplicateWithoutOwner() {
+        AdvancedNosePart duplicate = new AdvancedNosePart(null);
+        duplicate.condition = this.condition;
+        return duplicate;
     }
 
     private Vector2 computeSlotPlacement(Vector2 noseSlot) {

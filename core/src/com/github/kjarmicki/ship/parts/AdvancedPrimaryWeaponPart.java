@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.ship.ShipStructure;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.ship.bullets.OrangeBullet;
 import com.github.kjarmicki.util.Points;
@@ -78,7 +79,6 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
         this.slotName = variant.slotName;
         this.variant = variant;
         this.ship = ship;
-        positionWithinOwner();
     }
 
     @Override
@@ -108,8 +108,8 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     }
 
     @Override
-    public void positionWithinOwner() {
-        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
+    public void positionWithinStructure(ShipStructure structure) {
+        CorePart core = (CorePart) structure.getPartBySlotName(CORE).get();
         Vector2 origin = core.getOrigin();
         Vector2 weaponSlot = core.getSlotFor(slotName);
         Vector2 position = variant.computePosition.apply(weaponSlot);
@@ -126,6 +126,13 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     @Override
     public PartSlotName getSlotName() {
         return slotName;
+    }
+
+    @Override
+    public Part duplicateWithoutOwner() {
+        AdvancedPrimaryWeaponPart duplicate = new AdvancedPrimaryWeaponPart(variant, null);
+        duplicate.condition = this.condition;
+        return duplicate;
     }
 
     @Override

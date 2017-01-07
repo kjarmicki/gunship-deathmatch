@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.kjarmicki.assets.ArenaSkin;
@@ -18,10 +19,8 @@ import com.github.kjarmicki.client.connection.SocketIoConnection;
 import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.game.LocalGame;
-import com.github.kjarmicki.client.rendering.ArenaRenderer;
-import com.github.kjarmicki.client.rendering.ContainerRenderer;
-import com.github.kjarmicki.client.rendering.PlayersContainerRenderer;
-import com.github.kjarmicki.client.rendering.Renderer;
+import com.github.kjarmicki.client.hud.Hud;
+import com.github.kjarmicki.client.rendering.*;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.dto.PlayerDto;
@@ -45,25 +44,29 @@ import static java.util.stream.Collectors.toList;
 
 public class ArenaScreen extends ScreenAdapter {
     private final Batch batch;
+    private final ShapeRenderer shapeRenderer;
     private final Controls keyboard;
     private final Player localPlayer;
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
+    private final Hud hud;
     private final Connection connection;
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
     private final ArenaAssets arenaAssets;
     private final LocalGame game;
 
-    private final Renderer bulletsContainerRenderer;
-    private final Renderer powerupsContainerRenderer;
-    private final Renderer arenaRenderer;
-    private final Renderer shipOwnersContainerRenderer;
+    private final Renderer<Batch> bulletsContainerRenderer;
+    private final Renderer<Batch> powerupsContainerRenderer;
+    private final Renderer<Batch> arenaRenderer;
+    private final Renderer<Batch> shipOwnersContainerRenderer;
+    private final Renderer<ShapeRenderer> hudRenderer;
 
-    public ArenaScreen(LocalGame game, Viewport viewport, Batch batch) {
+    public ArenaScreen(LocalGame game, Viewport viewport, Batch batch, ShapeRenderer shapeRenderer) {
         this.game = game;
         this.viewport = viewport;
         this.batch = batch;
+        this.shapeRenderer = shapeRenderer;
         this.keyboard = new Keyboard();
         this.connection = new SocketIoConnection("http://localhost:3000", new DtoTimeConsistency());
 
@@ -87,11 +90,13 @@ public class ArenaScreen extends ScreenAdapter {
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();
+        hud = new Hud(localPlayer);
 
         shipOwnersContainerRenderer = new PlayersContainerRenderer(game.getPlayersContainer(), partsAssets);
         bulletsContainerRenderer = new ContainerRenderer<>(game.getBulletsContainer(), bulletsAssets);
         powerupsContainerRenderer = new ContainerRenderer<>(game.getPowerupsContainer(), partsAssets);
         arenaRenderer = new ArenaRenderer(game.getArena(), arenaAssets);
+        hudRenderer = new HudRenderer(hud);
 
         // connection management
         connection.connect(localPlayer);
@@ -145,6 +150,10 @@ public class ArenaScreen extends ScreenAdapter {
         bulletsContainerRenderer.render(batch);
         powerupsContainerRenderer.render(batch);
         batch.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        hudRenderer.render(shapeRenderer);
+        shapeRenderer.end();
 
         Debugger.setProjection(viewport.getCamera().combined);
         Debugger.render();

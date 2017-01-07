@@ -91,8 +91,12 @@ public class Ship {
         weapons().stream().forEach(weaponPart -> weaponPart.stopShooting(delta));
     }
 
-    public void mountPart(Part part) {
-        this.structure.mountPart(part);
+    public void mountIntoStructure(Part part) {
+        structure.mountPart(part);
+    }
+
+    public ShipStructure duplicateStructureWihtoutOwner() {
+        return structure.duplicateWithoutOwner();
     }
 
     public Optional<Part> getPartBySlotName(PartSlotName name) {
@@ -145,7 +149,7 @@ public class Ship {
 
     public void reconcileState() {
         structure.getCore().setPosition(position);
-        forEachPart(Part::positionWithinOwner);
+        forEachPart(part -> part.positionWithinStructure(structure));
     }
 
     public void updateFeatures() {

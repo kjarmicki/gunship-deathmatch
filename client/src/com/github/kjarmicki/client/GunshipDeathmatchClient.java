@@ -1,6 +1,7 @@
 package com.github.kjarmicki.client;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.kjarmicki.client.debugging.Debugger;
@@ -18,7 +19,8 @@ public class GunshipDeathmatchClient extends com.badlogic.gdx.Game {
         setScreen(new ArenaScreen(
                 new LocalGame(),
                 viewport,
-                new SpriteBatch()
+                new SpriteBatch(),
+                new ShapeRenderer()
         ));
     }
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.basis.VisibleThing;
 import com.github.kjarmicki.client.assets.Assets;
 
-public class DefaultRenderer<Thing extends VisibleThing, AssetsProvider extends Assets> implements Renderer {
+public class DefaultRenderer<Thing extends VisibleThing, AssetsProvider extends Assets> implements Renderer<Batch> {
     private final Thing thing;
     private final AssetsProvider assets;
 

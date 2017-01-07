@@ -7,8 +7,8 @@ import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.powerup.AdvancedNosePowerup;
 import com.github.kjarmicki.powerup.ArmoredWingPowerup;
-import com.github.kjarmicki.powerup.LightWingPowerup;
 import com.github.kjarmicki.powerup.FastWingPowerup;
+import com.github.kjarmicki.powerup.LightWingPowerup;
 import com.github.kjarmicki.ship.parts.BasicCorePart;
 
 import java.util.HashMap;

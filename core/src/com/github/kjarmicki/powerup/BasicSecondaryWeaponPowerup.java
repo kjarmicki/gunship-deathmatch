@@ -5,7 +5,6 @@ import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.parts.BasicSecondaryWeaponPart;
-import com.github.kjarmicki.util.Points;
 
 public class BasicSecondaryWeaponPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = BasicSecondaryWeaponPart.DEFAULT_INDEX;
@@ -20,8 +19,8 @@ public class BasicSecondaryWeaponPowerup extends GenericPowerup {
 
     @Override
     public void apply(Ship ship) {
-        ship.mountPart(BasicSecondaryWeaponPart.getLeftVariant(ship));
-        ship.mountPart(BasicSecondaryWeaponPart.getRightVariant(ship));
+        ship.mountIntoStructure(BasicSecondaryWeaponPart.getLeftVariant(ship));
+        ship.mountIntoStructure(BasicSecondaryWeaponPart.getRightVariant(ship));
         wasCollected = true;
     }
 

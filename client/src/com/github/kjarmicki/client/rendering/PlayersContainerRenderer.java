@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.github.kjarmicki.client.assets.PartsAssets;
 import com.github.kjarmicki.container.PlayersContainer;
 
-public class PlayersContainerRenderer implements Renderer {
+public class PlayersContainerRenderer implements Renderer<Batch> {
     private final PlayersContainer container;
     private final PartsAssets assets;
 
@@ -19,7 +19,7 @@ public class PlayersContainerRenderer implements Renderer {
         container.getContents()
                 .stream()
                 .forEach(player -> {
-                    Renderer renderer = new PlayerRenderer(player, assets);
+                    Renderer<Batch> renderer = new PlayerRenderer(player, assets);
                     renderer.render(batch);
                 });
     }

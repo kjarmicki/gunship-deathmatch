@@ -19,8 +19,8 @@ public class ArmoredWingPowerup extends GenericPowerup {
 
     @Override
     public void apply(Ship ship) {
-        ship.mountPart(ArmoredWingPart.getLeftVariant(ship));
-        ship.mountPart(ArmoredWingPart.getRightVariant(ship));
+        ship.mountIntoStructure(ArmoredWingPart.getLeftVariant(ship));
+        ship.mountIntoStructure(ArmoredWingPart.getRightVariant(ship));
         wasCollected = true;
     }
 

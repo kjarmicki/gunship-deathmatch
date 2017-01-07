@@ -2,6 +2,8 @@ package com.github.kjarmicki.ship.parts;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.basis.VisibleThing;
+import com.github.kjarmicki.ship.Ship;
+import com.github.kjarmicki.ship.ShipStructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,9 @@ public interface Part extends VisibleThing, FeatureUpdater {
     boolean isDestroyed();
     boolean isCritical();
     void mountSubpart(Part newPart);
-    void positionWithinOwner();
+    void positionWithinStructure(ShipStructure structure);
     void inheritSubpartsFrom(Part other);
-    Map<PartSlotName, Part> getAllSubparts();
+    List<Part> getAllSubpartsFlat();
     Map<PartSlotName, Part> getDirectSubparts();
     int getZIndex();
     PartSlotName getSlotName();
@@ -22,4 +24,5 @@ public interface Part extends VisibleThing, FeatureUpdater {
     default List<PartSlotName> getChildSlotNames() {
         return new ArrayList<>();
     }
+    Part duplicateWithoutOwner();
 }

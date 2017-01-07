@@ -5,9 +5,10 @@ import com.github.kjarmicki.client.assets.PartsAssets;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.parts.Part;
 
+import java.util.List;
 import java.util.WeakHashMap;
 
-public class PlayerRenderer implements Renderer {
+public class PlayerRenderer implements Renderer<Batch> {
     private final Player player;
     private final PartsAssets partsAssets;
     private final WeakHashMap<Part, DefaultRenderer<Part, PartsAssets>> rendererCache = new WeakHashMap<>();
@@ -19,8 +20,9 @@ public class PlayerRenderer implements Renderer {
 
     @Override
     public void render(Batch batch) {
-        player.getShip().allParts()
-                .stream()
+        List<Part> allParts = player.getShip().allParts();
+        allParts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());
+        allParts.stream()
                 .forEach(part ->
                     rendererCache.computeIfAbsent(part, key -> new DefaultRenderer<>(part, partsAssets))
                         .render(batch));

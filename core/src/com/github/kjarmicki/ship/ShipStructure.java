@@ -1,12 +1,11 @@
 package com.github.kjarmicki.ship;
 
-import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.ship.parts.*;
+import com.github.kjarmicki.ship.parts.CorePart;
+import com.github.kjarmicki.ship.parts.Part;
+import com.github.kjarmicki.ship.parts.PartSlotName;
+import com.github.kjarmicki.ship.parts.WeaponPart;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,14 +20,15 @@ public class ShipStructure {
         return core;
     }
 
-    public void mountPart(Part part) {
+    public ShipStructure mountPart(Part part) {
         findPartWithSlotAvailableFor(part).ifPresent(parentPart -> parentPart.mountSubpart(part));
+        part.positionWithinStructure(this);
+        return this;
     }
 
     public List<Part> allParts() {
-        List<Part> parts = new ArrayList<>(core.getAllSubparts().values());
+        List<Part> parts = core.getAllSubpartsFlat();
         parts.add(core);
-        parts.sort((p1, p2) -> p1.getZIndex() - p2.getZIndex());
         return parts;
     }
 
@@ -41,6 +41,19 @@ public class ShipStructure {
 
     public void removePart(Part lookedFor) {
         removePart(lookedFor, core);
+    }
+
+    public ShipStructure duplicateWithoutOwner() {
+        CorePart duplicatedCore = (CorePart)core.duplicateWithoutOwner();
+        List<Part> duplicatedParts = allParts().stream()
+                .filter(part -> !part.equals(core))
+                .map(Part::duplicateWithoutOwner)
+                .collect(toList());
+        ShipStructure duplicatedStructure = new ShipStructure(duplicatedCore);
+        duplicatedParts.stream()
+                .forEach(duplicatedStructure::mountPart);
+
+        return duplicatedStructure;
     }
 
     public Optional<Part> getPartBySlotName(PartSlotName name) {
@@ -73,5 +86,4 @@ public class ShipStructure {
                 .filter(part -> part.getChildSlotNames().contains(otherPart.getSlotName()))
                 .findFirst();
     }
-
 }

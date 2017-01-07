@@ -7,7 +7,7 @@ import com.github.kjarmicki.container.Container;
 
 import java.util.WeakHashMap;
 
-public class ContainerRenderer<T extends VisibleThing, AssetProvider extends Assets> implements Renderer {
+public class ContainerRenderer<T extends VisibleThing, AssetProvider extends Assets> implements Renderer<Batch> {
     private final Container<T> container;
     private final AssetProvider assets;
     private final WeakHashMap<T, DefaultRenderer<T, AssetProvider>> rendererCache = new WeakHashMap<>();

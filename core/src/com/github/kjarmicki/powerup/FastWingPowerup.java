@@ -5,7 +5,6 @@ import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.parts.FastWingPart;
-import com.github.kjarmicki.util.Points;
 
 public class FastWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = FastWingPart.DEFAULT_LEFT_INDEX;
@@ -20,8 +19,8 @@ public class FastWingPowerup extends GenericPowerup {
 
     @Override
     public void apply(Ship ship) {
-        ship.mountPart(FastWingPart.getLeftVariant(ship));
-        ship.mountPart(FastWingPart.getRightVariant(ship));
+        ship.mountIntoStructure(FastWingPart.getLeftVariant(ship));
+        ship.mountIntoStructure(FastWingPart.getRightVariant(ship));
         wasCollected = true;
     }
 

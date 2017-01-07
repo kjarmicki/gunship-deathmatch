@@ -19,7 +19,7 @@ public class AdvancedNosePowerup extends GenericPowerup {
 
     @Override
     public void apply(Ship ship) {
-        ship.mountPart(new AdvancedNosePart(ship));
+        ship.mountIntoStructure(new AdvancedNosePart(ship));
         wasCollected = true;
     }
 

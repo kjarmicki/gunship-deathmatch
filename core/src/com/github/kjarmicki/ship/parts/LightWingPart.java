@@ -5,12 +5,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.ship.ShipStructure;
 import com.github.kjarmicki.util.Points;
 import com.github.kjarmicki.util.Scale;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 import static com.github.kjarmicki.ship.parts.PartSlotName.*;
 
@@ -80,7 +80,6 @@ public class LightWingPart extends GenericPart implements WingPart {
         this.slotName = variant.getSlotName();
         this.variant = variant;
         this.ship = ship;
-        positionWithinOwner();
     }
 
     @Override
@@ -104,8 +103,8 @@ public class LightWingPart extends GenericPart implements WingPart {
     }
 
     @Override
-    public void positionWithinOwner() {
-        CorePart core = (CorePart) ship.getPartBySlotName(CORE).get();
+    public void positionWithinStructure(ShipStructure structure) {
+        CorePart core = (CorePart) structure.getPartBySlotName(CORE).get();
         Vector2 wingSlot = core.getSlotFor(variant.getSlotName());
         Vector2 position = variant.computePosition().apply(wingSlot);
         Vector2 origin = core.getOrigin();
@@ -135,6 +134,13 @@ public class LightWingPart extends GenericPart implements WingPart {
     @Override
     public List<PartSlotName> getChildSlotNames() {
         return childSlotNames;
+    }
+
+    @Override
+    public Part duplicateWithoutOwner() {
+        LightWingPart duplicate = new LightWingPart(variant, null);
+        duplicate.condition = this.condition;
+        return duplicate;
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.basis.GenericVisibleThing;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class GenericPart extends GenericVisibleThing implements Part {
     protected float condition = 100f;
@@ -30,7 +28,6 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
         Map<PartSlotName, Part> direct = other.getDirectSubparts();
         subparts.clear();
         subparts.putAll(direct);
-        direct.entrySet().stream().map(Map.Entry::getValue).forEach(Part::positionWithinOwner);
     }
 
     @Override
@@ -43,13 +40,15 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
         newPart.rotate(this.getRotation());
     }
 
-    public Map<PartSlotName, Part> getAllSubparts() {
-        Map<PartSlotName, Part> combined = new HashMap<>();
-        combined.putAll(subparts);
-        subparts.entrySet().stream().forEach(entry -> {
-            Part subpart = entry.getValue();
-            combined.putAll(subpart.getAllSubparts());
-        });
+    @Override
+    public List<Part> getAllSubpartsFlat() {
+        List<Part> combined = new ArrayList<>();
+        combined.addAll(subparts.values());
+        subparts.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .forEach(subpart -> {
+                    combined.addAll(subpart.getAllSubpartsFlat());
+                });
         return combined;
     }
 
