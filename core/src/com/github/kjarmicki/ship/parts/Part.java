@@ -12,6 +12,7 @@ import java.util.Map;
 public interface Part extends VisibleThing, FeatureUpdater {
     void receiveDamage(float amount);
     boolean isDestroyed();
+    float getCondition();
     boolean isCritical();
     void mountSubpart(Part newPart);
     void positionWithinStructure(ShipStructure structure);

@@ -15,8 +15,19 @@ public class ShipStatusRenderer implements Renderer<ShapeRenderer> {
     public void render(ShapeRenderer shapeRenderer) {
         shipStatus.getParts().stream()
                 .forEach(part -> {
-                    Renderer<ShapeRenderer> renderer = new PolygonRenderer(part.getTakenArea(), Color.WHITE);
+                    Renderer<ShapeRenderer> renderer = new PolygonRenderer(part.getTakenArea(), conditionToColor(part.getCondition()));
                     renderer.render(shapeRenderer);
                 });
+    }
+
+    private static Color conditionToColor(float condition) {
+        float r = 1 - (condition / 50);
+        float g = condition / 50;
+        float b = 0;
+        float a = 1;
+
+        if(condition > 50) g = 1;
+        else r = 1;
+        return new Color(r, g, b, a);
     }
 }

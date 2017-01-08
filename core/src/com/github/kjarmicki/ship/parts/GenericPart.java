@@ -24,6 +24,11 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
     }
 
     @Override
+    public float getCondition() {
+        return condition;
+    }
+
+    @Override
     public void inheritSubpartsFrom(Part other) {
         Map<PartSlotName, Part> direct = other.getDirectSubparts();
         subparts.clear();
