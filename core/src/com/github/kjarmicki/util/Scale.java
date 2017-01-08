@@ -1,5 +1,6 @@
 package com.github.kjarmicki.util;
 
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class Scale {
@@ -23,5 +24,10 @@ public class Scale {
             scaled[i] = set[i] * ratio;
         }
         return scaled;
+    }
+
+    public Polygon apply(Polygon polygon) {
+        float[] vertices = polygon.getTransformedVertices();
+        return new Polygon(apply(vertices));
     }
 }
