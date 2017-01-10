@@ -6,9 +6,12 @@ import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.client.hud.ShipStatus;
 import com.github.kjarmicki.util.Scale;
 
+import java.util.WeakHashMap;
+
 public class ShipStatusRenderer implements Renderer<ShapeRenderer> {
     private static final Scale SCALE = new Scale(0.7f);
     private final ShipStatus shipStatus;
+    private final WeakHashMap<CacheKey, PolygonRenderer> rendererCache = new WeakHashMap<>();
 
     public ShipStatusRenderer(ShipStatus shipStatus) {
         this.shipStatus = shipStatus;
@@ -18,8 +21,12 @@ public class ShipStatusRenderer implements Renderer<ShapeRenderer> {
     public void render(ShapeRenderer shapeRenderer) {
         shipStatus.getParts().stream()
                 .forEach(part -> {
-                    Renderer<ShapeRenderer> renderer = new PolygonRenderer(prepareShape(part.getTakenArea()), conditionToColor(part.getCondition()));
-                    renderer.render(shapeRenderer);
+                    Polygon polygon = prepareShape(part.getTakenArea());
+                    Color color = conditionToColor(part.getCondition());
+                    CacheKey cacheKey = new CacheKey(polygon, color);
+
+                    rendererCache.computeIfAbsent(cacheKey, key -> new PolygonRenderer(polygon, color))
+                            .render(shapeRenderer);
                 });
     }
 
@@ -38,5 +45,32 @@ public class ShipStatusRenderer implements Renderer<ShapeRenderer> {
         Polygon scaled = SCALE.apply(original);
         scaled.translate(120f, 40f);
         return scaled;
+    }
+}
+
+class CacheKey {
+    private final Polygon polygon;
+    private final Color color;
+
+    CacheKey(Polygon polygon, Color color) {
+        this.polygon = polygon;
+        this.color = color;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+
+        CacheKey cacheKey = (CacheKey) o;
+
+        return polygon.equals(cacheKey.polygon) && color.equals(cacheKey.color);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = polygon.hashCode();
+        result = 31 * result + color.hashCode();
+        return result;
     }
 }

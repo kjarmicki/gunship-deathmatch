@@ -29,10 +29,10 @@ public class ServerScreenRendered extends ScreenAdapter {
     private final Batch batch;
     private final ChaseCamera chaseCamera;
 
-    private final Renderer bulletsContainerRenderer;
-    private final Renderer powerupsContainerRenderer;
-    private final Renderer arenaRenderer;
-    private final Renderer shipOwnersContainerRenderer;
+    private final Renderer<Batch> bulletsContainerRenderer;
+    private final Renderer<Batch> powerupsContainerRenderer;
+    private final Renderer<Batch> arenaRenderer;
+    private final Renderer<Batch> shipOwnersContainerRenderer;
 
     public ServerScreenRendered(ServerScreen serverScreen, RemoteGame game, Viewport viewport, Batch batch) {
         this.serverScreen = serverScreen;
