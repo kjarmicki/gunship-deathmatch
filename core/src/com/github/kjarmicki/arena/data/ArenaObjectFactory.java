@@ -1,8 +1,7 @@
 package com.github.kjarmicki.arena.data;
 
 import com.badlogic.gdx.math.Vector2;
-import com.github.kjarmicki.arena.tile.ArenaTile;
-import com.github.kjarmicki.arena.tile.BasicTile;
+import com.github.kjarmicki.arena.tile.*;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.powerup.AdvancedNosePowerup;
@@ -26,6 +25,10 @@ public class ArenaObjectFactory {
 
     static {
         ARENA_TILES_BY_ASSET_KEY.put(BasicTile.getAssetString(), BasicTile::new);
+        ARENA_TILES_BY_ASSET_KEY.put(CornerRightBottomTile.getAssetString(), CornerRightBottomTile::new);
+        ARENA_TILES_BY_ASSET_KEY.put(CornerLeftBottomTile.getAssetString(), CornerLeftBottomTile::new);
+        ARENA_TILES_BY_ASSET_KEY.put(CornerRightTopTile.getAssetString(), CornerRightTopTile::new);
+        ARENA_TILES_BY_ASSET_KEY.put(CornerLeftTopTile.getAssetString(), CornerLeftTopTile::new);
         ARENA_POWERUPS_BY_ASSET_KEY.put(FastWingPowerup.getAssetString(), (x, y) -> new PowerupWrapper(new Vector2(x, y), FastWingPowerup::new));
         ARENA_POWERUPS_BY_ASSET_KEY.put(LightWingPowerup.getAssetString(), (x, y) -> new PowerupWrapper(new Vector2(x, y), LightWingPowerup::new));
         ARENA_POWERUPS_BY_ASSET_KEY.put(ArmoredWingPowerup.getAssetString(), (x, y) -> new PowerupWrapper(new Vector2(x, y), ArmoredWingPowerup::new));
