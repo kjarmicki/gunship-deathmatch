@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class WingVariant {
+    private final String type;
     private final int skinIndex;
     private final float[] vertices;
     private final Vector2 engineSlot;
@@ -14,8 +15,9 @@ public class WingVariant {
     private final PartSlotName slotName;
     private final Function<Vector2, Vector2> computePosition;
 
-    WingVariant(int skinIndex, float[] vertices, Vector2 engineSlot, Vector2 secondaryWeaponSlot, List<PartSlotName> childSlotNames,
+    WingVariant(String type, int skinIndex, float[] vertices, Vector2 engineSlot, Vector2 secondaryWeaponSlot, List<PartSlotName> childSlotNames,
                 PartSlotName slotName, Function<Vector2, Vector2> computePosition) {
+        this.type = type;
         this.skinIndex = skinIndex;
         this.vertices = vertices;
         this.engineSlot = engineSlot;
@@ -23,6 +25,10 @@ public class WingVariant {
         this.childSlotNames = childSlotNames;
         this.slotName = slotName;
         this.computePosition = computePosition;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public int getSkinIndex() {

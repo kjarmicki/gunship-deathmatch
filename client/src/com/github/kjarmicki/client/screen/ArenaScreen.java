@@ -23,18 +23,15 @@ import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.Controls;
-import com.github.kjarmicki.dto.GameStateDto;
-import com.github.kjarmicki.dto.PlayerDto;
-import com.github.kjarmicki.dto.PlayerWithShipDto;
-import com.github.kjarmicki.dto.ShipDto;
+import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
-import com.github.kjarmicki.dto.mapper.ControlsMapper;
-import com.github.kjarmicki.dto.mapper.PlayerMapper;
+import com.github.kjarmicki.dto.mapper.ControlsDtoMapper;
+import com.github.kjarmicki.dto.mapper.PlayerDtoMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
+import com.github.kjarmicki.dto.mapper.ShipStructureDtoMapper;
 import com.github.kjarmicki.player.GenericPlayer;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.Ship;
-import com.github.kjarmicki.ship.ShipFeatures;
 
 import java.util.List;
 import java.util.Optional;
@@ -134,7 +131,7 @@ public class ArenaScreen extends ScreenAdapter {
         if(!connection.isConnected()) return;
 
         // send state
-        connection.sendControls(ControlsMapper.mapToDto(keyboard));
+        connection.sendControls(ControlsDtoMapper.mapToDto(keyboard));
 
         // game logic update
         game.update(delta);
@@ -174,8 +171,10 @@ public class ArenaScreen extends ScreenAdapter {
 
     private void initPlayer(Player player, PlayerWithShipDto introducedDto) {
         ShipDto shipDto = introducedDto.getShip();
-        player.setShip(new Ship(new Vector2(shipDto.getPositionX(), shipDto.getPositionY()), shipDto.getTotalRotation(),
-                new ShipFeatures(), player));
+        ShipStructureDto shipStructureDto = shipDto.getStructure();
+        Ship ship = new Ship(new Vector2(shipDto.getPositionX(),
+                shipDto.getPositionY()), shipDto.getTotalRotation(), player, ShipStructureDtoMapper.mapFromDto(shipStructureDto));
+        player.setShip(ship);
         player.setUuid(introducedDto.getPlayer().getUuid());
     }
 
@@ -185,7 +184,7 @@ public class ArenaScreen extends ScreenAdapter {
                 .filter(playerWithShipDto -> !playerWithShipDto.getPlayer().isJustIntroduced())
                 .map(playerWithShipDto -> {
                     PlayerDto playerDto = playerWithShipDto.getPlayer();
-                    Player nextPlayer = PlayerMapper.mapFromDto(playerDto);
+                    Player nextPlayer = PlayerDtoMapper.mapFromDto(playerDto);
                     initPlayer(nextPlayer, playerWithShipDto);
                     return nextPlayer;
                 })

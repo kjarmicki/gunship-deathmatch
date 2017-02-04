@@ -1,9 +1,12 @@
 package com.github.kjarmicki.client.connection;
 
 import com.github.kjarmicki.connection.Event;
-import com.github.kjarmicki.dto.*;
+import com.github.kjarmicki.dto.ControlsDto;
+import com.github.kjarmicki.dto.GameStateDto;
+import com.github.kjarmicki.dto.PlayerWithShipDto;
+import com.github.kjarmicki.dto.TimestampedDto;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
-import com.github.kjarmicki.dto.mapper.PlayerMapper;
+import com.github.kjarmicki.dto.mapper.PlayerDtoMapper;
 import com.github.kjarmicki.player.Player;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -33,7 +36,7 @@ public class SocketIoConnection implements Connection {
         if(state == ConnectionState.NOT_CONNECTED) {
             state = ConnectionState.CONNECTING;
             socket.on(Socket.EVENT_CONNECT, response -> {
-                socket.emit(Event.INTRODUCE_PLAYER, PlayerMapper.mapToDto(player).toJsonString());
+                socket.emit(Event.INTRODUCE_PLAYER, PlayerDtoMapper.mapToDto(player).toJsonString());
             });
             socket.on(Event.THIS_PLAYER_INTRODUCED, response -> {
                 String gameStateDto = (String)response[0];

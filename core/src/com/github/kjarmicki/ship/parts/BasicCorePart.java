@@ -3,7 +3,6 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.ShipStructure;
 
@@ -38,11 +37,9 @@ public class BasicCorePart extends GenericPart implements CorePart {
         SLOT_VECTORS.put(LEFT_PRIMARY_WEAPON, new Vector2(23f, 115f));
         SLOT_VECTORS.put(RIGHT_PRIMARY_WEAPON, new Vector2(104f, 115f));
     }
-    private final Ship ship;
 
-    public BasicCorePart(float x, float y, Ship ship) {
+    public BasicCorePart(float x, float y) {
         super(new Polygon(VERTICES));
-        this.ship = ship;
         takenArea.setOrigin(ORIGIN.x, ORIGIN.y);
         takenArea.setPosition(x, y);
     }
@@ -59,7 +56,7 @@ public class BasicCorePart extends GenericPart implements CorePart {
 
     @Override
     public AssetKey getAssetKey() {
-        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
+        return new AssetKey(partSkin, DEFAULT_INDEX);
     }
 
     @Override
@@ -68,8 +65,8 @@ public class BasicCorePart extends GenericPart implements CorePart {
     }
 
     @Override
-    public Part duplicateWithoutOwner() {
-        BasicCorePart duplicate = new BasicCorePart(0, 0, null);
+    public Part duplicate() {
+        BasicCorePart duplicate = new BasicCorePart(0, 0);
         duplicate.condition = this.condition;
         return duplicate;
     }

@@ -3,7 +3,6 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.ShipStructure;
 
@@ -27,11 +26,9 @@ public class BasicNosePart extends GenericPart implements NosePart {
     public static final float HEIGHT = 116f;
     public static final int Z_INDEX = 2;
     public static final boolean IS_CRITICAL = true;
-    private final Ship ship;
 
-    public BasicNosePart(Ship ship) {
+    public BasicNosePart() {
         super(new Polygon(VERTICES));
-        this.ship = ship;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class BasicNosePart extends GenericPart implements NosePart {
 
     @Override
     public AssetKey getAssetKey() {
-        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
+        return new AssetKey(partSkin, DEFAULT_INDEX);
     }
 
     @Override
@@ -70,8 +67,8 @@ public class BasicNosePart extends GenericPart implements NosePart {
     }
 
     @Override
-    public Part duplicateWithoutOwner() {
-        BasicNosePart duplicate = new BasicNosePart(null);
+    public Part duplicate() {
+        BasicNosePart duplicate = new BasicNosePart();
         duplicate.condition = this.condition;
         return duplicate;
     }

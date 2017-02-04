@@ -3,7 +3,6 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.ShipStructure;
 import com.github.kjarmicki.util.Points;
@@ -43,9 +42,9 @@ public class LightWingPart extends GenericPart implements WingPart {
     private final List<PartSlotName> childSlotNames;
     private final PartSlotName slotName;
     private final WingVariant variant;
-    private final Ship ship;
 
     private static final WingVariant LEFT_VARIANT = new WingVariant(
+            "Left",
             DEFAULT_LEFT_INDEX,
             LEFT_VERTICES,
             LEFT_ENGINE_SLOT,
@@ -56,6 +55,7 @@ public class LightWingPart extends GenericPart implements WingPart {
     );
 
     private static final WingVariant RIGHT_VARIANT = new WingVariant(
+            "Right",
             DEFAULT_RIGHT_INDEX,
             Points.makeRightVertices(LEFT_VERTICES, WIDTH),
             Points.makeRightVector(LEFT_ENGINE_SLOT, WIDTH),
@@ -65,21 +65,20 @@ public class LightWingPart extends GenericPart implements WingPart {
             wingSlot -> new Vector2(wingSlot.x - 30, wingSlot.y - HEIGHT / 2)
     );
 
-    public static WingPart getLeftVariant(Ship ship) {
-        return new LightWingPart(LEFT_VARIANT, ship);
+    public static WingPart getLeftVariant() {
+        return new LightWingPart(LEFT_VARIANT);
     }
 
-    public static WingPart getRightVariant(Ship ship) {
-        return new LightWingPart(RIGHT_VARIANT, ship);
+    public static WingPart getRightVariant() {
+        return new LightWingPart(RIGHT_VARIANT);
     }
 
-    private LightWingPart(WingVariant variant, Ship ship) {
+    private LightWingPart(WingVariant variant) {
         super(new Polygon(variant.getVertices()));
         this.engineSlot = variant.getEngineSlot();
         this.childSlotNames = variant.getChildSlotNames();
         this.slotName = variant.getSlotName();
         this.variant = variant;
-        this.ship = ship;
     }
 
     @Override
@@ -94,7 +93,7 @@ public class LightWingPart extends GenericPart implements WingPart {
 
     @Override
     public AssetKey getAssetKey() {
-        return new AssetKey(ship.getColor(), variant.getSkinIndex());
+        return new AssetKey(partSkin, variant.getSkinIndex());
     }
 
     @Override
@@ -137,8 +136,8 @@ public class LightWingPart extends GenericPart implements WingPart {
     }
 
     @Override
-    public Part duplicateWithoutOwner() {
-        LightWingPart duplicate = new LightWingPart(variant, null);
+    public Part duplicate() {
+        LightWingPart duplicate = new LightWingPart(variant);
         duplicate.condition = this.condition;
         return duplicate;
     }
@@ -151,5 +150,10 @@ public class LightWingPart extends GenericPart implements WingPart {
     @Override
     public Vector2 getEngineSlot() {
         return withPosition(engineSlot);
+    }
+
+    @Override
+    public String getType() {
+        return super.getType() + variant.getType();
     }
 }

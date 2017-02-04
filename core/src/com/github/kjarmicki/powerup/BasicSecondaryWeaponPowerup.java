@@ -19,8 +19,8 @@ public class BasicSecondaryWeaponPowerup extends GenericPowerup {
 
     @Override
     public void apply(Ship ship) {
-        ship.mountIntoStructure(BasicSecondaryWeaponPart.getLeftVariant(ship));
-        ship.mountIntoStructure(BasicSecondaryWeaponPart.getRightVariant(ship));
+        ship.mountIntoStructure(BasicSecondaryWeaponPart.getLeftVariant());
+        ship.mountIntoStructure(BasicSecondaryWeaponPart.getRightVariant());
         wasCollected = true;
     }
 

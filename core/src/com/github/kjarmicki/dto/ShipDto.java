@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-
-// TODO: needs way more properties to properly sync client and server states
 public class ShipDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final float velocityX;
@@ -17,12 +14,14 @@ public class ShipDto implements Dto {
     private final float rotation;
     private final float totalRotation;
     private final boolean shooting;
+    private final ShipStructureDto structure;
 
     @JsonCreator
     public ShipDto(@JsonProperty("velocityX") float velocityX, @JsonProperty("velocityY") float velocityY,
                    @JsonProperty("positionX") float positionX, @JsonProperty("positionY") float positionY,
                    @JsonProperty("rotation") float rotation, @JsonProperty("totalRotation") float totalRotation,
-                   @JsonProperty("shooting") boolean shooting
+                   @JsonProperty("shooting") boolean shooting,
+                   @JsonProperty("structure") ShipStructureDto structure
                    ) {
 
         this.velocityX = velocityX;
@@ -32,6 +31,7 @@ public class ShipDto implements Dto {
         this.rotation = rotation;
         this.totalRotation = totalRotation;
         this.shooting = shooting;
+        this.structure = structure;
     }
 
     public float getVelocityX() {
@@ -62,12 +62,8 @@ public class ShipDto implements Dto {
         return shooting;
     }
 
-    public static ShipDto fromJsonString(String json) {
-        try {
-            return objectMapper.readValue(json, ShipDto.class);
-        } catch (IOException e) {
-            throw new RuntimeException("Error while creating ship dto from json", e);
-        }
+    public ShipStructureDto getStructure() {
+        return structure;
     }
 
     public String toJsonString() {

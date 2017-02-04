@@ -1,6 +1,7 @@
 package com.github.kjarmicki.ship.parts;
 
 import com.badlogic.gdx.math.Polygon;
+import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.basis.GenericVisibleThing;
 
 import java.util.*;
@@ -8,9 +9,26 @@ import java.util.*;
 public abstract class GenericPart extends GenericVisibleThing implements Part {
     protected float condition = 100f;
     protected final Map<PartSlotName, Part> subparts = new HashMap<>();
+    protected UUID uuid;
+    protected PartSkin partSkin;
 
     public GenericPart(Polygon takenArea) {
         super(takenArea);
+    }
+
+    @Override
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = UUID.fromString(uuid);
+    }
+
+    @Override
+    public Optional<UUID> getUuid() {
+        return Optional.ofNullable(uuid);
     }
 
     @Override
@@ -24,8 +42,18 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
     }
 
     @Override
+    public void setCondition(float condition) {
+        this.condition = condition;
+    }
+
+    @Override
     public float getCondition() {
         return condition;
+    }
+
+    @Override
+    public void setPartSkin(PartSkin partSkin) {
+        this.partSkin = partSkin;
     }
 
     @Override
@@ -55,6 +83,11 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
                     combined.addAll(subpart.getAllSubpartsFlat());
                 });
         return combined;
+    }
+
+    @Override
+    public String getType() {
+        return getClass().getSimpleName();
     }
 
     public Map<PartSlotName, Part> getDirectSubparts() {

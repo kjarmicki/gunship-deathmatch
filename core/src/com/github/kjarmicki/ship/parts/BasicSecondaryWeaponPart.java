@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.ShipStructure;
 import com.github.kjarmicki.ship.bullets.Bullet;
@@ -44,24 +43,22 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     public static final int AMMO = 10;
     private final PartSlotName slotName;
     private final Variant variant;
-    private final Ship ship;
     private Vector2 baseOrigin;
     private long lastShot = 0;
     private int ammo = AMMO;
 
-    public static BasicSecondaryWeaponPart getLeftVariant(Ship ship) {
-        return new BasicSecondaryWeaponPart(Variant.LEFT, ship);
+    public static BasicSecondaryWeaponPart getLeftVariant() {
+        return new BasicSecondaryWeaponPart(Variant.LEFT);
     }
 
-    public static BasicSecondaryWeaponPart getRightVariant(Ship ship) {
-        return new BasicSecondaryWeaponPart(Variant.RIGHT, ship);
+    public static BasicSecondaryWeaponPart getRightVariant() {
+        return new BasicSecondaryWeaponPart(Variant.RIGHT);
     }
 
-    private BasicSecondaryWeaponPart(Variant variant, Ship ship) {
+    private BasicSecondaryWeaponPart(Variant variant) {
         super(new Polygon(VERTICES));
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.ship = ship;
     }
 
     @Override
@@ -76,7 +73,7 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
 
     @Override
     public AssetKey getAssetKey() {
-        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
+        return new AssetKey(partSkin, DEFAULT_INDEX);
     }
 
     @Override
@@ -129,8 +126,8 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     }
 
     @Override
-    public Part duplicateWithoutOwner() {
-        BasicSecondaryWeaponPart duplicate = new BasicSecondaryWeaponPart(variant, null);
+    public Part duplicate() {
+        BasicSecondaryWeaponPart duplicate = new BasicSecondaryWeaponPart(variant);
         duplicate.condition = this.condition;
         return duplicate;
     }
@@ -140,23 +137,32 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
 
     }
 
+    @Override
+    public String getType() {
+        return super.getType() + variant.type;
+    }
+
     private enum Variant {
         LEFT(
+                "Left",
                 LEFT_SECONDARY_WEAPON,
                 LEFT_WING,
                 weaponSlot -> new Vector2(weaponSlot.x - WIDTH, weaponSlot.y - HEIGHT / 5)
         ),
         RIGHT(
+                "Right",
                 RIGHT_SECONDARY_WEAPON,
                 RIGHT_WING,
                 weaponSlot -> new Vector2(weaponSlot.x, weaponSlot.y - HEIGHT / 5)
         );
 
+        String type;
         PartSlotName slotName;
         PartSlotName parentSlotName;
         Function<Vector2, Vector2> computePosition;
 
-        Variant(PartSlotName slotName, PartSlotName parentSlotName, Function<Vector2, Vector2> computePosition) {
+        Variant(String type, PartSlotName slotName, PartSlotName parentSlotName, Function<Vector2, Vector2> computePosition) {
+            this.type = type;
             this.slotName = slotName;
             this.parentSlotName = parentSlotName;
             this.computePosition = computePosition;

@@ -2,17 +2,20 @@ package com.github.kjarmicki.dto.mapper;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.dto.ShipDto;
+import com.github.kjarmicki.dto.ShipStructureDto;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.Ship;
-import com.github.kjarmicki.ship.ShipFeatures;
+import com.github.kjarmicki.ship.ShipStructure;
 
-public class ShipMapper {
+public class ShipDtoMapper {
     public static ShipDto mapToDto(Ship ship) {
         Vector2 velocity = ship.getVelocity();
         Vector2 position = ship.getPosition();
         float rotation = ship.getRotation();
         float totalRotation = ship.getTotalRotation();
-        return new ShipDto(velocity.x, velocity.y, position.x, position.y, rotation, totalRotation, ship.shouldBeShooting());
+        ShipStructureDto shipStructureDto = ShipStructureDtoMapper.mapToDto(ship.getStructure());
+        return new ShipDto(velocity.x, velocity.y, position.x, position.y,
+                rotation, totalRotation, ship.shouldBeShooting(), shipStructureDto);
     }
 
     public static void setByDto(Ship ship, ShipDto dto) {
@@ -24,6 +27,7 @@ public class ShipMapper {
     }
 
     public static Ship mapFromDto(ShipDto dto, Player owner) {
-        return new Ship(new Vector2(dto.getPositionX(), dto.getPositionY()), dto.getTotalRotation(), new ShipFeatures(), owner);
+        ShipStructure shipStructure = ShipStructureDtoMapper.mapFromDto(dto.getStructure());
+        return new Ship(new Vector2(dto.getPositionX(), dto.getPositionY()), dto.getTotalRotation(), owner, shipStructure);
     }
 }

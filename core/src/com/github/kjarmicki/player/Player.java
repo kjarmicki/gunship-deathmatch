@@ -14,7 +14,7 @@ public interface Player extends Observable {
     void setUuid(String uuid);
     Optional<UUID> getUuid();
     void update(BulletsContainer bulletsContainer, float delta);
-    PartSkin getColor();
+    PartSkin getPartSkin();
     RemoteControls getRemoteControls();
 
     Ship getShip();

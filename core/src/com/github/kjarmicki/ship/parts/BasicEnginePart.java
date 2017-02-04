@@ -3,7 +3,6 @@ package com.github.kjarmicki.ship.parts;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.ShipStructure;
 
@@ -45,21 +44,19 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     public static final boolean IS_CRITICAL = false;
     private final Variant variant;
     private final PartSlotName slotName;
-    private final Ship ship;
 
-    public static BasicEnginePart getLeftVariant(Ship ship) {
-        return new BasicEnginePart(Variant.LEFT, ship);
+    public static BasicEnginePart getLeftVariant() {
+        return new BasicEnginePart(Variant.LEFT);
     }
 
-    public static BasicEnginePart getRightVariant(Ship ship) {
-        return new BasicEnginePart(Variant.RIGHT, ship);
+    public static BasicEnginePart getRightVariant() {
+        return new BasicEnginePart(Variant.RIGHT);
     }
 
-    private BasicEnginePart(Variant variant, Ship ship) {
+    private BasicEnginePart(Variant variant) {
         super(new Polygon(VERTICES));
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.ship = ship;
     }
 
     @Override
@@ -74,7 +71,7 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
 
     @Override
     public AssetKey getAssetKey() {
-        return new AssetKey(ship.getColor(), DEFAULT_INDEX);
+        return new AssetKey(partSkin, DEFAULT_INDEX);
     }
 
     @Override
@@ -104,8 +101,8 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
     }
 
     @Override
-    public Part duplicateWithoutOwner() {
-        BasicEnginePart duplicate = new BasicEnginePart(variant, null);
+    public Part duplicate() {
+        BasicEnginePart duplicate = new BasicEnginePart(variant);
         duplicate.condition = this.condition;
         return duplicate;
     }
@@ -115,23 +112,32 @@ public class BasicEnginePart extends GenericPart implements EnginePart {
 
     }
 
+    @Override
+    public String getType() {
+        return super.getType() + variant.type;
+    }
+
     private enum Variant {
         LEFT(
+                "Left",
                 LEFT_ENGINE,
                 LEFT_WING,
                 engineSlot -> new Vector2(engineSlot.x, engineSlot.y - 40)
         ),
         RIGHT(
+                "Right",
                 RIGHT_ENGINE,
                 RIGHT_WING,
                 engineSlot -> new Vector2(engineSlot.x - WIDTH, engineSlot.y - 40)
         );
 
+        String type;
         PartSlotName slotName;
         PartSlotName parentSlotName;
         Function<Vector2, Vector2> computePosition;
 
-        Variant(PartSlotName slotName, PartSlotName parentSlotName, Function<Vector2, Vector2> computePosition) {
+        Variant(String type, PartSlotName slotName, PartSlotName parentSlotName, Function<Vector2, Vector2> computePosition) {
+            this.type = type;
             this.slotName = slotName;
             this.parentSlotName = parentSlotName;
             this.computePosition = computePosition;

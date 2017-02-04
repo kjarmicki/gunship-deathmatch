@@ -3,8 +3,6 @@ package com.github.kjarmicki.arena.tile;
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.assets.ArenaSkin;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.basis.GenericVisibleThing;
-import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
 public class BasicTile extends GenericArenaTile {

@@ -55,7 +55,7 @@ public class GenericPlayer implements Player {
     }
 
     @Override
-    public PartSkin getColor() {
+    public PartSkin getPartSkin() {
         return color;
     }
 

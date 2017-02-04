@@ -9,7 +9,9 @@ import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.ship.bullets.Bullet;
-import com.github.kjarmicki.ship.parts.*;
+import com.github.kjarmicki.ship.parts.Part;
+import com.github.kjarmicki.ship.parts.PartSlotName;
+import com.github.kjarmicki.ship.parts.WeaponPart;
 import com.github.kjarmicki.util.Points;
 
 import java.util.List;
@@ -22,34 +24,26 @@ public class Ship {
     private final Vector2 velocity = new Vector2();
     private final Vector2 position = new Vector2();
     private final ShipFeatures features;
-    private final PartSkin color;
-    private final ShipStructure structure;
+    private final PartSkin partSkin;
+    private ShipStructure structure;
     private Player owner;
     private float rotation;
     private float totalRotation;
     private boolean shouldBeShooting = false;
     private boolean isDestroyed = false;
 
-
-    public Ship(Vector2 position, float totalRotation, ShipFeatures features, Player owner) {
-        this.features = features;
+    public Ship(Vector2 position, float totalRotation, Player owner, ShipStructure structure) {
+        this.features = new ShipFeatures();
         this.owner = owner;
-        this.color = owner.getColor();
+        this.partSkin = owner.getPartSkin();
         this.position.set(position);
-
-        structure = new ShipStructure(new BasicCorePart(position.x, position.y, this));
-        structure.mountPart(new BasicNosePart(this));
-        structure.mountPart(ArmoredWingPart.getLeftVariant(this));
-        structure.mountPart(ArmoredWingPart.getRightVariant(this));
-        structure.mountPart(BasicEnginePart.getLeftVariant(this));
-        structure.mountPart(BasicEnginePart.getRightVariant(this));
-        structure.mountPart(BasicPrimaryWeaponPart.getLeftVariant(this));
-        structure.mountPart(BasicPrimaryWeaponPart.getRightVariant(this));
-        structure.mountPart(BasicSecondaryWeaponPart.getLeftVariant(this));
-        structure.mountPart(BasicSecondaryWeaponPart.getRightVariant(this));
-
+        this.setStructure(structure);
         this.totalRotation = totalRotation;
         forEachPart(part -> part.rotate(totalRotation));
+    }
+
+    public Ship(Vector2 position, float totalRotation, Player owner) {
+        this(position, totalRotation, owner, null);
     }
 
     public void moveForwards(float delta) {
@@ -298,8 +292,13 @@ public class Ship {
         return rotation;
     }
 
-    public PartSkin getColor() {
-        return color;
+    public void setStructure(ShipStructure structure) {
+        this.structure = structure;
+        this.structure.setPartSkin(partSkin);
+    }
+
+    public ShipStructure getStructure() {
+        return structure;
     }
 
     public boolean isDestroyed() {

@@ -19,8 +19,8 @@ public class AdvancedPrimaryWeaponPowerup extends GenericPowerup {
 
     @Override
     public void apply(Ship ship) {
-        ship.mountIntoStructure(AdvancedPrimaryWeaponPart.getLeftVariant(ship));
-        ship.mountIntoStructure(AdvancedPrimaryWeaponPart.getRightVariant(ship));
+        ship.mountIntoStructure(AdvancedPrimaryWeaponPart.getLeftVariant());
+        ship.mountIntoStructure(AdvancedPrimaryWeaponPart.getRightVariant());
         wasCollected = true;
     }
 

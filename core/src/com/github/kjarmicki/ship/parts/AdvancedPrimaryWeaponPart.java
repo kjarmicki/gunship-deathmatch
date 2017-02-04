@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.kjarmicki.assets.AssetKey;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipFeatures;
 import com.github.kjarmicki.ship.ShipStructure;
 import com.github.kjarmicki.ship.bullets.Bullet;
@@ -61,24 +60,22 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     private final PartSlotName slotName;
     private final Vector2 bulletOutput;
     private final Variant variant;
-    private final Ship ship;
     private Vector2 baseOrigin;
     private long lastShot = 0;
 
-    public static AdvancedPrimaryWeaponPart getLeftVariant(Ship ship) {
-        return new AdvancedPrimaryWeaponPart(Variant.LEFT, ship);
+    public static AdvancedPrimaryWeaponPart getLeftVariant() {
+        return new AdvancedPrimaryWeaponPart(Variant.LEFT);
     }
 
-    public static AdvancedPrimaryWeaponPart getRightVariant(Ship ship) {
-        return new AdvancedPrimaryWeaponPart(Variant.RIGHT, ship);
+    public static AdvancedPrimaryWeaponPart getRightVariant() {
+        return new AdvancedPrimaryWeaponPart(Variant.RIGHT);
     }
 
-    private AdvancedPrimaryWeaponPart(Variant variant, Ship ship) {
+    private AdvancedPrimaryWeaponPart(Variant variant) {
         super(new Polygon(variant.vertices));
         this.bulletOutput = variant.bulletOutput;
         this.slotName = variant.slotName;
         this.variant = variant;
-        this.ship = ship;
     }
 
     @Override
@@ -129,8 +126,8 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     }
 
     @Override
-    public Part duplicateWithoutOwner() {
-        AdvancedPrimaryWeaponPart duplicate = new AdvancedPrimaryWeaponPart(variant, null);
+    public Part duplicate() {
+        AdvancedPrimaryWeaponPart duplicate = new AdvancedPrimaryWeaponPart(variant);
         duplicate.condition = this.condition;
         return duplicate;
     }
@@ -151,12 +148,18 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     }
 
     @Override
+    public String getType() {
+        return super.getType() + variant.type;
+    }
+
+    @Override
     public AssetKey getAssetKey() {
-        return new AssetKey(ship.getColor(), variant.skinIndex);
+        return new AssetKey(partSkin, variant.skinIndex);
     }
 
     private enum Variant {
         LEFT(
+                "Left",
                 DEFAULT_LEFT_INDEX,
                 LEFT_VERTICES,
                 LEFT_BULLET_OUTPUT,
@@ -164,6 +167,7 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
                 weaponSlot -> new Vector2(weaponSlot.x - 52, weaponSlot.y - 25)
         ),
         RIGHT(
+                "Right",
                 DEFAULT_RIGHT_INDEX,
                 Points.makeRightVertices(LEFT_VERTICES, WIDTH),
                 Points.makeRightVector(LEFT_BULLET_OUTPUT, WIDTH),
@@ -171,13 +175,15 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
                 weaponSlot -> new Vector2(weaponSlot.x - 15, weaponSlot.y - 25)
         );
 
+        String type;
         int skinIndex;
         float[] vertices;
         Vector2 bulletOutput;
         PartSlotName slotName;
         Function<Vector2, Vector2> computePosition;
 
-        Variant(int skinIndex, float[] vertices, Vector2 bulletOutput, PartSlotName slotName, Function<Vector2, Vector2> computePosition) {
+        Variant(String type, int skinIndex, float[] vertices, Vector2 bulletOutput, PartSlotName slotName, Function<Vector2, Vector2> computePosition) {
+            this.type = type;
             this.skinIndex = skinIndex;
             this.vertices = vertices;
             this.bulletOutput = bulletOutput;

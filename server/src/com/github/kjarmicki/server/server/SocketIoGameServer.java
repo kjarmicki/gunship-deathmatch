@@ -8,9 +8,9 @@ import com.corundumstudio.socketio.listener.ExceptionListenerAdapter;
 import com.github.kjarmicki.connection.Event;
 import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
-import com.github.kjarmicki.dto.mapper.PlayerMapper;
-import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
 import com.github.kjarmicki.dto.mapper.GameStateDtoMapper;
+import com.github.kjarmicki.dto.mapper.PlayerDtoMapper;
+import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
 import com.github.kjarmicki.player.Player;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -113,7 +113,7 @@ public class SocketIoGameServer implements GameServer {
 
     private Player initNewPlayerFromJsonString(String json, SocketIOClient client) {
         PlayerDto playerDto = PlayerDto.fromJsonString(json);
-        Player newPlayer = PlayerMapper.mapFromDto(playerDto);
+        Player newPlayer = PlayerDtoMapper.mapFromDto(playerDto);
         newPlayer.setUuid(client.getSessionId());
         return newPlayer;
     }
