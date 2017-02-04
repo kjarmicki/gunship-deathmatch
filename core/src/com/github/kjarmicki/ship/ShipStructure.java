@@ -60,7 +60,7 @@ public class ShipStructure {
         removePart(lookedFor, core);
     }
 
-    public ShipStructure duplicateWithoutOwner() {
+    public ShipStructure duplicate() {
         CorePart duplicatedCore = (CorePart)core.duplicate();
         List<Part> duplicatedParts = allParts().stream()
                 .filter(part -> !part.equals(core))

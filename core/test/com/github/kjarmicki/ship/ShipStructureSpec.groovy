@@ -20,7 +20,7 @@ class ShipStructureSpec extends Specification {
         structure.mountPart(rightEngine)
 
         when:
-        def duplicate = structure.duplicateWithoutOwner()
+        def duplicate = structure.duplicate()
 
         then:
         structure.allParts().size() == duplicate.allParts().size()

@@ -89,8 +89,8 @@ public class Ship {
         structure.mountPart(part);
     }
 
-    public ShipStructure duplicateStructureWihtoutOwner() {
-        return structure.duplicateWithoutOwner();
+    public ShipStructure duplicateStructure() {
+        return structure.duplicate();
     }
 
     public Optional<Part> getPartBySlotName(PartSlotName name) {

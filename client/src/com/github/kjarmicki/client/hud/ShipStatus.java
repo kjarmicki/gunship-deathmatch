@@ -13,6 +13,6 @@ public class ShipStatus {
     }
 
     public List<Part> getParts() {
-        return player.getShip().duplicateStructureWihtoutOwner().allParts();
+        return player.getShip().duplicateStructure().allParts();
     }
 }
