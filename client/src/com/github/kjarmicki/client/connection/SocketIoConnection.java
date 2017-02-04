@@ -1,10 +1,7 @@
 package com.github.kjarmicki.client.connection;
 
 import com.github.kjarmicki.connection.Event;
-import com.github.kjarmicki.dto.ControlsDto;
-import com.github.kjarmicki.dto.PlayerWithShipDto;
-import com.github.kjarmicki.dto.PlayersWithShipDto;
-import com.github.kjarmicki.dto.TimestampedDto;
+import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
 import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.player.Player;
@@ -19,7 +16,7 @@ public class SocketIoConnection implements Connection {
     private final Socket socket;
     private final DtoTimeConsistency broadcastConsistency;
     private ConnectionState state = ConnectionState.NOT_CONNECTED;
-    private Consumer<PlayersWithShipDto> playerConnectedHandler;
+    private Consumer<GameStateDto> playerConnectedHandler;
     private Consumer<PlayerWithShipDto> somebodyElseConnectedHandler;
 
     public SocketIoConnection(String url, DtoTimeConsistency broadcastConsistency) {
@@ -39,8 +36,8 @@ public class SocketIoConnection implements Connection {
                 socket.emit(Event.INTRODUCE_PLAYER, PlayerMapper.mapToDto(player).toJsonString());
             });
             socket.on(Event.THIS_PLAYER_INTRODUCED, response -> {
-                String playersWithShipDtoJson = (String)response[0];
-                playerConnectedHandler.accept(PlayersWithShipDto.fromJsonString(playersWithShipDtoJson));
+                String gameStateDto = (String)response[0];
+                playerConnectedHandler.accept(GameStateDto.fromJsonString(gameStateDto));
                 state = ConnectionState.CONNECTED;
             });
             socket.connect();
@@ -48,23 +45,23 @@ public class SocketIoConnection implements Connection {
     }
 
     @Override
-    public void onConnected(Consumer<PlayersWithShipDto> action) {
+    public void onConnected(Consumer<GameStateDto> action) {
         playerConnectedHandler = action;
     }
 
     @Override
     public void onSomebodyElseConnected(Consumer<PlayerWithShipDto> action) {
         socket.on(Event.OTHER_PLAYER_INTRODUCED, response -> {
-            String playerWithShipDtoJson = (String)response[0];
-            action.accept(PlayerWithShipDto.fromJsonString(playerWithShipDtoJson));
+            String gameStateDtoJson = (String)response[0];
+            action.accept(PlayerWithShipDto.fromJsonString(gameStateDtoJson));
         });
     }
 
     @Override
-    public void onStateReceived(Consumer<PlayersWithShipDto> action) {
+    public void onGameStateReceived(Consumer<GameStateDto> action) {
         socket.on(Event.STATE_BROADCAST, response -> {
-            String playersWithShipDtoJson = (String)response[0];
-            PlayersWithShipDto dto = PlayersWithShipDto.fromJsonString(playersWithShipDtoJson);
+            String gameStateDtoJson = (String)response[0];
+            GameStateDto dto = GameStateDto.fromJsonString(gameStateDtoJson);
             if(!isBroadcastTimeConsistent(dto)) return;
             action.accept(dto);
         });

@@ -23,9 +23,9 @@ import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.dto.GameStateDto;
 import com.github.kjarmicki.dto.PlayerDto;
 import com.github.kjarmicki.dto.PlayerWithShipDto;
-import com.github.kjarmicki.dto.PlayersWithShipDto;
 import com.github.kjarmicki.dto.ShipDto;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
 import com.github.kjarmicki.dto.mapper.ControlsMapper;
@@ -101,23 +101,23 @@ public class ArenaScreen extends ScreenAdapter {
         // connection management
         connection.connect(localPlayer);
 
-        connection.onConnected(playersWithShipDto -> {
-            PlayerWithShipDto introducedDto = findIntroducedDto(playersWithShipDto);
+        connection.onConnected(gameStateDto -> {
+            PlayerWithShipDto introducedDto = findIntroducedDto(gameStateDto);
             initPlayer(localPlayer, introducedDto);
-            List<Player> remainingPlayers = initRemainingPlayers(playersWithShipDto);
+            List<Player> remainingPlayers = initRemainingPlayers(gameStateDto);
             game.getPlayersContainer().add(localPlayer);
             remainingPlayers.stream().forEach(player -> game.getPlayersContainer().add(player));
         });
 
-        connection.onStateReceived(playersWithShipDto -> {
+        connection.onGameStateReceived(gameStateDto -> {
             // sync up players with received state
             PlayersContainer playersContainer = game.getPlayersContainer();
-            playersWithShipDto.getPlayers()
+            gameStateDto.getPlayers()
                     .stream()
                     .forEach(playerWithShipDto ->
                             playersContainer.getByUuid(UUID.fromString(playerWithShipDto.getPlayer().getUuid()))
-                            .ifPresent(player ->
-                                    PlayerWithShipDtoMapper.setByDto(player, playerWithShipDto)));
+                                    .ifPresent(player ->
+                                            PlayerWithShipDtoMapper.setByDto(player, playerWithShipDto)));
         });
 
         connection.onSomebodyElseConnected(playerWithShipDto -> {
@@ -164,8 +164,8 @@ public class ArenaScreen extends ScreenAdapter {
         viewport.update(width, height, true);
     }
 
-    private PlayerWithShipDto findIntroducedDto(PlayersWithShipDto all) {
-        return all.getPlayers()
+    private PlayerWithShipDto findIntroducedDto(GameStateDto gameState) {
+        return gameState.getPlayers()
                 .stream()
                 .filter(playerWithShipDto -> playerWithShipDto.getPlayer().isJustIntroduced())
                 .findFirst()
@@ -179,8 +179,8 @@ public class ArenaScreen extends ScreenAdapter {
         player.setUuid(introducedDto.getPlayer().getUuid());
     }
 
-    private List<Player> initRemainingPlayers(PlayersWithShipDto all) {
-        return all.getPlayers()
+    private List<Player> initRemainingPlayers(GameStateDto gameState) {
+        return gameState.getPlayers()
                 .stream()
                 .filter(playerWithShipDto -> !playerWithShipDto.getPlayer().isJustIntroduced())
                 .map(playerWithShipDto -> {

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.mapper.ControlsMapper;
-import com.github.kjarmicki.dto.mapper.PlayersWithShipDtoMapper;
+import com.github.kjarmicki.dto.mapper.GameStateDtoMapper;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.server.GameServer;
@@ -49,7 +49,7 @@ public class ServerScreen extends ScreenAdapter {
         game.update(delta);
         gameServer.broadcast(() -> {
             List<Player> players = game.getPlayersContainer().getContents();
-            return PlayersWithShipDtoMapper.mapToDto(players);
+            return GameStateDtoMapper.mapToDto(players);
         });
     }
 }

@@ -10,7 +10,7 @@ import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
 import com.github.kjarmicki.dto.mapper.PlayerMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
-import com.github.kjarmicki.dto.mapper.PlayersWithShipDtoMapper;
+import com.github.kjarmicki.dto.mapper.GameStateDtoMapper;
 import com.github.kjarmicki.player.Player;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -84,7 +84,7 @@ public class SocketIoGameServer implements GameServer {
             connectedPlayers.add(newPlayer);
 
             // notify player about initial game state
-            PlayersWithShipDto responseForNewPlayer = introductionResponseForNewPlayer(newPlayer, remainingPlayers);
+            GameStateDto responseForNewPlayer = introductionResponseForNewPlayer(newPlayer, remainingPlayers);
             client.sendEvent(Event.THIS_PLAYER_INTRODUCED, responseForNewPlayer.toJsonString());
 
             // notify remaining players that someone joined
@@ -118,8 +118,8 @@ public class SocketIoGameServer implements GameServer {
         return newPlayer;
     }
 
-    private PlayersWithShipDto introductionResponseForNewPlayer(Player newPlayer, List<Player> remainingPlayers) {
-        PlayersWithShipDto response = PlayersWithShipDtoMapper.mapToDto(remainingPlayers);
+    private GameStateDto introductionResponseForNewPlayer(Player newPlayer, List<Player> remainingPlayers) {
+        GameStateDto response = GameStateDtoMapper.mapToDto(remainingPlayers);
         PlayerWithShipDto newPlayerDto = PlayerWithShipDtoMapper.mapToDto(newPlayer);
         newPlayerDto.getPlayer().isJustIntroduced(true);
         response.getPlayers().add(newPlayerDto);

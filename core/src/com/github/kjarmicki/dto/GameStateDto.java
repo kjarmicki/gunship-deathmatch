@@ -8,16 +8,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-public class PlayersWithShipDto implements TimestampedDto {
+public class GameStateDto implements TimestampedDto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final List<PlayerWithShipDto> players;
     private final long timestamp;
 
     @JsonCreator
-    public PlayersWithShipDto(
+    public GameStateDto(
             @JsonProperty("players") List<PlayerWithShipDto> players,
             @JsonProperty("timestamp") long timestamp
-        ) {
+    ) {
         this.players = players;
         this.timestamp = timestamp;
     }
@@ -26,11 +26,11 @@ public class PlayersWithShipDto implements TimestampedDto {
         return players;
     }
 
-    public static PlayersWithShipDto fromJsonString(String json) {
+    public static GameStateDto fromJsonString(String json) {
         try {
-           return objectMapper.readValue(json, PlayersWithShipDto.class);
+            return objectMapper.readValue(json, GameStateDto.class);
         } catch (IOException e) {
-            throw new RuntimeException("Error while creating players with ship dto from json", e);
+            throw new RuntimeException("Error while creating game state dto from json", e);
         }
     }
 
@@ -39,7 +39,7 @@ public class PlayersWithShipDto implements TimestampedDto {
         try {
             return objectMapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error while converting players with ship dto to json", e);
+            throw new RuntimeException("Error while converting game state dto to json", e);
         }
     }
 
