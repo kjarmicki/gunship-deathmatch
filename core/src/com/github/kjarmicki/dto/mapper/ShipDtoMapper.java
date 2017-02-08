@@ -9,25 +9,17 @@ import com.github.kjarmicki.ship.ShipStructure;
 
 public class ShipDtoMapper {
     public static ShipDto mapToDto(Ship ship) {
-        Vector2 velocity = ship.getVelocity();
-        Vector2 position = ship.getPosition();
-        float rotation = ship.getRotation();
-        float totalRotation = ship.getTotalRotation();
         ShipStructureDto shipStructureDto = ShipStructureDtoMapper.mapToDto(ship.getStructure());
-        return new ShipDto(velocity.x, velocity.y, position.x, position.y,
-                rotation, totalRotation, ship.shouldBeShooting(), shipStructureDto);
+        return new ShipDto(shipStructureDto);
     }
 
     public static void setByDto(Ship ship, ShipDto dto) {
-        ship.setVelocity(new Vector2(dto.getVelocityX(), dto.getVelocityY()));
-        ship.setPosition(new Vector2(dto.getPositionX(), dto.getPositionY()));
-        ship.setRotation(dto.getRotation());
-        ship.setTotalRotation(dto.getTotalRotation());
-        ship.shouldBeShooting(dto.isShooting());
+        ShipStructure shipStructure = ShipStructureDtoMapper.mapFromDto(dto.getStructure());
+        ship.setStructure(shipStructure);
     }
 
     public static Ship mapFromDto(ShipDto dto, Player owner) {
         ShipStructure shipStructure = ShipStructureDtoMapper.mapFromDto(dto.getStructure());
-        return new Ship(new Vector2(dto.getPositionX(), dto.getPositionY()), dto.getTotalRotation(), owner, shipStructure);
+        return new Ship(owner, shipStructure);
     }
 }

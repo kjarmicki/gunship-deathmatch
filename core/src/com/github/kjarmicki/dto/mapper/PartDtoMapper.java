@@ -10,18 +10,18 @@ import java.util.UUID;
 
 public class PartDtoMapper {
     public static PartDto maptoDto(Part part) {
-        String uuid = part.getUuid()
-                .map(UUID::toString).orElseGet(() -> "");
-        return new PartDto(uuid, part.getType(), part.getCondition(), part.getTakenArea().getX(), part.getTakenArea().getY());
+        return new PartDto(part.getType(), part.getCondition(), part.getTakenArea().getX(),
+                part.getTakenArea().getY(), part.getTakenArea().getRotation());
     }
 
-    public static CorePart mapCoreFromDto(PartDto coreDto) {
+    public static CorePart mapPositionedCoreFromDto(PartDto coreDto) {
         CorePart core = new BasicCorePart(coreDto.getPositionX(), coreDto.getPositionY());
         core.setCondition(coreDto.getCondition());
+        core.setRotation(coreDto.getRotation());
         return core;
     }
 
-    public static Part mapFromDto(PartDto partDto) {
+    public static Part mapUnpositionedPartFromDto(PartDto partDto) {
         Part part = TypeToInstance.create(partDto.getType());
         part.setCondition(partDto.getCondition());
         return part;

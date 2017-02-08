@@ -9,6 +9,7 @@ public interface VisibleThing {
     Polygon getTakenArea();
     void moveBy(Vector2 movement);
     void rotate(float degrees);
+    void setRotation(float degrees);
     float getWidth();
     float getHeight();
     Vector2 outsideBounds(Rectangle bounds);

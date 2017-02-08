@@ -2,6 +2,7 @@ package com.github.kjarmicki.ship.parts;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class TypeToInstance {
@@ -22,11 +23,15 @@ public class TypeToInstance {
         CREATORS.put("BasicSecondaryWeaponPartRight", BasicSecondaryWeaponPart::getRightVariant);
         CREATORS.put("BasicWingPartLeft", BasicWingPart::getLeftVariant);
         CREATORS.put("BasicWingPartRight", BasicWingPart::getRightVariant);
+        CREATORS.put("FastWingPartLeft", FastWingPart::getLeftVariant);
+        CREATORS.put("FastWingPartRight", FastWingPart::getRightVariant);
         CREATORS.put("LightWingPartLeft", LightWingPart::getLeftVariant);
         CREATORS.put("LightWingPartRight", LightWingPart::getRightVariant);
     }
 
     public static Part create(String type) {
-        return CREATORS.get(type).get();
+        return Optional.ofNullable(CREATORS.get(type))
+                .map(Supplier::get)
+                .orElseThrow(() -> new RuntimeException("Part not found: " + type));
     }
 }

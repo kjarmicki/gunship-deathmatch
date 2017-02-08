@@ -8,17 +8,11 @@ import com.github.kjarmicki.ship.ShipStructure;
 import java.util.*;
 
 public interface Part extends VisibleThing, FeatureUpdater {
-    // uuid
-    void setUuid(UUID uuid);
-    void setUuid(String uuid);
-    Optional<UUID> getUuid();
-
     // condition
     void receiveDamage(float amount);
     boolean isDestroyed();
     void setCondition(float condition);
     float getCondition();
-
 
     // subparts
     void mountSubpart(Part newPart);

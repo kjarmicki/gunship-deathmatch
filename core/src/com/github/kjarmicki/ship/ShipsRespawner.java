@@ -27,7 +27,7 @@ public class ShipsRespawner {
                 .filter(player -> player.getShip() == null || player.getShip().isDestroyed())
                 .forEach(player -> {
                     Vector2 respawnPoint = findNextFreeRespawnSpot(player);
-                    player.setShip(new Ship(respawnPoint, Ship.STARTING_ROTATION, player, ShipStructure.defaultStructure(respawnPoint)));
+                    player.setShip(new Ship(player, ShipStructure.defaultStructure(respawnPoint)));
                 });
     }
 

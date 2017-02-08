@@ -36,11 +36,14 @@ public class ShipStructure {
         return core;
     }
 
-    public ShipStructure mountPart(Part part) {
+    public void mountPart(Part part) {
         findPartWithSlotAvailableFor(part).ifPresent(parentPart -> parentPart.mountSubpart(part));
         part.positionWithinStructure(this);
         if(partSkin != null) part.setPartSkin(partSkin);
-        return this;
+    }
+
+    public void mountParts(List<Part> parts) {
+        parts.forEach(this::mountPart);
     }
 
     public List<Part> allParts() {

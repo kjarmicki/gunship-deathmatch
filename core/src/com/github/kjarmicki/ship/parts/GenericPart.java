@@ -9,26 +9,10 @@ import java.util.*;
 public abstract class GenericPart extends GenericVisibleThing implements Part {
     protected float condition = 100f;
     protected final Map<PartSlotName, Part> subparts = new HashMap<>();
-    protected UUID uuid;
     protected PartSkin partSkin;
 
     public GenericPart(Polygon takenArea) {
         super(takenArea);
-    }
-
-    @Override
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    @Override
-    public void setUuid(String uuid) {
-        this.uuid = UUID.fromString(uuid);
-    }
-
-    @Override
-    public Optional<UUID> getUuid() {
-        return Optional.ofNullable(uuid);
     }
 
     @Override

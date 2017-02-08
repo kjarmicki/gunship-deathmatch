@@ -23,11 +23,12 @@ public class ShipStructureDtoMapper {
     }
 
     public static ShipStructure mapFromDto(ShipStructureDto dto) {
-        CorePart core = PartDtoMapper.mapCoreFromDto(dto.getCorePart());
+        CorePart core = PartDtoMapper.mapPositionedCoreFromDto(dto.getCorePart());
+        List<Part> parts = dto.getParts().stream()
+                .map(PartDtoMapper::mapUnpositionedPartFromDto)
+                .collect(toList());
         ShipStructure shipStructure = new ShipStructure(core);
-        dto.getParts().stream()
-                .map(PartDtoMapper::mapFromDto)
-                .forEach(shipStructure::mountPart);
+        shipStructure.mountParts(parts);
         return shipStructure;
     }
 }

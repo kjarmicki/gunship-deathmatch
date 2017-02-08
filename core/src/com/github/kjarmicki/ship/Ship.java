@@ -20,30 +20,24 @@ import java.util.function.Consumer;
 
 
 public class Ship {
-    public static final float STARTING_ROTATION = 0f;
     private final Vector2 velocity = new Vector2();
-    private final Vector2 position = new Vector2();
     private final ShipFeatures features;
     private final PartSkin partSkin;
     private ShipStructure structure;
     private Player owner;
     private float rotation;
-    private float totalRotation;
     private boolean shouldBeShooting = false;
     private boolean isDestroyed = false;
 
-    public Ship(Vector2 position, float totalRotation, Player owner, ShipStructure structure) {
+    public Ship(Player owner, ShipStructure structure) {
         this.features = new ShipFeatures();
         this.owner = owner;
         this.partSkin = owner.getPartSkin();
-        this.position.set(position);
         this.setStructure(structure);
-        this.totalRotation = totalRotation;
-        forEachPart(part -> part.rotate(totalRotation));
     }
 
-    public Ship(Vector2 position, float totalRotation, Player owner) {
-        this(position, totalRotation, owner, null);
+    public Ship(Player owner) {
+        this(owner, null);
     }
 
     public void moveForwards(float delta) {
@@ -64,14 +58,6 @@ public class Ship {
 
     public void rotateRight(float delta) {
         rotation -= delta * features.getRotation();
-    }
-
-    public void shouldBeShooting(boolean itShould) {
-        this.shouldBeShooting = itShould;
-    }
-
-    public boolean shouldBeShooting() {
-        return shouldBeShooting;
     }
 
     public void startShooting(BulletsContainer bulletsContainer, float delta) {
@@ -120,9 +106,6 @@ public class Ship {
     }
 
     public void applyMovement(float delta) {
-        // TODO: probably not a place for it?
-        reconcileState();
-
         velocity.clamp(0, features.getMaxSpeed());
 
         velocity.x -= delta * features.getDrag() * velocity.x;
@@ -132,18 +115,11 @@ public class Ship {
         float x = delta * velocity.x;
         float y = delta * velocity.y;
         Vector2 movement = new Vector2(x, y);
-        position.add(movement);
-        totalRotation += rotation;
 
         forEachPart(part -> {
             part.moveBy(movement);
             part.rotate(rotation);
         });
-    }
-
-    public void reconcileState() {
-        structure.getCore().setPosition(position);
-        forEachPart(part -> part.positionWithinStructure(structure));
     }
 
     public void updateFeatures() {
@@ -259,33 +235,12 @@ public class Ship {
         velocity.y += objectVelocity.y;
     }
 
-
-    public void setTotalRotation(float totalRotation) {
-        this.totalRotation = totalRotation;
-    }
-
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
-    }
-
-    public void setVelocity(Vector2 velocity) {
-        this.velocity.set(velocity);
-    }
-
-    public void setPosition(Vector2 position) {
-        this.position.set(position);
-    }
-
     public Vector2 getVelocity() {
         return velocity;
     }
 
-    public Vector2 getPosition() {
-        return position;
-    }
-
     public float getTotalRotation() {
-        return totalRotation;
+        return structure.getCore().getTakenArea().getRotation();
     }
 
     public float getRotation() {

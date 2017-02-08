@@ -30,11 +30,6 @@ public class LocalGame {
     }
 
     public void update(float delta) {
-        // ships related updates
-        shipsRespawner.update(delta);
-        playersContainer.update(bulletsContainer, delta);
-        arena.checkCollisionWithPlayers(playersContainer.getContents());
-
         // bullets related updates
         bulletsContainer.updateBullets(delta);
         bulletsContainer.checkCollisionsWithPlayers(playersContainer.getContents());

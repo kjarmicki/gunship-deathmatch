@@ -30,7 +30,7 @@ public class ServerScreen extends ScreenAdapter {
             PlayersContainer playersContainer = game.getPlayersContainer();
             ShipsRespawner shipsRespawner = game.getShipsRespawner();
             Vector2 spawnPosition = shipsRespawner.findNextFreeRespawnSpot(player);
-            player.setShip(new Ship(spawnPosition, Ship.STARTING_ROTATION, player, ShipStructure.defaultStructure(spawnPosition)));
+            player.setShip(new Ship(player, ShipStructure.defaultStructure(spawnPosition)));
             playersContainer.add(player);
         });
         gameServer.onPlayerLeft(player -> {
