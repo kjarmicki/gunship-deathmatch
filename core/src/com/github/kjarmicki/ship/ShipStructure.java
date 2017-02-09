@@ -38,7 +38,7 @@ public class ShipStructure {
 
     public void mountPart(Part part) {
         findPartWithSlotAvailableFor(part).ifPresent(parentPart -> parentPart.mountSubpart(part));
-        part.positionWithinStructure(this);
+        positionAllParts();
         if(partSkin != null) part.setPartSkin(partSkin);
     }
 
@@ -111,5 +111,9 @@ public class ShipStructure {
         this.partSkin = partSkin;
         allParts().stream()
                 .forEach(part -> part.setPartSkin(partSkin));
+    }
+
+    private void positionAllParts() {
+        allParts().forEach(part -> part.positionWithinStructure(this));
     }
 }
