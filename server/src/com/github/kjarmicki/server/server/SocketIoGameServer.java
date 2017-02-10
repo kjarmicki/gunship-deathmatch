@@ -16,6 +16,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
@@ -119,7 +120,8 @@ public class SocketIoGameServer implements GameServer {
     }
 
     private GameStateDto introductionResponseForNewPlayer(Player newPlayer, List<Player> remainingPlayers) {
-        GameStateDto response = GameStateDtoMapper.mapToDto(remainingPlayers);
+        GameStateDto response = GameStateDtoMapper.mapToDto(remainingPlayers,
+                /* TODO: nope nope nope, refactor this whole class, figure out proper responsibility split between it and screen */ new HashMap<>());
         PlayerWithShipDto newPlayerDto = PlayerWithShipDtoMapper.mapToDto(newPlayer);
         newPlayerDto.getPlayer().isJustIntroduced(true);
         response.getPlayers().add(newPlayerDto);

@@ -4,9 +4,7 @@ import com.github.kjarmicki.dto.PartDto;
 import com.github.kjarmicki.ship.parts.BasicCorePart;
 import com.github.kjarmicki.ship.parts.CorePart;
 import com.github.kjarmicki.ship.parts.Part;
-import com.github.kjarmicki.ship.parts.TypeToInstance;
-
-import java.util.UUID;
+import com.github.kjarmicki.ship.parts.PartsFactory;
 
 public class PartDtoMapper {
     public static PartDto maptoDto(Part part) {
@@ -22,7 +20,7 @@ public class PartDtoMapper {
     }
 
     public static Part mapUnpositionedPartFromDto(PartDto partDto) {
-        Part part = TypeToInstance.create(partDto.getType());
+        Part part = PartsFactory.create(partDto.getType());
         part.setCondition(partDto.getCondition());
         return part;
     }

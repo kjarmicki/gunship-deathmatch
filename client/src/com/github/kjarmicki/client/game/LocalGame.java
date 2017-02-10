@@ -30,12 +30,6 @@ public class LocalGame {
     }
 
     public void update(float delta) {
-        // bullets related updates
-        bulletsContainer.updateBullets(delta);
-        bulletsContainer.checkCollisionsWithPlayers(playersContainer.getContents());
-        bulletsContainer.checkCollisionWithArenaObjects(arena.getContents());
-        bulletsContainer.cleanup(arena.getBounds());
-
         // powerups related updates
         powerupsRespawner.update(delta);
         powerupsContainer.checkCollisionsWithPlayers(playersContainer.getContents());

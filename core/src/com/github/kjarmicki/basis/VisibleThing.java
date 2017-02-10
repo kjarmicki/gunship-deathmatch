@@ -15,4 +15,5 @@ public interface VisibleThing {
     Vector2 outsideBounds(Rectangle bounds);
     Vector2 collisionVector(VisibleThing otherPart);
     AssetKey getAssetKey();
+    String getType();
 }

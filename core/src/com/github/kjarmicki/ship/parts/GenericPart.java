@@ -69,11 +69,6 @@ public abstract class GenericPart extends GenericVisibleThing implements Part {
         return combined;
     }
 
-    @Override
-    public String getType() {
-        return getClass().getSimpleName();
-    }
-
     public Map<PartSlotName, Part> getDirectSubparts() {
         return subparts;
     }

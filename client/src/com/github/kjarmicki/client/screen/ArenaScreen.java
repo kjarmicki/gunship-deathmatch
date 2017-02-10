@@ -21,17 +21,16 @@ import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.game.LocalGame;
 import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
+import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
-import com.github.kjarmicki.dto.mapper.ControlsDtoMapper;
-import com.github.kjarmicki.dto.mapper.PlayerDtoMapper;
-import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
-import com.github.kjarmicki.dto.mapper.ShipStructureDtoMapper;
+import com.github.kjarmicki.dto.mapper.*;
 import com.github.kjarmicki.player.GenericPlayer;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.Ship;
+import com.github.kjarmicki.ship.bullets.Bullet;
 
 import java.util.List;
 import java.util.Optional;
@@ -110,11 +109,22 @@ public class ArenaScreen extends ScreenAdapter {
             // sync up players with received state
             PlayersContainer playersContainer = game.getPlayersContainer();
             gameStateDto.getPlayers()
-                    .stream()
                     .forEach(playerWithShipDto ->
                             playersContainer.getByUuid(UUID.fromString(playerWithShipDto.getPlayer().getUuid()))
                                     .ifPresent(player ->
                                             PlayerWithShipDtoMapper.setByDto(player, playerWithShipDto)));
+            // sync up bullets
+            BulletsContainer bulletsContainer = game.getBulletsContainer();
+            bulletsContainer.clear();
+            gameStateDto.getBullets()
+                    .forEach(bulletDto -> {
+                        playersContainer.getByUuid(UUID.fromString(bulletDto.getPlayerUuid()))
+                                .ifPresent(player -> {
+                                    Bullet bullet = BulletDtoMapper.mapFromDto(bulletDto);
+                                    bulletsContainer.addBullet(bullet, player);
+                                });
+                    });
+
         });
 
         connection.onSomebodyElseConnected(playerWithShipDto -> {

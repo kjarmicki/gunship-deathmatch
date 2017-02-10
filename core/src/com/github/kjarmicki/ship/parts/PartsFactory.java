@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class TypeToInstance {
+public class PartsFactory {
     private final static Map<String, Supplier<Part>> CREATORS;
     static {
         CREATORS = new HashMap<>();

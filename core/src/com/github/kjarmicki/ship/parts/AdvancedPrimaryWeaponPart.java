@@ -82,7 +82,7 @@ public class AdvancedPrimaryWeaponPart extends GenericPart implements PrimaryWea
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL) {
-            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation());
+            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), true);
             lastShot = TimeUtils.millis();
             return Optional.of(bullet);
         }

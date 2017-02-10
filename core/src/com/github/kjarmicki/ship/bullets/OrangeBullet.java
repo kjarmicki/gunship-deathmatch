@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.assets.AssetKey;
 import com.github.kjarmicki.assets.BulletSkin;
-import com.github.kjarmicki.util.Points;
 
 public class OrangeBullet extends GenericBullet {
     public static final BulletSkin SKIN = BulletSkin.ORANGE_TAIL;
@@ -24,14 +23,13 @@ public class OrangeBullet extends GenericBullet {
     public static final float IMPACT = 30;
     public static final float RANGE = 800;
 
-    public OrangeBullet(Vector2 position, Vector2 origin, float rotation) {
+    public OrangeBullet(Vector2 position, Vector2 origin, float rotation, boolean adjustForOutput) {
         super(new Polygon(VERTICES));
-        position.x -= WIDTH / 2;
-        position.y -= 30;
-        takenArea.setPosition(position.x, position.y);
-        takenArea.setRotation(rotation);
-        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
-        startingPosition.set(position.x, position.y);
+        if(adjustForOutput) {
+            adjustForOutput(position, origin, rotation);
+        } else {
+            setValues(position, origin, rotation);
+        }
     }
 
     @Override
@@ -47,31 +45,6 @@ public class OrangeBullet extends GenericBullet {
     @Override
     public AssetKey getAssetKey() {
         return new AssetKey(SKIN, 0);
-    }
-
-    @Override
-    public void update(float delta) {
-        // check if bullet got out of it's range
-        Vector2 position = new Vector2(takenArea.getX(), takenArea.getY());
-        if(startingPosition.dst(position) > RANGE) {
-            isRangeExceeded = true;
-            return;
-        }
-
-        Vector2 direction = Points.getDirectionVector(takenArea.getRotation());
-        if(velocity.equals(Points.ZERO)) {
-            velocity.x += ACCELERATION / 10 * direction.x;
-            velocity.y += ACCELERATION / 10 * direction.y;
-        }
-        velocity.x += delta * ACCELERATION * direction.x;
-        velocity.y += delta * ACCELERATION * direction.y;
-        velocity.clamp(0, MAX_SPEED);
-
-        float x = delta * velocity.x;
-        float y = delta * velocity.y;
-        Vector2 movement = new Vector2(x, y);
-
-        moveBy(movement);
     }
 
     @Override
@@ -92,5 +65,11 @@ public class OrangeBullet extends GenericBullet {
     @Override
     public int getMaxSpeed() {
         return MAX_SPEED;
+    }
+
+    protected void adjustForOutput(Vector2 position, Vector2 origin, float rotation) {
+        position.x -= WIDTH / 2;
+        position.y -= 30;
+        super.adjustForOutput(position, origin, rotation);
     }
 }

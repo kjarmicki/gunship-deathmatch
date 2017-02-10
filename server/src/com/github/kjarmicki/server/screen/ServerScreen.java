@@ -12,8 +12,10 @@ import com.github.kjarmicki.server.server.GameServer;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipStructure;
 import com.github.kjarmicki.ship.ShipsRespawner;
+import com.github.kjarmicki.ship.bullets.Bullet;
 
 import java.util.List;
+import java.util.Map;
 
 public class ServerScreen extends ScreenAdapter {
     private final RemoteGame game;
@@ -49,7 +51,8 @@ public class ServerScreen extends ScreenAdapter {
         game.update(delta);
         gameServer.broadcast(() -> {
             List<Player> players = game.getPlayersContainer().getContents();
-            return GameStateDtoMapper.mapToDto(players);
+            Map<Bullet, Player> bulletsByPlayers = game.getBulletsContainer().getBulletsByPlayers();
+            return GameStateDtoMapper.mapToDto(players, bulletsByPlayers);
         });
     }
 }

@@ -11,19 +11,26 @@ import java.util.List;
 public class GameStateDto implements TimestampedDto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final List<PlayerWithShipDto> players;
+    private final List<BulletDto> bullets;
     private final long timestamp;
 
     @JsonCreator
     public GameStateDto(
             @JsonProperty("players") List<PlayerWithShipDto> players,
+            @JsonProperty("bulletsByPlayers") List<BulletDto> bullets,
             @JsonProperty("timestamp") long timestamp
     ) {
         this.players = players;
+        this.bullets = bullets;
         this.timestamp = timestamp;
     }
 
     public List<PlayerWithShipDto> getPlayers() {
         return players;
+    }
+
+    public List<BulletDto> getBullets() {
+        return bullets;
     }
 
     public static GameStateDto fromJsonString(String json) {

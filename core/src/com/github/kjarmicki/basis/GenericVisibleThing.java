@@ -65,4 +65,8 @@ public abstract class GenericVisibleThing implements VisibleThing {
         }
         return Points.ZERO;
     }
+
+    public String getType() {
+        return getClass().getSimpleName();
+    }
 }

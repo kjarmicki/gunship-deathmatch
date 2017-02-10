@@ -23,14 +23,13 @@ public class BlueBullet extends GenericBullet {
     public static final float IMPACT = 20;
     public static final float RANGE = 500;
 
-    public BlueBullet(Vector2 position, Vector2 origin, float rotation) {
+    public BlueBullet(Vector2 position, Vector2 origin, float rotation, boolean adjustForOutput) {
         super(new Polygon(VERTICES));
-        position.x -= WIDTH / 2;
-        position.y -= 30;
-        takenArea.setPosition(position.x, position.y);
-        takenArea.setRotation(rotation);
-        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
-        startingPosition.set(position.x, position.y);
+        if(adjustForOutput) {
+            adjustForOutput(position, origin, rotation);
+        } else {
+            setValues(position, origin, rotation);
+        }
     }
 
     @Override
@@ -66,5 +65,11 @@ public class BlueBullet extends GenericBullet {
     @Override
     public int getMaxSpeed() {
         return MAX_SPEED;
+    }
+
+    protected void adjustForOutput(Vector2 position, Vector2 origin, float rotation) {
+        position.x -= WIDTH / 2;
+        position.y -= 30;
+        super.adjustForOutput(position, origin, rotation);
     }
 }

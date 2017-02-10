@@ -80,7 +80,7 @@ public class BasicSecondaryWeaponPart extends GenericPart implements WeaponPart 
     public Optional<Bullet> startShooting(float delta) {
         long now = TimeUtils.millis();
         if(now - lastShot > SHOT_INTERVAL && ammo > 0) {
-            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation());
+            Bullet bullet = new OrangeBullet(getBulletOutput(), withPosition(baseOrigin), takenArea.getRotation(), true);
             lastShot = TimeUtils.millis();
             ammo--;
             return Optional.of(bullet);

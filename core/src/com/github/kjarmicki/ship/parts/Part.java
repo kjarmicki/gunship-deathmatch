@@ -29,7 +29,6 @@ public interface Part extends VisibleThing, FeatureUpdater {
         return new ArrayList<>();
     }
 
-    String getType();
     Part duplicate();
     boolean isCritical();
     void setPartSkin(PartSkin partSkin);

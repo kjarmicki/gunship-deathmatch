@@ -9,12 +9,13 @@ import com.github.kjarmicki.util.Points;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 public class BulletsContainer implements Container<Bullet> {
-    private final Map<Bullet, Player> bulletsByPlayers = new HashMap<>();
+    private final Map<Bullet, Player> bulletsByPlayers = new ConcurrentHashMap<>();
 
     public void addBullet(Bullet bullet, Player owner) {
         bulletsByPlayers.put(bullet, owner);
@@ -26,6 +27,10 @@ public class BulletsContainer implements Container<Bullet> {
                 .stream()
                 .map(Map.Entry::getKey)
                 .collect(toList());
+    }
+
+    public Map<Bullet, Player> getBulletsByPlayers() {
+        return bulletsByPlayers;
     }
 
     public void updateBullets(float delta) {
@@ -70,6 +75,10 @@ public class BulletsContainer implements Container<Bullet> {
     public void cleanup(Rectangle bounds) {
         destroyOutOfBounds(bounds);
         removeDestroyedAndOutOfRange();
+    }
+
+    public void clear() {
+        bulletsByPlayers.clear();
     }
 
     private void removeDestroyedAndOutOfRange() {

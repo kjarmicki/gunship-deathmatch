@@ -72,4 +72,18 @@ public abstract class GenericBullet extends GenericVisibleThing implements Bulle
     public Vector2 getVelocity() {
         return velocity;
     }
+
+    protected void adjustForOutput(Vector2 position, Vector2 origin, float rotation) {
+        takenArea.setPosition(position.x, position.y);
+        takenArea.setRotation(rotation);
+        takenArea.setOrigin(origin.x - position.x, origin.y - position.y);
+        startingPosition.set(position);
+    }
+
+    protected void setValues(Vector2 position, Vector2 origin, float rotation) {
+        takenArea.setPosition(position.x, position.y);
+        takenArea.setRotation(rotation);
+        takenArea.setOrigin(origin.x, origin.y);
+        startingPosition.set(position);
+    }
 }
