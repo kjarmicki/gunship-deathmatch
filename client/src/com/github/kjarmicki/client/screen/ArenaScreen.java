@@ -23,12 +23,14 @@ import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
 import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PlayersContainer;
+import com.github.kjarmicki.container.PowerupsContainer;
 import com.github.kjarmicki.controls.Controls;
 import com.github.kjarmicki.dto.*;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
 import com.github.kjarmicki.dto.mapper.*;
 import com.github.kjarmicki.player.GenericPlayer;
 import com.github.kjarmicki.player.Player;
+import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.bullets.Bullet;
 
@@ -113,6 +115,7 @@ public class ArenaScreen extends ScreenAdapter {
                             playersContainer.getByUuid(UUID.fromString(playerWithShipDto.getPlayer().getUuid()))
                                     .ifPresent(player ->
                                             PlayerWithShipDtoMapper.setByDto(player, playerWithShipDto)));
+
             // sync up bullets
             BulletsContainer bulletsContainer = game.getBulletsContainer();
             bulletsContainer.clear();
@@ -125,6 +128,15 @@ public class ArenaScreen extends ScreenAdapter {
                                 });
                     });
 
+            // sync up powerups
+            PowerupsContainer powerupsContainer = game.getPowerupsContainer();
+            powerupsContainer.clear();
+            gameStateDto.getPowerups()
+                    .forEach(powerupDto -> {
+                        Vector2 position = new Vector2(powerupDto.getPositionX(), powerupDto.getPositionY());
+                        Powerup powerup = PowerupDtoMapper.mapFromDto(powerupDto);
+                        powerupsContainer.addPowerup(position, powerup);
+                    });
         });
 
         connection.onSomebodyElseConnected(playerWithShipDto -> {

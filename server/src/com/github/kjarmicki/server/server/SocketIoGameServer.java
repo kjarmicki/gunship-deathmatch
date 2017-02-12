@@ -121,7 +121,7 @@ public class SocketIoGameServer implements GameServer {
 
     private GameStateDto introductionResponseForNewPlayer(Player newPlayer, List<Player> remainingPlayers) {
         GameStateDto response = GameStateDtoMapper.mapToDto(remainingPlayers,
-                /* TODO: nope nope nope, refactor this whole class, figure out proper responsibility split between it and screen */ new HashMap<>());
+                /* TODO: nope nope nope, refactor this whole class, figure out proper responsibility split between it and screen */ new HashMap<>(), new HashMap<>());
         PlayerWithShipDto newPlayerDto = PlayerWithShipDtoMapper.mapToDto(newPlayer);
         newPlayerDto.getPlayer().isJustIntroduced(true);
         response.getPlayers().add(newPlayerDto);

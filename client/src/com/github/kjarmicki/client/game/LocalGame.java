@@ -30,10 +30,7 @@ public class LocalGame {
     }
 
     public void update(float delta) {
-        // powerups related updates
-        powerupsRespawner.update(delta);
-        powerupsContainer.checkCollisionsWithPlayers(playersContainer.getContents());
-        powerupsContainer.cleanup();
+        // TODO: local state predictions
     }
 
     public Arena getArena() {

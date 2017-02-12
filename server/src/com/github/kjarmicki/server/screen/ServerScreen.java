@@ -7,6 +7,7 @@ import com.github.kjarmicki.controls.RemoteControls;
 import com.github.kjarmicki.dto.mapper.ControlsDtoMapper;
 import com.github.kjarmicki.dto.mapper.GameStateDtoMapper;
 import com.github.kjarmicki.player.Player;
+import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.server.GameServer;
 import com.github.kjarmicki.ship.Ship;
@@ -52,7 +53,8 @@ public class ServerScreen extends ScreenAdapter {
         gameServer.broadcast(() -> {
             List<Player> players = game.getPlayersContainer().getContents();
             Map<Bullet, Player> bulletsByPlayers = game.getBulletsContainer().getBulletsByPlayers();
-            return GameStateDtoMapper.mapToDto(players, bulletsByPlayers);
+            Map<Vector2, Powerup> powerupsByPosition = game.getPowerupsContainer().getPowerupsByPosition();
+            return GameStateDtoMapper.mapToDto(players, bulletsByPlayers, powerupsByPosition);
         });
     }
 }

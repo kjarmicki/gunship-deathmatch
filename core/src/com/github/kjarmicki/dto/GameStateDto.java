@@ -12,16 +12,19 @@ public class GameStateDto implements TimestampedDto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final List<PlayerWithShipDto> players;
     private final List<BulletDto> bullets;
+    private final List<PowerupDto> powerups;
     private final long timestamp;
 
     @JsonCreator
     public GameStateDto(
             @JsonProperty("players") List<PlayerWithShipDto> players,
             @JsonProperty("bulletsByPlayers") List<BulletDto> bullets,
+            @JsonProperty("powerupsByPosition") List<PowerupDto> powerups,
             @JsonProperty("timestamp") long timestamp
     ) {
         this.players = players;
         this.bullets = bullets;
+        this.powerups = powerups;
         this.timestamp = timestamp;
     }
 
@@ -31,6 +34,10 @@ public class GameStateDto implements TimestampedDto {
 
     public List<BulletDto> getBullets() {
         return bullets;
+    }
+
+    public List<PowerupDto> getPowerups() {
+        return powerups;
     }
 
     public static GameStateDto fromJsonString(String json) {

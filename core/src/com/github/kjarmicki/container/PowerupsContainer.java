@@ -27,6 +27,10 @@ public class PowerupsContainer implements Container<Powerup> {
                 .collect(toList());
     }
 
+    public Map<Vector2, Powerup> getPowerupsByPosition() {
+        return powerupsByPosition;
+    }
+
     public void checkCollisionsWithPlayers(List<Player> players) {
         powerupsByPosition.entrySet()
                 .stream()
@@ -54,5 +58,9 @@ public class PowerupsContainer implements Container<Powerup> {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         powerupsByPosition.clear();
         powerupsByPosition.putAll(filtered);
+    }
+
+    public void clear() {
+        powerupsByPosition.clear();
     }
 }
