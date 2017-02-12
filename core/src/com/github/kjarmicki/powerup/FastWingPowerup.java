@@ -8,7 +8,7 @@ import com.github.kjarmicki.ship.parts.FastWingPart;
 
 public class FastWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = FastWingPart.DEFAULT_LEFT_INDEX;
-    public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
+    public static final PartSkin DEFAULT_COLOR = PartSkin.POWERUP_SKIN;
     public static final float[] VERTICES = SCALE.apply(FastWingPart.LEFT_VERTICES);
     public static final float WIDTH = SCALE.apply(FastWingPart.WIDTH);
     public static final float HEIGHT = SCALE.apply(FastWingPart.HEIGHT);

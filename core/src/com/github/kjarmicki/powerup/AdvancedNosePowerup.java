@@ -8,7 +8,7 @@ import com.github.kjarmicki.ship.parts.AdvancedNosePart;
 
 public class AdvancedNosePowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = AdvancedNosePart.DEFAULT_INDEX;
-    public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
+    public static final PartSkin DEFAULT_COLOR = PartSkin.POWERUP_SKIN;
     public static final float[] VERTICES = SCALE.apply(AdvancedNosePart.VERTICES);
     public static final float WIDTH = SCALE.apply(AdvancedNosePart.WIDTH);
     public static final float HEIGHT = SCALE.apply(AdvancedNosePart.HEIGHT);

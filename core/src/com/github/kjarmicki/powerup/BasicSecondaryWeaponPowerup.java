@@ -8,7 +8,7 @@ import com.github.kjarmicki.ship.parts.BasicSecondaryWeaponPart;
 
 public class BasicSecondaryWeaponPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = BasicSecondaryWeaponPart.DEFAULT_INDEX;
-    public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
+    public static final PartSkin DEFAULT_COLOR = PartSkin.POWERUP_SKIN;
     private static final float[] VERTICES = SCALE.apply(BasicSecondaryWeaponPart.VERTICES);
     public static final float WIDTH = SCALE.apply(BasicSecondaryWeaponPart.WIDTH);
     public static final float HEIGHT = SCALE.apply(BasicSecondaryWeaponPart.HEIGHT);

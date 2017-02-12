@@ -8,7 +8,7 @@ import com.github.kjarmicki.ship.parts.ArmoredWingPart;
 
 public class ArmoredWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = ArmoredWingPart.DEFAULT_LEFT_INDEX;
-    public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
+    public static final PartSkin DEFAULT_COLOR = PartSkin.POWERUP_SKIN;
     public static final float[] VERTICES = SCALE.apply(ArmoredWingPart.LEFT_VERTICES);
     public static final float WIDTH = SCALE.apply(ArmoredWingPart.WIDTH);
     public static final float HEIGHT = SCALE.apply(ArmoredWingPart.HEIGHT);

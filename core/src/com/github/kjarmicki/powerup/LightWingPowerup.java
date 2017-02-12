@@ -8,7 +8,7 @@ import com.github.kjarmicki.ship.parts.LightWingPart;
 
 public class LightWingPowerup extends GenericPowerup {
     public static final int DEFAULT_INDEX = LightWingPart.DEFAULT_LEFT_INDEX;
-    public static final PartSkin DEFAULT_COLOR = PartSkin.GREEN;
+    public static final PartSkin DEFAULT_COLOR = PartSkin.POWERUP_SKIN;
     public static final float[] VERTICES = SCALE.apply(LightWingPart.LEFT_VERTICES);
     public static final float WIDTH = SCALE.apply(LightWingPart.WIDTH);
     public static final float HEIGHT = SCALE.apply(LightWingPart.HEIGHT);

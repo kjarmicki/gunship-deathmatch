@@ -81,7 +81,7 @@ public class ArenaScreen extends ScreenAdapter {
         );
 
         localPlayer = new GenericPlayer(
-                PartSkin.BLUE,
+                PartSkin.randomPlayerSkin(),
                 Optional.of(keyboard)
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
