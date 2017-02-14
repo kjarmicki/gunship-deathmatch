@@ -7,12 +7,13 @@ import com.github.kjarmicki.powerup.Powerup;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 public class PowerupsContainer implements Container<Powerup> {
-    private final Map<Vector2, Powerup> powerupsByPosition = new HashMap<>();
+    private final Map<Vector2, Powerup> powerupsByPosition = new ConcurrentHashMap<>();
 
     public void addPowerup(Vector2 position, Powerup powerup) {
         powerup.moveBy(position);
