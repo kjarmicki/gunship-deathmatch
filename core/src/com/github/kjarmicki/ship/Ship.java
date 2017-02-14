@@ -14,6 +14,7 @@ import com.github.kjarmicki.ship.parts.PartSlotName;
 import com.github.kjarmicki.ship.parts.WeaponPart;
 import com.github.kjarmicki.util.Points;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -162,13 +163,13 @@ public class Ship {
                     .findFirst()
                     .ifPresent(collidingForeignPart -> {
                         Vector2 shift = myPart.collisionVector(collidingForeignPart);
+                        Vector2 myVelocity = velocity;
+                        Vector2 foreignVelocity = other.getVelocity();
 
                         other.bump(velocity);
-                        bump(other.getVelocity());
-
-                        velocity.x = rebound(velocity.x);
-                        velocity.y = rebound(velocity.y);
-                        rotation = rebound(rotation);
+                        bump(foreignVelocity);
+                        if(myVelocity.len() > foreignVelocity.len()) rebound();
+                        else other.rebound();
 
                         // TODO: damage
 
@@ -211,9 +212,7 @@ public class Ship {
                     Vector2 shift = myPart.collisionVector(arenaTile);
 
                     // rebound a ship off the object
-                    velocity.x = rebound(velocity.x);
-                    velocity.y = rebound(velocity.y);
-                    rotation = rebound(rotation);
+                    rebound();
 
                     // damage part that went off
                     myPart.receiveDamage(shift.len());
@@ -275,6 +274,12 @@ public class Ship {
         allParts().stream().forEach(action);
     }
 
+    public void rebound() {
+        velocity.x = rebound(velocity.x);
+        velocity.y = rebound(velocity.y);
+        rotation = rebound(rotation);
+    }
+
     private List<WeaponPart> weapons() {
         return structure.weapons();
     }
@@ -282,4 +287,5 @@ public class Ship {
     private float rebound(float value) {
         return -(value / 2);
     }
+
 }
