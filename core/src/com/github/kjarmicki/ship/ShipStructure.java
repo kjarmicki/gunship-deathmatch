@@ -113,6 +113,19 @@ public class ShipStructure {
                 .forEach(part -> part.setPartSkin(partSkin));
     }
 
+    public void receiveDamage(Part damagedPart, float amount, Runnable action) {
+        allParts().stream()
+                .filter(part -> part.equals(damagedPart))
+                .findFirst()
+                .ifPresent(foundPart -> {
+                    foundPart.receiveDamage(amount);
+                    if(foundPart.isDestroyed()) {
+                        this.removePart(foundPart);
+                    }
+                    action.run();
+                });
+    }
+
     private void positionAllParts() {
         allParts().forEach(part -> part.positionWithinStructure(this));
     }

@@ -146,10 +146,7 @@ public class Ship {
                     rotation = rebound(rotation);
 
                     // damage part that went off
-                    outsidePart.receiveDamage(shift.len());
-                    if (outsidePart.isDestroyed()) {
-                        removeDestroyedPart(outsidePart);
-                    }
+                    receiveDamage(outsidePart, shift.len());
 
                     // translate ship back to the area
                     allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
@@ -165,13 +162,15 @@ public class Ship {
                         Vector2 shift = myPart.collisionVector(collidingForeignPart);
                         Vector2 myVelocity = velocity;
                         Vector2 foreignVelocity = other.getVelocity();
+                        float velocityTotal = velocity.len() + foreignVelocity.len();
 
                         other.bump(velocity);
                         bump(foreignVelocity);
                         if(myVelocity.len() > foreignVelocity.len()) rebound();
                         else other.rebound();
 
-                        // TODO: damage
+                        receiveDamage(myPart, velocityTotal / 2);
+                        other.receiveDamage(collidingForeignPart, velocityTotal / 2);
 
                         allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
                     });
@@ -187,10 +186,7 @@ public class Ship {
                     velocity.x += shift.x * 20;
                     velocity.y += shift.y * 20;
 
-                    myPart.receiveDamage(bullet.getImpact());
-                    if (myPart.isDestroyed()) {
-                        removeDestroyedPart(myPart);
-                    }
+                    receiveDamage(myPart, bullet.getImpact());
                     bullet.destroy();
                 });
     }
@@ -215,10 +211,7 @@ public class Ship {
                     rebound();
 
                     // damage part that went off
-                    myPart.receiveDamage(shift.len());
-                    if (myPart.isDestroyed()) {
-                        removeDestroyedPart(myPart);
-                    }
+                    receiveDamage(myPart, shift.len());
 
                     // translate ship back to the area
                     allParts().stream().forEach(part -> part.getTakenArea().translate(shift.x, shift.y));
@@ -259,13 +252,6 @@ public class Ship {
         return isDestroyed;
     }
 
-    private void removeDestroyedPart(Part part) {
-        if(part.isCritical()) {
-            isDestroyed = true;
-        }
-        structure.removePart(part);
-    }
-
     public List<Part> allParts() {
         return structure.allParts();
     }
@@ -278,6 +264,14 @@ public class Ship {
         velocity.x = rebound(velocity.x);
         velocity.y = rebound(velocity.y);
         rotation = rebound(rotation);
+    }
+
+    private void receiveDamage(Part damagedPart, float amount) {
+        structure.receiveDamage(damagedPart, amount, () -> {
+            if(damagedPart.isCritical() && damagedPart.isDestroyed()) {
+                isDestroyed = true;
+            }
+        });
     }
 
     private List<WeaponPart> weapons() {
