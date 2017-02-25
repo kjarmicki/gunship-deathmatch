@@ -1,9 +1,11 @@
-package com.github.kjarmicki.client.rendering;
+package com.github.kjarmicki.client.rendering.hud;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
 import com.github.kjarmicki.client.hud.ShipStatus;
+import com.github.kjarmicki.client.rendering.PolygonRenderer;
+import com.github.kjarmicki.client.rendering.Renderer;
 import com.github.kjarmicki.util.Scale;
 
 import java.util.WeakHashMap;

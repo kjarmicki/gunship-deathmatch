@@ -19,8 +19,10 @@ import com.github.kjarmicki.client.connection.SocketIoConnection;
 import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.game.LocalGame;
+import com.github.kjarmicki.client.hud.EventsLog;
 import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
+import com.github.kjarmicki.client.rendering.hud.HudRenderer;
 import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.container.PowerupsContainer;
@@ -48,6 +50,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
     private final Hud hud;
+    private final EventsLog eventsLog;
     private final Connection connection;
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
@@ -88,17 +91,19 @@ public class ArenaScreen extends ScreenAdapter {
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();
-        hud = new Hud(localPlayer);
+        eventsLog = new EventsLog();
+        hud = new Hud(localPlayer, eventsLog);
 
         shipOwnersContainerRenderer = new PlayersContainerRenderer(game.getPlayersContainer(), partsAssets);
         bulletsContainerRenderer = new ContainerRenderer<>(game.getBulletsContainer(), bulletsAssets);
         powerupsContainerRenderer = new ContainerRenderer<>(game.getPowerupsContainer(), partsAssets);
         arenaRenderer = new ArenaRenderer(game.getArena(), arenaAssets);
-        hudRenderer = new HudRenderer(hud);
+        hudRenderer = new HudRenderer(hud, batch);
 
         // connection management
         connection.connect(localPlayer);
 
+        // TODO: get rid of dtos here, operate on domain objects
         connection.onConnected(gameStateDto -> {
             PlayerWithShipDto introducedDto = findIntroducedDto(gameStateDto);
             initPlayer(localPlayer, introducedDto);
@@ -140,7 +145,9 @@ public class ArenaScreen extends ScreenAdapter {
         });
 
         connection.onSomebodyElseConnected(playerWithShipDto -> {
-            game.getPlayersContainer().add(PlayerWithShipDtoMapper.mapFromDto(playerWithShipDto));
+            Player joiner = PlayerWithShipDtoMapper.mapFromDto(playerWithShipDto);
+            game.getPlayersContainer().add(joiner);
+            eventsLog.add("A player joined");
         });
     }
 
@@ -157,6 +164,7 @@ public class ArenaScreen extends ScreenAdapter {
 
         // game logic update
         game.update(delta);
+        eventsLog.update();
 
         viewport.apply();
         chaseCamera.lookAt(localPlayer, delta);
