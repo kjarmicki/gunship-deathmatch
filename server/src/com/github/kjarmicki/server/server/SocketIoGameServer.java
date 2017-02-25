@@ -6,8 +6,14 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ExceptionListenerAdapter;
 import com.github.kjarmicki.connection.Event;
-import com.github.kjarmicki.dto.*;
+import com.github.kjarmicki.connection.GameState;
+import com.github.kjarmicki.controls.Controls;
+import com.github.kjarmicki.dto.ControlsDto;
+import com.github.kjarmicki.dto.GameStateDto;
+import com.github.kjarmicki.dto.PlayerDto;
+import com.github.kjarmicki.dto.PlayerWithShipDto;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
+import com.github.kjarmicki.dto.mapper.ControlsDtoMapper;
 import com.github.kjarmicki.dto.mapper.GameStateDtoMapper;
 import com.github.kjarmicki.dto.mapper.PlayerDtoMapper;
 import com.github.kjarmicki.dto.mapper.PlayerWithShipDtoMapper;
@@ -16,12 +22,10 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class SocketIoGameServer implements GameServer {
     private final SocketIOServer server;
@@ -29,7 +33,7 @@ public class SocketIoGameServer implements GameServer {
     private final WeakHashMap<Player, DtoTimeConsistency> playerControlsConsistency;
 
     private Consumer<Player> playerJoinedHandler;
-    private BiConsumer<Player, ControlsDto> playerSentControlsHandler;
+    private BiConsumer<Player, Controls> playerSentControlsHandler;
     private Consumer<Player> playerLeftHandler;
 
     public SocketIoGameServer(String host, int port) {
@@ -80,19 +84,8 @@ public class SocketIoGameServer implements GameServer {
     private void setupEvents() {
         server.addEventListener(Event.INTRODUCE_PLAYER, String.class, (client, json, ackSender) -> {
             Player newPlayer = initNewPlayerFromJsonString(json, client);
-            List<Player> remainingPlayers = new ArrayList<>(connectedPlayers);
             playerJoinedHandler.accept(newPlayer);
             connectedPlayers.add(newPlayer);
-
-            // notify player about initial game state
-            GameStateDto responseForNewPlayer = introductionResponseForNewPlayer(newPlayer, remainingPlayers);
-            client.sendEvent(Event.THIS_PLAYER_INTRODUCED, responseForNewPlayer.toJsonString());
-
-            // notify remaining players that someone joined
-            PlayerWithShipDto responseForOtherPlayers = introductionResponseForOtherPlayers(newPlayer);
-            remainingPlayers.stream().forEach(remainingPlayer ->
-                    server.getClient(remainingPlayer.getUuid().get())
-                            .sendEvent(Event.OTHER_PLAYER_INTRODUCED, responseForOtherPlayers.toJsonString()));
         });
 
         server.addEventListener(Event.SEND_CONTROLS, String.class, (client, json, ackSender) -> {
@@ -102,7 +95,7 @@ public class SocketIoGameServer implements GameServer {
                     .get();
             ControlsDto dto = ControlsDto.fromJsonString(json);
             if(!areControlsTimeConsistent(sender, dto)) return;
-            playerSentControlsHandler.accept(sender, dto);
+            playerSentControlsHandler.accept(sender, ControlsDtoMapper.mapFromDto(dto));
         });
 
         server.addDisconnectListener(client ->
@@ -117,15 +110,6 @@ public class SocketIoGameServer implements GameServer {
         Player newPlayer = PlayerDtoMapper.mapFromDto(playerDto);
         newPlayer.setUuid(client.getSessionId());
         return newPlayer;
-    }
-
-    private GameStateDto introductionResponseForNewPlayer(Player newPlayer, List<Player> remainingPlayers) {
-        GameStateDto response = GameStateDtoMapper.mapToDto(remainingPlayers,
-                /* TODO: nope nope nope, refactor this whole class, figure out proper responsibility split between it and screen */ new HashMap<>(), new HashMap<>());
-        PlayerWithShipDto newPlayerDto = PlayerWithShipDtoMapper.mapToDto(newPlayer);
-        newPlayerDto.getPlayer().isJustIntroduced(true);
-        response.getPlayers().add(newPlayerDto);
-        return response;
     }
 
     private PlayerWithShipDto introductionResponseForOtherPlayers(Player newPlayer) {
@@ -150,13 +134,34 @@ public class SocketIoGameServer implements GameServer {
     }
 
     @Override
-    public void onPlayerSentControls(BiConsumer<Player, ControlsDto> eventHandler) {
+    public void onPlayerSentControls(BiConsumer<Player, Controls> eventHandler) {
         playerSentControlsHandler = eventHandler;
     }
 
     @Override
-    public void broadcast(Supplier<Dto> dataSupplier) {
-        server.getBroadcastOperations().sendEvent(Event.STATE_BROADCAST, dataSupplier.get().toJsonString());
+    public void broadcast(GameState gameState) {
+        server.getBroadcastOperations().sendEvent(Event.STATE_BROADCAST,
+                GameStateDtoMapper.mapToDto(gameState).toJsonString());
+    }
+
+    @Override
+    public void sendIntroductoryDataToJoiner(Player joiner, GameState gameState) {
+        SocketIOClient client = clientOfPlayer(joiner);
+        GameStateDto introductoryData = GameStateDtoMapper.mapToDto(gameState);
+        PlayerWithShipDto joinerDto = PlayerWithShipDtoMapper.mapToDto(joiner);
+        joinerDto.getPlayer().isJustIntroduced(true);
+        introductoryData.getPlayers().add(joinerDto);
+        client.sendEvent(Event.THIS_PLAYER_INTRODUCED, introductoryData.toJsonString());
+    }
+
+    @Override
+    public void notifyOtherPlayersAboutJoiner(Player joiner) {
+        PlayerWithShipDto responseForOtherPlayers = introductionResponseForOtherPlayers(joiner);
+        connectedPlayers.stream()
+                .filter(player -> !player.equals(joiner))
+                .map(this::clientOfPlayer)
+                .forEach(clientOdPlayer ->
+                        clientOdPlayer.sendEvent(Event.OTHER_PLAYER_INTRODUCED, responseForOtherPlayers.toJsonString()));
     }
 
     private boolean areControlsTimeConsistent(Player player, ControlsDto controlsDto) {
@@ -164,5 +169,9 @@ public class SocketIoGameServer implements GameServer {
         if(!consistency.wasSentAfterLastOne(controlsDto)) return false;
         consistency.recordLastTimestamp(controlsDto);
         return true;
+    }
+
+    private SocketIOClient clientOfPlayer(Player player) {
+        return server.getClient(player.getUuid().get());
     }
 }

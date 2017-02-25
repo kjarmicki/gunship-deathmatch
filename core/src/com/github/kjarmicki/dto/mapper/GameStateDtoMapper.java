@@ -1,13 +1,13 @@
 package com.github.kjarmicki.dto.mapper;
 
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.connection.GameState;
 import com.github.kjarmicki.dto.GameStateDto;
 import com.github.kjarmicki.dto.consistency.DtoTimeConsistency;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.ship.bullets.Bullet;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,5 +26,9 @@ public class GameStateDtoMapper {
                     .map(entry -> PowerupDtoMapper.mapToDtoWithPosition(entry.getKey(), entry.getValue()))
                     .collect(toList()),
                 DtoTimeConsistency.timestamp());
+    }
+
+    public static GameStateDto mapToDto(GameState gameState) {
+        return mapToDto(gameState.getPlayers(), gameState.getBulletsByPlayers(), gameState.getPowerupsByPosition());
     }
 }

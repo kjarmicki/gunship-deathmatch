@@ -3,20 +3,11 @@ package com.github.kjarmicki.server.screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.container.PlayersContainer;
-import com.github.kjarmicki.controls.RemoteControls;
-import com.github.kjarmicki.dto.mapper.ControlsDtoMapper;
-import com.github.kjarmicki.dto.mapper.GameStateDtoMapper;
-import com.github.kjarmicki.player.Player;
-import com.github.kjarmicki.powerup.Powerup;
 import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.server.GameServer;
 import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.ship.ShipStructure;
 import com.github.kjarmicki.ship.ShipsRespawner;
-import com.github.kjarmicki.ship.bullets.Bullet;
-
-import java.util.List;
-import java.util.Map;
 
 public class ServerScreen extends ScreenAdapter {
     private final RemoteGame game;
@@ -34,15 +25,18 @@ public class ServerScreen extends ScreenAdapter {
             ShipsRespawner shipsRespawner = game.getShipsRespawner();
             Vector2 spawnPosition = shipsRespawner.findNextFreeRespawnSpot(player);
             player.setShip(new Ship(player, ShipStructure.defaultStructure(spawnPosition)));
+
+            gameServer.sendIntroductoryDataToJoiner(player, game.getGameState());
+            gameServer.notifyOtherPlayersAboutJoiner(player);
+
             playersContainer.add(player);
         });
         gameServer.onPlayerLeft(player -> {
             PlayersContainer playersContainer = game.getPlayersContainer();
             playersContainer.remove(player);
         });
-        gameServer.onPlayerSentControls((player, controlsDto) -> {
-            RemoteControls controls = player.getRemoteControls();
-            ControlsDtoMapper.setByDto(controls, controlsDto);
+        gameServer.onPlayerSentControls((player, controls) -> {
+            player.getRemoteControls().setState(controls);
         });
         gameServer.start();
     }
@@ -50,11 +44,6 @@ public class ServerScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         game.update(delta);
-        gameServer.broadcast(() -> {
-            List<Player> players = game.getPlayersContainer().getContents();
-            Map<Bullet, Player> bulletsByPlayers = game.getBulletsContainer().getBulletsByPlayers();
-            Map<Vector2, Powerup> powerupsByPosition = game.getPowerupsContainer().getPowerupsByPosition();
-            return GameStateDtoMapper.mapToDto(players, bulletsByPlayers, powerupsByPosition);
-        });
+        gameServer.broadcast(game.getGameState());
     }
 }

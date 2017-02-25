@@ -1,6 +1,5 @@
 package com.github.kjarmicki.dto.mapper;
 
-import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.dto.ShipDto;
 import com.github.kjarmicki.dto.ShipStructureDto;
 import com.github.kjarmicki.player.Player;

@@ -5,6 +5,7 @@ import com.github.kjarmicki.arena.Arena;
 import com.github.kjarmicki.arena.WarehouseArena;
 import com.github.kjarmicki.arena.data.ArenaData;
 import com.github.kjarmicki.arena.data.Overlap2dArenaData;
+import com.github.kjarmicki.connection.GameState;
 import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.container.PowerupsContainer;
@@ -69,5 +70,11 @@ public class RemoteGame {
 
     public ShipsRespawner getShipsRespawner() {
         return shipsRespawner;
+    }
+
+    public GameState getGameState() {
+        return new GameState(getPlayersContainer().getContents(),
+                getBulletsContainer().getBulletsByPlayers(),
+                getPowerupsContainer().getPowerupsByPosition());
     }
 }

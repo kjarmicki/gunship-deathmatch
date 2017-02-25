@@ -5,7 +5,9 @@ import com.github.kjarmicki.assets.PartSkin;
 import com.github.kjarmicki.basis.VisibleThing;
 import com.github.kjarmicki.ship.ShipStructure;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public interface Part extends VisibleThing, FeatureUpdater {
     // condition

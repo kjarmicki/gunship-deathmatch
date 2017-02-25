@@ -32,23 +32,11 @@ public class RemoteControls implements Controls {
         return shoot;
     }
 
-    public void setUp(boolean up) {
-        this.up = up;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-
-    public void setRight(boolean right) {
-        this.right = right;
-    }
-
-    public void setShoot(boolean shoot) {
-        this.shoot = shoot;
+    public void setState(Controls controls) {
+        this.up = controls.up();
+        this.down = controls.down();
+        this.left = controls.left();
+        this.right = controls.right();
+        this.shoot = controls.shoot();
     }
 }

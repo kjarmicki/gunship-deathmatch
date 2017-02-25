@@ -14,7 +14,6 @@ import com.github.kjarmicki.ship.parts.PartSlotName;
 import com.github.kjarmicki.ship.parts.WeaponPart;
 import com.github.kjarmicki.util.Points;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;

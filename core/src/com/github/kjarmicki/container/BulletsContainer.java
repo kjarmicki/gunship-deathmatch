@@ -6,7 +6,6 @@ import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

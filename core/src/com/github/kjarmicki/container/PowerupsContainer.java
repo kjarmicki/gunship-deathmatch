@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.powerup.Powerup;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
