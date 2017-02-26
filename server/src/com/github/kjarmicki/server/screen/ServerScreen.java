@@ -2,6 +2,7 @@ package com.github.kjarmicki.server.screen;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
+import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.server.game.RemoteGame;
 import com.github.kjarmicki.server.server.GameServer;
@@ -34,6 +35,8 @@ public class ServerScreen extends ScreenAdapter {
         gameServer.onPlayerLeft(player -> {
             PlayersContainer playersContainer = game.getPlayersContainer();
             playersContainer.remove(player);
+            BulletsContainer bulletsContainer = game.getBulletsContainer();
+            bulletsContainer.removeBulletsBy(player);
         });
         gameServer.onPlayerSentControls((player, controls) -> {
             player.getRemoteControls().setState(controls);

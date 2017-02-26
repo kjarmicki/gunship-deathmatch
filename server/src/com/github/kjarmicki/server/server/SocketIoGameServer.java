@@ -23,6 +23,7 @@ import io.netty.channel.ChannelHandlerContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -98,11 +99,13 @@ public class SocketIoGameServer implements GameServer {
             playerSentControlsHandler.accept(sender, ControlsDtoMapper.mapFromDto(dto));
         });
 
-        server.addDisconnectListener(client ->
-                connectedPlayers.removeIf(player ->
-                        client.getSessionId().equals(player.getUuid().orElse(null))
-                )
-        );
+        server.addDisconnectListener(client -> {
+            playerForClient(client)
+                    .ifPresent(disconnected -> {
+                        connectedPlayers.remove(disconnected);
+                        playerLeftHandler.accept(disconnected);
+                    });
+        });
     }
 
     private Player initNewPlayerFromJsonString(String json, SocketIOClient client) {
@@ -173,5 +176,12 @@ public class SocketIoGameServer implements GameServer {
 
     private SocketIOClient clientOfPlayer(Player player) {
         return server.getClient(player.getUuid().get());
+    }
+
+    private Optional<Player> playerForClient(SocketIOClient client) {
+        return connectedPlayers.stream()
+                .filter(player -> player.getUuid().isPresent())
+                .filter(player -> client.getSessionId().equals(player.getUuid().get()))
+                .findFirst();
     }
 }

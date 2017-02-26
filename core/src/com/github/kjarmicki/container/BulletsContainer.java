@@ -82,13 +82,23 @@ public class BulletsContainer implements Container<Bullet> {
 
     private void removeDestroyedAndOutOfRange() {
         // TODO: support for a nice kaboom animation here
-        Map<Bullet, Player> filtered = bulletsByPlayers.entrySet()
+        repackage(bulletsByPlayers.entrySet()
                 .stream()
                 .filter(entry -> !entry.getKey().isDestroyed())
                 .filter(entry -> !entry.getKey().isRangeExceeded())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    }
+
+    public void removeBulletsBy(Player player) {
+        repackage(bulletsByPlayers.entrySet()
+                .stream()
+                .filter(entry -> !entry.getValue().equals(player))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    }
+
+    private void repackage(Map<Bullet, Player> newContents) {
         bulletsByPlayers.clear();
-        bulletsByPlayers.putAll(filtered);
+        bulletsByPlayers.putAll(newContents);
     }
 
     private void destroyOutOfBounds(Rectangle bounds) {
