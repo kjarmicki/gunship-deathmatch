@@ -19,7 +19,7 @@ import com.github.kjarmicki.client.connection.SocketIoConnection;
 import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.game.LocalGame;
-import com.github.kjarmicki.client.hud.EventsLog;
+import com.github.kjarmicki.client.hud.NoticesLog;
 import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
 import com.github.kjarmicki.client.rendering.hud.HudRenderer;
@@ -50,7 +50,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
     private final Hud hud;
-    private final EventsLog eventsLog;
+    private final NoticesLog noticesLog;
     private final Connection connection;
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
@@ -91,8 +91,8 @@ public class ArenaScreen extends ScreenAdapter {
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();
-        eventsLog = new EventsLog();
-        hud = new Hud(localPlayer, eventsLog);
+        noticesLog = new NoticesLog();
+        hud = new Hud(localPlayer, noticesLog);
 
         shipOwnersContainerRenderer = new PlayersContainerRenderer(game.getPlayersContainer(), partsAssets);
         bulletsContainerRenderer = new ContainerRenderer<>(game.getBulletsContainer(), bulletsAssets);
@@ -147,7 +147,7 @@ public class ArenaScreen extends ScreenAdapter {
         connection.onSomebodyElseConnected(playerWithShipDto -> {
             Player joiner = PlayerWithShipDtoMapper.mapFromDto(playerWithShipDto);
             game.getPlayersContainer().add(joiner);
-            eventsLog.add("A player joined");
+            noticesLog.add("A player joined");
         });
     }
 
@@ -164,7 +164,7 @@ public class ArenaScreen extends ScreenAdapter {
 
         // game logic update
         game.update(delta);
-        eventsLog.update();
+        noticesLog.update();
 
         viewport.apply();
         chaseCamera.lookAt(localPlayer, delta);

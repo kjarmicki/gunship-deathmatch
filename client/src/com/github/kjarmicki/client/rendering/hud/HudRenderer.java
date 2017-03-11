@@ -11,12 +11,12 @@ import com.github.kjarmicki.client.rendering.Renderer;
 
 public class HudRenderer implements Renderer<ShapeRenderer> {
     private final ShipStatusRenderer shipStatusRenderer;
-    private final EventsLogRenderer eventsLogRenderer;
+    private final NoticesLogRenderer noticesLogRenderer;
     private final Stage stage;
 
     public HudRenderer(Hud hud, Batch batch) {
         this.shipStatusRenderer = new ShipStatusRenderer(hud.getShipStatus());
-        this.eventsLogRenderer = new EventsLogRenderer(hud.getEventsLog());
+        this.noticesLogRenderer = new NoticesLogRenderer(hud.getNoticesLog());
         this.stage = new Stage(new FitViewport(
                 GunshipDeathmatchClient.CAMERA_VIEW_WIDTH,
                 GunshipDeathmatchClient.CAMERA_VIEW_HEIGHT,
@@ -27,7 +27,7 @@ public class HudRenderer implements Renderer<ShapeRenderer> {
     public void render(ShapeRenderer shapeRenderer) {
         this.shipStatusRenderer.render(shapeRenderer);
         stage.clear();
-        this.eventsLogRenderer.render(stage);
+        this.noticesLogRenderer.render(stage);
         stage.draw();
     }
 }

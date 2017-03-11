@@ -4,18 +4,18 @@ import com.github.kjarmicki.player.Player;
 
 public class Hud {
     private final ShipStatus shipStatus;
-    private final EventsLog eventsLog;
+    private final NoticesLog noticesLog;
 
-    public Hud(Player player, EventsLog eventsLog) {
+    public Hud(Player player, NoticesLog noticesLog) {
         this.shipStatus = new ShipStatus(player);
-        this.eventsLog = eventsLog;
+        this.noticesLog = noticesLog;
     }
 
     public ShipStatus getShipStatus() {
         return shipStatus;
     }
 
-    public EventsLog getEventsLog() {
-        return eventsLog;
+    public NoticesLog getNoticesLog() {
+        return noticesLog;
     }
 }
