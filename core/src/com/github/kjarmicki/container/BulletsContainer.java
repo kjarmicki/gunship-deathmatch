@@ -2,12 +2,15 @@ package com.github.kjarmicki.container;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.github.kjarmicki.arena.tile.ArenaTile;
+import com.github.kjarmicki.notices.NoticesInput;
+import com.github.kjarmicki.notices.NoticesOutput;
 import com.github.kjarmicki.player.Player;
 import com.github.kjarmicki.ship.bullets.Bullet;
 import com.github.kjarmicki.util.Points;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -15,6 +18,15 @@ import static java.util.stream.Collectors.toList;
 
 public class BulletsContainer implements Container<Bullet> {
     private final Map<Bullet, Player> bulletsByPlayers = new ConcurrentHashMap<>();
+    private final Optional<NoticesInput> noticesInput;
+
+    public BulletsContainer(NoticesInput noticesInput) {
+        this.noticesInput = Optional.ofNullable(noticesInput);
+    }
+
+    public BulletsContainer() {
+        this(null);
+    }
 
     public void addBullet(Bullet bullet, Player owner) {
         bulletsByPlayers.put(bullet, owner);
@@ -50,8 +62,8 @@ public class BulletsContainer implements Container<Bullet> {
 
                     ownerList.stream()
                             .forEach(foreignPlayer -> {
-                                if (!bullet.isDestroyed() && foreignPlayer != currentPlayer) {
-                                    foreignPlayer.getShip().checkCollisionWith(bullet);
+                                if (!bullet.isDestroyed() && !foreignPlayer.getShip().isDestroyed() && foreignPlayer != currentPlayer) {
+                                    foreignPlayer.checkCollisionWith(bullet, currentPlayer, noticesInput);
                                 }
                             });
                 });

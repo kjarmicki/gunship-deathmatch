@@ -1,7 +1,7 @@
 package com.github.kjarmicki.container;
 
+import com.github.kjarmicki.notices.NoticesInput;
 import com.github.kjarmicki.player.Player;
-import com.github.kjarmicki.ship.Ship;
 import com.github.kjarmicki.util.Sets;
 
 import java.util.ArrayList;
@@ -11,9 +11,19 @@ import java.util.UUID;
 
 public class PlayersContainer implements Container<Player> {
     private final List<Player> players;
+    private final Optional<NoticesInput> noticesInput;
+
+    public PlayersContainer(List<Player> players, NoticesInput noticesInput) {
+        this.players = players;
+        this.noticesInput = Optional.ofNullable(noticesInput);
+    }
 
     public PlayersContainer(List<Player> players) {
-        this.players = players;
+        this(players, null);
+    }
+
+    public PlayersContainer(NoticesInput noticesInput) {
+        this(new ArrayList<>(), noticesInput);
     }
 
     public PlayersContainer() {
@@ -39,17 +49,17 @@ public class PlayersContainer implements Container<Player> {
         players
                 .stream()
                 .forEach(player -> player.update(bulletsContainer, delta));
-        checkCollisionsBetweenShips();
+        checkCollisions();
     }
 
-    private void checkCollisionsBetweenShips() {
+    private void checkCollisions() {
         List<List<Player>> combinations = Sets.combinations(players, 2);
         combinations
                 .stream()
                 .forEach(pair -> {
-                    Ship first = pair.get(0).getShip();
-                    Ship second = pair.get(1).getShip();
-                    first.checkCollisionWith(second);
+                    Player first = pair.get(0);
+                    Player second = pair.get(1);
+                    first.checkCollisionWith(second, noticesInput);
                 });
     }
 

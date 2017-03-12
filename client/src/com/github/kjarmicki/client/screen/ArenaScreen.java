@@ -19,7 +19,7 @@ import com.github.kjarmicki.client.connection.SocketIoConnection;
 import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.game.LocalGame;
-import com.github.kjarmicki.client.hud.NoticesLog;
+import com.github.kjarmicki.notices.NoticesOutput;
 import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
 import com.github.kjarmicki.client.rendering.hud.HudRenderer;
@@ -50,7 +50,7 @@ public class ArenaScreen extends ScreenAdapter {
     private final Viewport viewport;
     private final ChaseCamera chaseCamera;
     private final Hud hud;
-    private final NoticesLog noticesLog;
+    private final NoticesOutput noticesOutput;
     private final Connection connection;
     private final PartsAssets partsAssets;
     private final BulletsAssets bulletsAssets;
@@ -86,13 +86,14 @@ public class ArenaScreen extends ScreenAdapter {
         );
 
         localPlayer = new GenericPlayer(
+                "Unnamed Player",
                 PartSkin.randomPlayerSkin(),
                 Optional.of(keyboard)
         );
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();
-        noticesLog = new NoticesLog();
-        hud = new Hud(localPlayer, noticesLog);
+        noticesOutput = new NoticesOutput();
+        hud = new Hud(localPlayer, noticesOutput);
 
         shipOwnersContainerRenderer = new PlayersContainerRenderer(game.getPlayersContainer(), partsAssets);
         bulletsContainerRenderer = new ContainerRenderer<>(game.getBulletsContainer(), bulletsAssets);
@@ -142,12 +143,14 @@ public class ArenaScreen extends ScreenAdapter {
                         Powerup powerup = PowerupDtoMapper.mapFromDto(powerupDto);
                         powerupsContainer.addPowerup(position, powerup);
                     });
+
+            // add notices
+            gameStateDto.getNotices().forEach(noticesOutput::add);
         });
 
         connection.onSomebodyElseConnected(playerWithShipDto -> {
             Player joiner = PlayerWithShipDtoMapper.mapFromDto(playerWithShipDto);
             game.getPlayersContainer().add(joiner);
-            noticesLog.add("A player joined");
         });
     }
 
@@ -164,7 +167,7 @@ public class ArenaScreen extends ScreenAdapter {
 
         // game logic update
         game.update(delta);
-        noticesLog.update();
+        noticesOutput.update();
 
         viewport.apply();
         chaseCamera.lookAt(localPlayer, delta);

@@ -14,7 +14,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 public class GameStateDtoMapper {
-    public static GameStateDto mapToDto(List<Player> players, Map<Bullet, Player> bulletsByPlayers, Map<Vector2, Powerup> powerupsByPosition) {
+    public static GameStateDto mapToDto(List<Player> players, Map<Bullet, Player> bulletsByPlayers, Map<Vector2, Powerup> powerupsByPosition, List<String> notices) {
         return new GameStateDto(
                 players.stream()
                     .map(PlayerWithShipDtoMapper::mapToDto)
@@ -25,10 +25,11 @@ public class GameStateDtoMapper {
                 powerupsByPosition.entrySet().stream()
                     .map(entry -> PowerupDtoMapper.mapToDtoWithPosition(entry.getKey(), entry.getValue()))
                     .collect(toList()),
+                notices,
                 DtoTimeConsistency.timestamp());
     }
 
     public static GameStateDto mapToDto(GameState gameState) {
-        return mapToDto(gameState.getPlayers(), gameState.getBulletsByPlayers(), gameState.getPowerupsByPosition());
+        return mapToDto(gameState.getPlayers(), gameState.getBulletsByPlayers(), gameState.getPowerupsByPosition(), gameState.getNotices());
     }
 }

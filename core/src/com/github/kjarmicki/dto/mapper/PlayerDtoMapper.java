@@ -12,12 +12,12 @@ public class PlayerDtoMapper {
     public static PlayerDto mapToDto(Player player) {
         String uuid = player.getUuid()
                 .map(UUID::toString).orElseGet(() -> "");
-        return new PlayerDto(player.getPartSkin().name(), uuid, false);
+        return new PlayerDto(player.getName(), player.getPartSkin().name(), uuid, false);
     }
 
     public static Player mapFromDto(PlayerDto dto) {
         Player player =
-                new GenericPlayer(PartSkin.valueOf(dto.getPartSkin()), Optional.empty());
+                new GenericPlayer(dto.getName(), PartSkin.valueOf(dto.getPartSkin()), Optional.empty());
         if(!"".equals(dto.getUuid())) {
             player.setUuid(dto.getUuid());
         }

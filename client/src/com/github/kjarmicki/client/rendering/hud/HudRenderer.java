@@ -16,7 +16,7 @@ public class HudRenderer implements Renderer<ShapeRenderer> {
 
     public HudRenderer(Hud hud, Batch batch) {
         this.shipStatusRenderer = new ShipStatusRenderer(hud.getShipStatus());
-        this.noticesLogRenderer = new NoticesLogRenderer(hud.getNoticesLog());
+        this.noticesLogRenderer = new NoticesLogRenderer(hud.getNoticesOutput());
         this.stage = new Stage(new FitViewport(
                 GunshipDeathmatchClient.CAMERA_VIEW_WIDTH,
                 GunshipDeathmatchClient.CAMERA_VIEW_HEIGHT,

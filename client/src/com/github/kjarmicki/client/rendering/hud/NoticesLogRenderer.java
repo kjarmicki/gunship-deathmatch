@@ -5,14 +5,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.github.kjarmicki.client.hud.NoticesLog;
+import com.github.kjarmicki.notices.NoticesOutput;
 import com.github.kjarmicki.client.rendering.Renderer;
 
 public class NoticesLogRenderer implements Renderer<Stage> {
-    private final NoticesLog noticesLog;
+    private final NoticesOutput noticesOutput;
 
-    public NoticesLogRenderer(NoticesLog noticesLog) {
-        this.noticesLog = noticesLog;
+    public NoticesLogRenderer(NoticesOutput noticesOutput) {
+        this.noticesOutput = noticesOutput;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class NoticesLogRenderer implements Renderer<Stage> {
         table.pad(10);
         table.setFillParent(true);
 
-        noticesLog.getAll().stream()
+        noticesOutput.getAll().stream()
                 .map(notice -> new Label(notice, new Label.LabelStyle(new BitmapFont(), Color.WHITE)))
                 .forEach(label -> {
                     table.add(label);

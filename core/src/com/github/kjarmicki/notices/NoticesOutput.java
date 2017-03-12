@@ -1,4 +1,4 @@
-package com.github.kjarmicki.client.hud;
+package com.github.kjarmicki.notices;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -8,16 +8,16 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
-public class NoticesLog {
-    public static final int MAX_KEPT = 2;
+public class NoticesOutput {
+    public static final int MAX_KEPT = 5;
     public static final Duration KEEP_FOR = Duration.ofSeconds(5);
     private List<Map.Entry<Instant, String>> noticesInTime;
 
-    public NoticesLog(List<Map.Entry<Instant, String>> noticesInTime) {
+    public NoticesOutput(List<Map.Entry<Instant, String>> noticesInTime) {
         this.noticesInTime = noticesInTime;
     }
 
-    public NoticesLog() {
+    public NoticesOutput() {
         this(new ArrayList<>());
     }
 

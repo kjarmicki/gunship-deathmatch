@@ -9,10 +9,12 @@ import com.github.kjarmicki.connection.GameState;
 import com.github.kjarmicki.container.BulletsContainer;
 import com.github.kjarmicki.container.PlayersContainer;
 import com.github.kjarmicki.container.PowerupsContainer;
+import com.github.kjarmicki.notices.NoticesInput;
 import com.github.kjarmicki.powerup.PowerupsRespawner;
 import com.github.kjarmicki.ship.ShipsRespawner;
 
 public class RemoteGame {
+    private final NoticesInput noticesInput;
     private final Arena arena;
     private final BulletsContainer bulletsContainer;
     private final PowerupsContainer powerupsContainer;
@@ -21,10 +23,11 @@ public class RemoteGame {
     private final ShipsRespawner shipsRespawner;
 
     public RemoteGame() {
+        noticesInput = new NoticesInput();
         ArenaData arenaData = new Overlap2dArenaData(WarehouseArena.NAME, new ObjectMapper());
         arena = new WarehouseArena(arenaData.getTiles());
-        bulletsContainer = new BulletsContainer();
-        playersContainer = new PlayersContainer();
+        bulletsContainer = new BulletsContainer(noticesInput);
+        playersContainer = new PlayersContainer(noticesInput);
         powerupsContainer = new PowerupsContainer();
         powerupsRespawner = new PowerupsRespawner(arenaData.getRespawnablePowerups(), powerupsContainer);
         shipsRespawner = new ShipsRespawner(arenaData.getShipsRespawnPoints(), playersContainer);
@@ -72,9 +75,13 @@ public class RemoteGame {
         return shipsRespawner;
     }
 
+    public NoticesInput getNoticesInput() {
+        return noticesInput;
+    }
+
     public GameState getGameState() {
         return new GameState(getPlayersContainer().getContents(),
                 getBulletsContainer().getBulletsByPlayers(),
-                getPowerupsContainer().getPowerupsByPosition());
+                getPowerupsContainer().getPowerupsByPosition(), noticesInput.getAllAndClear());
     }
 }

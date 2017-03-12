@@ -9,19 +9,26 @@ import java.io.IOException;
 
 public class PlayerDto implements Dto {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final String name;
     private final String partSkin;
     private final String uuid;
     private boolean justIntroduced;
 
     @JsonCreator
     public PlayerDto(
+            @JsonProperty("name") String name,
             @JsonProperty("partSkin") String partSkin,
             @JsonProperty("uuid") String uuid,
             @JsonProperty("justIntroduced") boolean justIntroduced
     ) {
+        this.name = name;
         this.partSkin = partSkin;
         this.uuid = uuid;
         this.justIntroduced = justIntroduced;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getPartSkin() {
