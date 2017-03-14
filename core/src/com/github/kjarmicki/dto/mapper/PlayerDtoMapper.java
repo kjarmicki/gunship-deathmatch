@@ -12,7 +12,7 @@ public class PlayerDtoMapper {
     public static PlayerDto mapToDto(Player player) {
         String uuid = player.getUuid()
                 .map(UUID::toString).orElseGet(() -> "");
-        return new PlayerDto(player.getName(), player.getPartSkin().name(), uuid, false);
+        return new PlayerDto(player.getName(), player.getScore(), player.getPartSkin().name(), uuid, false);
     }
 
     public static Player mapFromDto(PlayerDto dto) {
@@ -22,5 +22,9 @@ public class PlayerDtoMapper {
             player.setUuid(dto.getUuid());
         }
         return player;
+    }
+
+    public static void setByDto(Player player, PlayerDto dto) {
+        player.setScore(dto.getScore());
     }
 }

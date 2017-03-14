@@ -17,7 +17,8 @@ public class GenericPlayer implements Player {
     private final PartSkin color;
     private final RemoteControls remoteControls;
     private final Optional<Controls> localControls;
-    private  Ship ship;
+    private int score;
+    private Ship ship;
     private UUID uuid;
 
     public GenericPlayer(String name, PartSkin color, Optional<Controls> localControls) {
@@ -70,6 +71,7 @@ public class GenericPlayer implements Player {
 
     @Override
     public void acknowledgeDestructionOf(Player other, Optional<NoticesInput> noticesInput) {
+        score += 1;
         noticesInput.ifPresent(instance -> {
             instance.playerDestroyedOtherPlayer(other, this);
         });
@@ -103,5 +105,15 @@ public class GenericPlayer implements Player {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int getScore() {
+        return score;
+    }
+
+    @Override
+    public void setScore(int score) {
+        this.score = score;
     }
 }

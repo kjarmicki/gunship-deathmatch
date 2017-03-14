@@ -15,6 +15,7 @@ public class PlayerWithShipDtoMapper {
 
     public static void setByDto(Player toUpdate, PlayerWithShipDto dto) {
         ShipDtoMapper.setByDto(toUpdate.getShip(), dto.getShip());
+        PlayerDtoMapper.setByDto(toUpdate, dto.getPlayer());
     }
 
     public static Player mapFromDto(PlayerWithShipDto dto) {

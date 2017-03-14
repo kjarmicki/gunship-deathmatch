@@ -19,6 +19,7 @@ import com.github.kjarmicki.client.connection.SocketIoConnection;
 import com.github.kjarmicki.client.controls.Keyboard;
 import com.github.kjarmicki.client.debugging.Debugger;
 import com.github.kjarmicki.client.game.LocalGame;
+import com.github.kjarmicki.client.hud.ScoreBoard;
 import com.github.kjarmicki.notices.NoticesOutput;
 import com.github.kjarmicki.client.hud.Hud;
 import com.github.kjarmicki.client.rendering.*;
@@ -93,7 +94,7 @@ public class ArenaScreen extends ScreenAdapter {
         chaseCamera = new ChaseCamera(viewport.getCamera(), game.getArena(), 9f);
         chaseCamera.snapAtNextObservable();
         noticesOutput = new NoticesOutput();
-        hud = new Hud(localPlayer, noticesOutput);
+        hud = new Hud(localPlayer, game.getPlayersContainer(), noticesOutput);
 
         shipOwnersContainerRenderer = new PlayersContainerRenderer(game.getPlayersContainer(), partsAssets);
         bulletsContainerRenderer = new ContainerRenderer<>(game.getBulletsContainer(), bulletsAssets);

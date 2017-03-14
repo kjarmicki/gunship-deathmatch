@@ -22,6 +22,8 @@ public interface Player extends Observable {
     PartSkin getPartSkin();
     RemoteControls getRemoteControls();
     String getName();
+    int getScore();
+    void setScore(int score);
 
     Ship getShip();
 }
